@@ -1,0 +1,2163 @@
+<channel version="3.5.1">
+  <id>5beae4c2-e7f8-4ae3-9fca-703dea9233a2</id>
+  <nextMetaDataId>7</nextMetaDataId>
+  <name>HL7 to PostgreSQL Javascript</name>
+  <description>@Desc:	Receives HL7 messages and persists content to DB Writer
+@Modified:	
+2018-01-10 JER - Use global variables ${ipMedseek}, ${portToMedseekHl7}
+</description>
+  <revision>36</revision>
+  <sourceConnector version="3.5.1">
+    <metaDataId>0</metaDataId>
+    <name>sourceConnector</name>
+    <properties class="com.mirth.connect.connectors.tcp.TcpReceiverProperties" version="3.5.1">
+      <pluginProperties/>
+      <listenerConnectorProperties version="3.5.1">
+        <host>0.0.0.0</host>
+        <port>6661</port>
+      </listenerConnectorProperties>
+      <sourceConnectorProperties version="3.5.1">
+        <responseVariable>Auto-generate (Before processing)</responseVariable>
+        <respondAfterProcessing>false</respondAfterProcessing>
+        <processBatch>false</processBatch>
+        <firstResponse>true</firstResponse>
+        <processingThreads>1</processingThreads>
+        <resourceIds class="linked-hash-map">
+          <entry>
+            <string>Default Resource</string>
+            <string>[Default Resource]</string>
+          </entry>
+        </resourceIds>
+        <queueBufferSize>1000</queueBufferSize>
+      </sourceConnectorProperties>
+      <transmissionModeProperties class="com.mirth.connect.plugins.mllpmode.MLLPModeProperties">
+        <pluginPointName>MLLP</pluginPointName>
+        <startOfMessageBytes>0B</startOfMessageBytes>
+        <endOfMessageBytes>1C0D</endOfMessageBytes>
+        <useMLLPv2>false</useMLLPv2>
+        <ackBytes>06</ackBytes>
+        <nackBytes>15</nackBytes>
+        <maxRetries>2</maxRetries>
+      </transmissionModeProperties>
+      <serverMode>true</serverMode>
+      <remoteAddress></remoteAddress>
+      <remotePort></remotePort>
+      <overrideLocalBinding>false</overrideLocalBinding>
+      <reconnectInterval>5000</reconnectInterval>
+      <receiveTimeout>0</receiveTimeout>
+      <bufferSize>65536</bufferSize>
+      <maxConnections>10</maxConnections>
+      <keepConnectionOpen>true</keepConnectionOpen>
+      <dataTypeBinary>false</dataTypeBinary>
+      <charsetEncoding>DEFAULT_ENCODING</charsetEncoding>
+      <respondOnNewConnection>0</respondOnNewConnection>
+      <responseAddress></responseAddress>
+      <responsePort></responsePort>
+    </properties>
+    <transformer version="3.5.1">
+      <elements>
+        <com.mirth.connect.plugins.mapper.MapperStep>
+          <name>SendingApplication</name>
+          <sequenceNumber>0</sequenceNumber>
+          <variable>SendingApplication</variable>
+          <mapping>msg[&apos;MSH&apos;][&apos;MSH.3&apos;][&apos;MSH.3.1&apos;].toString()</mapping>
+          <defaultValue></defaultValue>
+          <replacements/>
+          <scope>CHANNEL</scope>
+        </com.mirth.connect.plugins.mapper.MapperStep>
+        <com.mirth.connect.plugins.mapper.MapperStep>
+          <name>SendingFacility</name>
+          <sequenceNumber>1</sequenceNumber>
+          <variable>SendingFacility</variable>
+          <mapping>msg[&apos;MSH&apos;][&apos;MSH.4&apos;][&apos;MSH.4.1&apos;].toString()</mapping>
+          <defaultValue></defaultValue>
+          <replacements/>
+          <scope>CHANNEL</scope>
+        </com.mirth.connect.plugins.mapper.MapperStep>
+        <com.mirth.connect.plugins.mapper.MapperStep>
+          <name>MessageDateTime</name>
+          <sequenceNumber>2</sequenceNumber>
+          <variable>MessageDateTime</variable>
+          <mapping>msg[&apos;MSH&apos;][&apos;MSH.7&apos;][&apos;MSH.7.1&apos;].toString()</mapping>
+          <defaultValue></defaultValue>
+          <replacements/>
+          <scope>CHANNEL</scope>
+        </com.mirth.connect.plugins.mapper.MapperStep>
+        <com.mirth.connect.plugins.mapper.MapperStep>
+          <name>MessageControlId</name>
+          <sequenceNumber>3</sequenceNumber>
+          <variable>MessageControlId</variable>
+          <mapping>msg[&apos;MSH&apos;][&apos;MSH.10&apos;][&apos;MSH.10.1&apos;].toString()</mapping>
+          <defaultValue></defaultValue>
+          <replacements/>
+          <scope>CHANNEL</scope>
+        </com.mirth.connect.plugins.mapper.MapperStep>
+        <com.mirth.connect.plugins.mapper.MapperStep>
+          <name>ChannelMessageId</name>
+          <sequenceNumber>4</sequenceNumber>
+          <variable>ChannelMessageId</variable>
+          <mapping>connectorMessage.getMessageId()</mapping>
+          <defaultValue></defaultValue>
+          <replacements/>
+          <scope>CHANNEL</scope>
+        </com.mirth.connect.plugins.mapper.MapperStep>
+        <com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
+          <name>Convert HL7 datetime YYYYMMDDHHMMSS to YYYY-MM-DD date</name>
+          <sequenceNumber>5</sequenceNumber>
+          <script>//Convert date to consumable format
+//datetime will be yyyyMMddHHmmSS to yyyy-mm-dd
+var messageDate= convertDate($(&apos;MessageDateTime&apos;),&apos;yyyy-MM-dd&apos;);
+channelMap.put(&apos;MessageDate&apos;,messageDate);</script>
+        </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
+        <com.mirth.connect.plugins.mapper.MapperStep>
+          <name>MessageType</name>
+          <sequenceNumber>6</sequenceNumber>
+          <variable>MessageType</variable>
+          <mapping>msg[&apos;MSH&apos;][&apos;MSH.9&apos;].toString()</mapping>
+          <defaultValue></defaultValue>
+          <replacements/>
+          <scope>CHANNEL</scope>
+        </com.mirth.connect.plugins.mapper.MapperStep>
+        <com.mirth.connect.plugins.mapper.MapperStep>
+          <name>Message</name>
+          <sequenceNumber>7</sequenceNumber>
+          <variable>Message</variable>
+          <mapping>connectorMessage.getRawData().toString()</mapping>
+          <defaultValue></defaultValue>
+          <replacements/>
+          <scope>CHANNEL</scope>
+        </com.mirth.connect.plugins.mapper.MapperStep>
+        <com.mirth.connect.plugins.mapper.MapperStep>
+          <name>PatientId</name>
+          <sequenceNumber>8</sequenceNumber>
+          <variable>PatientId</variable>
+          <mapping>msg[&apos;PID&apos;][&apos;PID.3&apos;][&apos;PID.3.1&apos;].toString()</mapping>
+          <defaultValue></defaultValue>
+          <replacements/>
+          <scope>CHANNEL</scope>
+        </com.mirth.connect.plugins.mapper.MapperStep>
+      </elements>
+      <inboundTemplate encoding="base64"></inboundTemplate>
+      <outboundTemplate encoding="base64"></outboundTemplate>
+      <inboundDataType>HL7V2</inboundDataType>
+      <outboundDataType>HL7V2</outboundDataType>
+      <inboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.5.1">
+        <serializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties" version="3.5.1">
+          <handleRepetitions>true</handleRepetitions>
+          <handleSubcomponents>true</handleSubcomponents>
+          <useStrictParser>false</useStrictParser>
+          <useStrictValidation>false</useStrictValidation>
+          <stripNamespaces>false</stripNamespaces>
+          <segmentDelimiter>\r</segmentDelimiter>
+          <convertLineBreaks>true</convertLineBreaks>
+        </serializationProperties>
+        <deserializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties" version="3.5.1">
+          <useStrictParser>false</useStrictParser>
+          <useStrictValidation>false</useStrictValidation>
+          <segmentDelimiter>\r</segmentDelimiter>
+        </deserializationProperties>
+        <batchProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties" version="3.5.1">
+          <splitType>MSH_Segment</splitType>
+          <batchScript></batchScript>
+        </batchProperties>
+        <responseGenerationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties" version="3.5.1">
+          <segmentDelimiter>\r</segmentDelimiter>
+          <successfulACKCode>AA</successfulACKCode>
+          <successfulACKMessage></successfulACKMessage>
+          <errorACKCode>AE</errorACKCode>
+          <errorACKMessage>An Error Occured Processing Message.</errorACKMessage>
+          <rejectedACKCode>AR</rejectedACKCode>
+          <rejectedACKMessage>Message Rejected.</rejectedACKMessage>
+          <msh15ACKAccept>false</msh15ACKAccept>
+          <dateFormat>yyyyMMddHHmmss</dateFormat>
+        </responseGenerationProperties>
+        <responseValidationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties" version="3.5.1">
+          <successfulACKCode>AA,CA</successfulACKCode>
+          <errorACKCode>AE,CE</errorACKCode>
+          <rejectedACKCode>AR,CR</rejectedACKCode>
+          <validateMessageControlId>false</validateMessageControlId>
+          <originalMessageControlId>Destination_Encoded</originalMessageControlId>
+          <originalIdMapVariable></originalIdMapVariable>
+        </responseValidationProperties>
+      </inboundProperties>
+      <outboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.5.1">
+        <serializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties" version="3.5.1">
+          <handleRepetitions>true</handleRepetitions>
+          <handleSubcomponents>true</handleSubcomponents>
+          <useStrictParser>false</useStrictParser>
+          <useStrictValidation>false</useStrictValidation>
+          <stripNamespaces>true</stripNamespaces>
+          <segmentDelimiter>\r</segmentDelimiter>
+          <convertLineBreaks>true</convertLineBreaks>
+        </serializationProperties>
+        <deserializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties" version="3.5.1">
+          <useStrictParser>false</useStrictParser>
+          <useStrictValidation>false</useStrictValidation>
+          <segmentDelimiter>\r</segmentDelimiter>
+        </deserializationProperties>
+        <batchProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties" version="3.5.1">
+          <splitType>MSH_Segment</splitType>
+          <batchScript></batchScript>
+        </batchProperties>
+        <responseGenerationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties" version="3.5.1">
+          <segmentDelimiter>\r</segmentDelimiter>
+          <successfulACKCode>AA</successfulACKCode>
+          <successfulACKMessage></successfulACKMessage>
+          <errorACKCode>AE</errorACKCode>
+          <errorACKMessage>An Error Occured Processing Message.</errorACKMessage>
+          <rejectedACKCode>AR</rejectedACKCode>
+          <rejectedACKMessage>Message Rejected.</rejectedACKMessage>
+          <msh15ACKAccept>false</msh15ACKAccept>
+          <dateFormat>yyyyMMddHHmmss</dateFormat>
+        </responseGenerationProperties>
+        <responseValidationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties" version="3.5.1">
+          <successfulACKCode>AA,CA</successfulACKCode>
+          <errorACKCode>AE,CE</errorACKCode>
+          <rejectedACKCode>AR,CR</rejectedACKCode>
+          <validateMessageControlId>false</validateMessageControlId>
+          <originalMessageControlId>Destination_Encoded</originalMessageControlId>
+          <originalIdMapVariable></originalIdMapVariable>
+        </responseValidationProperties>
+      </outboundProperties>
+    </transformer>
+    <filter version="3.5.1">
+      <elements>
+        <com.mirth.connect.plugins.rulebuilder.RuleBuilderRule>
+          <name>Accept message if &quot;msg[&apos;MSH&apos;][&apos;MSH.9&apos;][&apos;MSH.9.1&apos;].toString()&quot; equals &quot;ADT&quot; or &quot;SIU&quot;</name>
+          <sequenceNumber>0</sequenceNumber>
+          <field>msg[&apos;MSH&apos;][&apos;MSH.9&apos;][&apos;MSH.9.1&apos;].toString()</field>
+          <condition>EQUALS</condition>
+          <values>
+            <string>&quot;ADT&quot;</string>
+            <string>&quot;SIU&quot;</string>
+          </values>
+        </com.mirth.connect.plugins.rulebuilder.RuleBuilderRule>
+        <com.mirth.connect.plugins.rulebuilder.RuleBuilderRule>
+          <name>Accept message if &quot;msg[&apos;MSH&apos;][&apos;MSH.9&apos;][&apos;MSH.9.2&apos;].toString()&quot; equals &quot;A01&quot; or &quot;A04&quot; or &quot;A08&quot; or &quot;A28&quot; or &quot;A31&quot; or &quot;S12&quot; or &quot;S13&quot; or &quot;S14&quot; or &quot;S15&quot; or &quot;S16&quot; or &quot;S17&quot; or &quot;S18&quot; or &quot;S19&quot; or &quot;S20&quot; or &quot;S22&quot;</name>
+          <sequenceNumber>1</sequenceNumber>
+          <operator>AND</operator>
+          <field>msg[&apos;MSH&apos;][&apos;MSH.9&apos;][&apos;MSH.9.2&apos;].toString()</field>
+          <condition>EQUALS</condition>
+          <values>
+            <string>&quot;A01&quot;</string>
+            <string>&quot;A04&quot;</string>
+            <string>&quot;A08&quot;</string>
+            <string>&quot;A28&quot;</string>
+            <string>&quot;A31&quot;</string>
+            <string>&quot;S12&quot;</string>
+            <string>&quot;S13&quot;</string>
+            <string>&quot;S14&quot;</string>
+            <string>&quot;S15&quot;</string>
+            <string>&quot;S16&quot;</string>
+            <string>&quot;S17&quot;</string>
+            <string>&quot;S18&quot;</string>
+            <string>&quot;S19&quot;</string>
+            <string>&quot;S20&quot;</string>
+            <string>&quot;S22&quot;</string>
+          </values>
+        </com.mirth.connect.plugins.rulebuilder.RuleBuilderRule>
+      </elements>
+    </filter>
+    <transportName>TCP Listener</transportName>
+    <mode>SOURCE</mode>
+    <enabled>true</enabled>
+    <waitForPrevious>true</waitForPrevious>
+  </sourceConnector>
+  <destinationConnectors>
+    <connector version="3.5.1">
+      <metaDataId>6</metaDataId>
+      <name>Javascript - PostgreSQL (postgreSQLServerHostName:5432)</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="3.5.1">
+        <pluginProperties/>
+        <destinationConnectorProperties version="3.5.1">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-map">
+            <entry>
+              <string>Default Resource</string>
+              <string>[Default Resource]</string>
+            </entry>
+          </resourceIds>
+          <queueBufferSize>1000</queueBufferSize>
+          <reattachAttachments>true</reattachAttachments>
+        </destinationConnectorProperties>
+        <script>/* 
+Created:	2018-05-31 JER
+Modified:
+
+*/
+
+var dbConn;
+var ChannelName=&quot;HL7_Inbound_MessageParsing&quot;;
+var Filename;
+
+//try {
+	// dbConn = DatabaseConnectionFactory.createDatabaseConnection(&apos;org.postgresql.Driver&apos;,&apos;jdbc:postgresql://mirth-connect-testing.cjrdhfkpku44.us-east-2.rds.amazonaws.com:5432/postgres&apos;,&apos;mirth&apos;,&apos;ja9J*s$vW!QOgGOPX6Rc&apos;);
+	// dbConn = DatabaseConnectionFactory.createDatabaseConnection(&apos;org.postgresql.Driver&apos;,&apos;jdbc:postgresql://localhost:5432/postgres&apos;,&apos;postgres&apos;,&apos;Pa55word&apos;);
+	dbConn = DatabaseConnectionFactory.createDatabaseConnection(configurationMap.get(&apos;postgreSQLDriverString&apos;),configurationMap.get(&apos;postgreSQLUrlHostString&apos;),configurationMap.get(&apos;postgreSQLUser&apos;),configurationMap.get(&apos;postgreSQLPassword&apos;));
+
+	var result= dbConn.executeUpdate(&quot;INSERT INTO \&quot;Mirth_Inbound\&quot;.\&quot;HL7_Message\&quot;(\&quot;sending_facility\&quot;,\&quot;Channel_MessageId\&quot;,\&quot;hl7message\&quot;,\&quot;createdondatetime\&quot;,\&quot;status\&quot;,\&quot;sending_application\&quot;,\&quot;file_name\&quot;,\&quot;data_direction\&quot;,\&quot;msh_id\&quot;) VALUES(&apos;&quot;+$(&apos;SendingFacility&apos;)+&quot;&apos;,&apos;&quot;+$(&apos;ChannelMessageId&apos;)+&quot;&apos;,&apos;&quot;+$(&apos;Message&apos;)+&quot;&apos;,&apos;&quot;+$(&apos;MessageDate&apos;)+&quot;&apos;,&apos;0&apos;,&apos;&quot;+$(&apos;SendingApplication&apos;)+&quot;&apos;,&apos;&quot;+$(&apos;originalFilename&apos;)+&quot;&apos;,&apos;in&apos;,&apos;&quot;+$(&apos;MessageControlId&apos;)+&quot;&apos;)&quot;);
+	
+    	var result = dbConn.executeCachedQuery(&quot;SELECT id AS HL7_InboundMessage_id,Sending_Facility AS HL7_InboundMessage_sourcename, \&quot;Channel_MessageId\&quot; AS hl7messageid, hl7message AS HL7_InboundMessage_hl7message, createdondatetime AS createdondatetime, status AS HL7_InboundMessage_status,sending_application AS HL7_InboundMessage_Application ,file_name AS HL7_File_Name FROM \&quot;Mirth_Inbound\&quot;.\&quot;HL7_Message\&quot; where status=0 and data_direction=&apos;in&apos; &quot;);
+     var resultSize = result.size();
+	
+	//	logger.info(&apos;result size in inbound parsing&apos;+ resultSize);
+	if(resultSize&gt;0){
+		for(var i = 0;i&lt;resultSize;i++){
+			result.next();
+			var id = result.getString(1);
+			var SourceName = result.getString(2);
+			var HL7_id=result.getString(3);
+			var entry = result.getString(1) + &quot;//&quot; + result.getString(4);
+			var msg =result.getString(4);
+			var SendingApplication =result.getString(7);
+			Filename =result.getString(8);
+			var msgXML = new XML(SerializerFactory.getHL7Serializer().toXML(msg));
+			insertPID();
+			insertNK1();
+			insertPV1();
+			insertIN1();
+			insertGT1();
+			insertNTE();
+			insertMSH();
+			insertEVN();
+		
+			logger.info(&quot;Row inbound parsing ==&gt;&quot; +entry);
+			var result2 = dbConn.executeUpdate(&quot;UPDATE \&quot;Mirth_Inbound\&quot;.\&quot;HL7_Message\&quot; SET status = 1 WHERE id=&quot;+id);
+        }
+	}
+
+	// You may access this result below with $(&apos;column_name&apos;)
+	return result;
+//}
+/*
+catch(ex){
+	var dateString = DateUtil.getCurrentDate(&apos;MM/dd/yyyy HH:mm:ss.hhh&apos;);
+	var result = dbConn.executeUpdate(&quot;INSERT INTO \&quot;Mirth_Inbound\&quot;.\&quot;HL7_Error_Log\&quot;(\&quot;Sending_Facility\&quot;,\&quot;Channel_Message_Id\&quot;,\&quot;Sending_Application\&quot;,\&quot;Error_Message\&quot;,\&quot;Error_DateTime\&quot;,\&quot;File_Name\&quot;,\&quot;Channel_Name\&quot;,\&quot;HL7_Message_Id\&quot;,data_direction)values (&apos;&quot;+SourceName+&quot;&apos;,&apos;&quot;+HL7_id+&quot;&apos;,&apos;&quot;+SendingApplication+&quot;&apos;,&apos;&quot;+ex+&quot;&apos;,&apos;&quot;+dateString+&quot;&apos;,&apos;&quot;+Filename+&quot;&apos;,&apos;&quot;+ChannelName+&quot;&apos;,&apos;&quot;+HL7_id+&quot;&apos;,&apos;in&apos;)&quot;);
+}
+
+finally {
+	if (dbConn) { 
+		
+		dbConn.close();
+	}
+}
+*/
+function insertPID()
+	{
+		
+	   for each (seg in msgXML..PID)
+        {
+        	
+		var PID_Set_ID = seg[&apos;PID.1&apos;][&apos;PID.1.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_External_ID = seg[&apos;PID.2&apos;][&apos;PID.2.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Internal_ID = seg[&apos;PID.3&apos;][&apos;PID.3.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	     var PID_Alt_Patient_ID = seg[&apos;PID.4&apos;][&apos;PID.4.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Last_Name = seg[&apos;PID.5&apos;][&apos;PID.5.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Suffix = seg[&apos;PID.5&apos;][&apos;PID.5.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_NameType = seg[&apos;PID.5&apos;][&apos;PID.5.7&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_First_Name = seg[&apos;PID.5&apos;][&apos;PID.5.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Middle_Name = seg[&apos;PID.5&apos;][&apos;PID.5.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Mother_Maiden_Name = seg[&apos;PID.6&apos;][&apos;PID.6.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_DOB = seg[&apos;PID.7&apos;][&apos;PID.7.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_SEX = seg[&apos;PID.8&apos;][&apos;PID.8.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Race = seg[&apos;PID.10&apos;][&apos;PID.10.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Race_Text = seg[&apos;PID.10&apos;][&apos;PID.10.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Street = seg[&apos;PID.11&apos;][&apos;PID.11.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Country = seg[&apos;PID.11&apos;][&apos;PID.11.6&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Phone = seg[&apos;PID.13&apos;][&apos;PID.13.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	     var PID_Apartment = seg[&apos;PID.11&apos;][&apos;PID.11.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	     var PID_City = seg[&apos;PID.11&apos;][&apos;PID.11.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	     var PID_State = seg[&apos;PID.11&apos;][&apos;PID.11.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	     var PID_Zip = seg[&apos;PID.11&apos;][&apos;PID.11.5&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	     var PID_Email = seg[&apos;PID.13&apos;][&apos;PID.13.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		 var PID_AreaCode = seg[&apos;PID.13&apos;][&apos;PID.13.6&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		 var PID_LocalNumber = seg[&apos;PID.13&apos;][&apos;PID.13.7&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	     var PID_Work_Email = seg[&apos;PID.14&apos;][&apos;PID.14.5&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		 var PID_Work_AreaCode = seg[&apos;PID.14&apos;][&apos;PID.14.6&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		 var PID_Work_LocalNumber = seg[&apos;PID.14&apos;][&apos;PID.14.7&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	     var PID_Phone1 = seg[&apos;PID.13&apos;][&apos;PID.13.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	     var PID_Phone2 = seg[&apos;PID.14&apos;][&apos;PID.14.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	     var PID_Account_No = seg[&apos;PID.18&apos;][&apos;PID.18.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_SSN = seg[&apos;PID.19&apos;][&apos;PID.19.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Ethnic_Group = seg[&apos;PID.22&apos;][&apos;PID.22.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Ethnic_Text = seg[&apos;PID.22&apos;][&apos;PID.22.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Birth_Place = seg[&apos;PID.23&apos;][&apos;PID.23.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Multiple_Birth_Indicator = seg[&apos;PID.24&apos;][&apos;PID.24.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Birth_Order = seg[&apos;PID.25&apos;][&apos;PID.25.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_Patient_Death_Date_and_Time = seg[&apos;PID.29&apos;][&apos;PID.29.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;)
+	    var PID_Patient_Death_Indicator = seg[&apos;PID.30&apos;][&apos;PID.30.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_PrimaryLanguage = seg[&apos;PID.15&apos;][&apos;PID.15.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		var PID_HL70005 = seg[&apos;PID.10&apos;][&apos;PID.10.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+        var PID_Address_Type = seg[&apos;PID.11&apos;][&apos;PID.11.7&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+        var PID_Home_PRN = seg[&apos;PID.13&apos;][&apos;PID.13.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+        var PID_Home_PH = seg[&apos;PID.13&apos;][&apos;PID.13.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+        var PID_Work_WPN = seg[&apos;PID.14&apos;][&apos;PID.14.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+        var PID_Work_PH = seg[&apos;PID.14&apos;][&apos;PID.14.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+        var PID_Languagetext = seg[&apos;PID.14&apos;][&apos;PID.14.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+        var PID_ISO0639 = seg[&apos;PID.15&apos;][&apos;PID.15.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+        var PID_HL70189 = seg[&apos;PID.22&apos;][&apos;PID.22.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+
+
+		
+	var result = dbConn.executeUpdate(&quot;INSERT INTO \&quot;Mirth_Inbound\&quot;.\&quot;HL7_PID_Segment\&quot;(\&quot;HL7_Message_Id\&quot;,\&quot;Channel_Message_Id\&quot;, \&quot;First_Name\&quot;,\&quot;Set_Id\&quot;,\&quot;Patient_Id_Bc\&quot;,\&quot;Patient_Id\&quot;,\&quot;Alternative_Patient_Id_Bc\&quot;,\&quot;Last_Name\&quot;,\&quot;Middle_Initial\&quot;,\&quot;Suffix\&quot;,\&quot;Name_Type\&quot;,\&quot;Mother’s_Maiden_Name\&quot;,\&quot;DOB\&quot;,\&quot;Sex\&quot;,\&quot;Race\&quot;,\&quot;Race_Text\&quot;,\&quot;Address_Line_1\&quot;,\&quot;Apartment\&quot;,\&quot;City\&quot;,\&quot;State\&quot;,\&quot;Zip_Code\&quot;,\&quot;Country\&quot;,\&quot;Home_Phone_Number\&quot;,\&quot;Email_Address\&quot;,\&quot;Area_Code\&quot;,\&quot;Local_Number\&quot;,\&quot;Work_Email_Address\&quot;,\&quot;Work_Phone_Number\&quot;,\&quot;Work_Area_Code\&quot;,\&quot;Work_Local_Number\&quot;,\&quot;Primary_Language\&quot;,\&quot;Birth_Place\&quot;,\&quot;Multiple_Birth_Indicator\&quot;,\&quot;Ethnic_Group\&quot;,\&quot;Ethnic_Text\&quot;,\&quot;Patient_Account_Number\&quot;,\&quot;SSN\&quot;,\&quot;Patient_Death_Indicator\&quot;,\&quot;Patient_Death_Date_And_Time\&quot;,\&quot;Sending_Facility\&quot;,\&quot;Sending_Application\&quot;,\&quot;HL70005\&quot;,\&quot;Address_Type\&quot;,\&quot;Home_PRN_PRS\&quot;,\&quot;Home_PH_CP_Internet\&quot;,\&quot;Work_WPN\&quot;,\&quot;Work_PH_Internet\&quot;,\&quot;Language_Text\&quot;,\&quot;ISOo639\&quot;,\&quot;HL70189\&quot;,data_direction) VALUES(&quot;+id+&quot;,&quot;+HL7_id+&quot;,&apos;&quot;+PID_First_Name+&quot;&apos; ,&apos;&quot;+PID_Set_ID+&quot;&apos;,&apos;&quot;+PID_External_ID+&quot;&apos;,&apos;&quot;+PID_Internal_ID+&quot;&apos;,&apos;&quot;+PID_Alt_Patient_ID+&quot;&apos;,&apos;&quot;+PID_Last_Name+&quot;&apos;,&apos;&quot;+PID_Middle_Name+&quot;&apos;,&apos;&quot;+PID_Suffix+&quot;&apos;,&apos;&quot;+PID_NameType+&quot;&apos;,&apos;&quot;+PID_Mother_Maiden_Name+&quot;&apos;,&apos;&quot;+PID_DOB+&quot;&apos;,&apos;&quot;+PID_SEX+&quot;&apos;,&apos;&quot;+PID_Race+&quot;&apos;,&apos;&quot;+PID_Race_Text+&quot;&apos;,&apos;&quot;+PID_Street+&quot;&apos;,&apos;&quot;+PID_Apartment+&quot;&apos;,&apos;&quot;+PID_City+&quot;&apos;,&apos;&quot;+PID_State+&quot;&apos;,&apos;&quot;+PID_Zip+&quot;&apos;,&apos;&quot;+PID_Country+&quot;&apos;,&apos;&quot;+PID_Phone1+&quot;&apos;,&apos;&quot;+PID_Email+&quot;&apos;,&apos;&quot;+PID_AreaCode+&quot;&apos;,&apos;&quot;+PID_LocalNumber+&quot;&apos;,&apos;&quot;+PID_Work_Email+&quot;&apos;,&apos;&quot;+PID_Phone2+&quot;&apos;,&apos;&quot;+PID_Work_AreaCode+&quot;&apos;,&apos;&quot;+PID_Work_LocalNumber+&quot;&apos;,&apos;&quot;+PID_PrimaryLanguage+&quot;&apos;,&apos;&quot;+PID_Birth_Place+&quot;&apos;,&apos;&quot;+PID_Multiple_Birth_Indicator+&quot;&apos;,&apos;&quot;+PID_Ethnic_Group+&quot;&apos;,&apos;&quot;+PID_Ethnic_Text+&quot;&apos;,&apos;&quot;+PID_Account_No+&quot;&apos;,&apos;&quot;+PID_SSN+&quot;&apos;,&apos;&quot;+PID_Patient_Death_Indicator+&quot;&apos;,&apos;&quot;+PID_Patient_Death_Date_and_Time+&quot;&apos;,&apos;&quot;+SourceName+&quot;&apos;,&apos;&quot;+SendingApplication+&quot;&apos;,&apos;&quot;+PID_HL70005+&quot;&apos;,&apos;&quot;+PID_Address_Type+&quot;&apos;,&apos;&quot;+PID_Home_PRN+&quot;&apos;,&apos;&quot;+PID_Home_PH+&quot;&apos;,&apos;&quot;+PID_Work_WPN+&quot;&apos;,&apos;&quot;+PID_Home_PH+&quot;&apos;,&apos;&quot;+PID_Languagetext+&quot;&apos;,&apos;&quot;+PID_ISO0639+&quot;&apos;,&apos;&quot;+PID_HL70189+&quot;&apos;,&apos;in&apos;)&quot;);
+
+		
+		
+	    
+	    }
+	}
+function insertNK1() {
+	
+  for each (seg in msgXML..NK1)
+       {
+		var NK1_Setid_Next_Of_Kin = seg[&apos;NK1.1&apos;][&apos;NK1.1.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var NK1_Next_Of_Kin_Last_Name = seg[&apos;NK1.2&apos;][&apos;NK1.2.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var NK1_Next_Of_Kin_First_Name = seg[&apos;NK1.2&apos;][&apos;NK1.2.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var NK1_Next_Of_Kin_Middle_Name = seg[&apos;NK1.2&apos;][&apos;NK1.2.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var NK1_Next_Of_Kin_Relationship = seg[&apos;NK1.3&apos;][&apos;NK1.3.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var NK1_Next_Of_Kin_Address = seg[&apos;NK1.4&apos;][&apos;NK1.4.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	  var NK1_Next_Of_Kin_Apartment = seg[&apos;NK1.4&apos;][&apos;NK1.4.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var NK1_Next_Of_Kin_City = seg[&apos;NK1.4&apos;][&apos;NK1.4.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var NK1_Next_Of_Kin_State_Code = seg[&apos;NK1.4&apos;][&apos;NK1.4.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var NK1_Next_Of_Kin_Zip = seg[&apos;NK1.4&apos;][&apos;NK1.4.5&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+        var NK1_Next_Of_Kin_Country = seg[&apos;NK1.4&apos;][&apos;NK1.4.6&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+        var NK1_Home_Phone_Number = seg[&apos;NK1.5&apos;][&apos;NK1.5.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var NK1_Home_Phone_Email = seg[&apos;NK1.5&apos;][&apos;NK1.5.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var NK1_RelatioshipText = seg[&apos;NK1.3&apos;][&apos;NK1.3.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var NK1_HL70063 = seg[&apos;NK1.3&apos;][&apos;NK1.3.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var NK1_PRN_or_PRS = seg[&apos;NK1.5&apos;][&apos;NK1.5.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+           
+         
+     var result = dbConn.executeUpdate(&quot;INSERT INTO \&quot;Mirth_Inbound\&quot;.\&quot;HL7_NK1_Segment\&quot;(\&quot;set_id\&quot;,\&quot;Last_Name\&quot; ,\&quot;First_Name\&quot;,\&quot;Middle_Name\&quot;,\&quot;Hl7_Relationship_Code\&quot;,\&quot;Address_Line_1\&quot;,\&quot;Apartment\&quot;,\&quot;City\&quot;,\&quot;State\&quot;,\&quot;zip_code\&quot;,\&quot;Country\&quot;,\&quot;Phone_Number\&quot;,\&quot;PH_or_CP Internet\&quot;,\&quot;HL7_Message_Id\&quot;,\&quot;Sending_Facility\&quot; ,\&quot;Channel_Message_Id\&quot;,\&quot;Sending_Application\&quot;,\&quot;Relationship_Text\&quot;,\&quot;HL70063\&quot;,\&quot;PRN_or_PRS\&quot;,data_direction)values (&apos;&quot;+NK1_Setid_Next_Of_Kin+&quot;&apos;,&apos;&quot;+NK1_Next_Of_Kin_Last_Name+&quot;&apos;,&apos;&quot;+NK1_Next_Of_Kin_First_Name+&quot;&apos;,&apos;&quot;+NK1_Next_Of_Kin_Middle_Name+&quot;&apos;,&apos;&quot; + NK1_Next_Of_Kin_Relationship + &quot;&apos;,&apos;&quot;+NK1_Next_Of_Kin_Address+&quot;&apos;,&apos;&quot;+NK1_Next_Of_Kin_Apartment +&quot;&apos;,&apos;&quot;+NK1_Next_Of_Kin_City+&quot;&apos;,&apos;&quot;+NK1_Next_Of_Kin_State_Code+&quot;&apos;,&apos;&quot;+NK1_Next_Of_Kin_Zip+&quot;&apos;,&apos;&quot;+NK1_Next_Of_Kin_Country +&quot;&apos;,&apos;&quot;+NK1_Home_Phone_Number+&quot;&apos;,&apos;&quot;+NK1_Home_Phone_Email+&quot;&apos;,&apos;&quot;+id+&quot;&apos;,&apos;&quot;+SourceName+&quot;&apos;,&apos;&quot;+HL7_id+&quot;&apos;,&apos;&quot;+SendingApplication+&quot;&apos;,&apos;&quot;+NK1_RelatioshipText+&quot;&apos;,&apos;&quot;+NK1_HL70063+&quot;&apos;,&apos;&quot;+NK1_PRN_or_PRS+&quot;&apos;,&apos;in&apos;)&quot;);
+          
+       }
+}
+       function insertPV1() {
+
+       for each (seg in msgXML..PV1)
+       {
+
+
+
+
+          var PV1_Set_ID_Patientid = seg[&apos;PV1.1&apos;][&apos;PV1.1.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var PV1_Patient_Class = seg[&apos;PV1.2&apos;][&apos;PV1.2.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var PV1_Point_Of_Care = seg[&apos;PV1.3&apos;][&apos;PV1.3.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          
+          var PV1_Attending_Doctor_NPIID = seg[&apos;PV1.7&apos;][&apos;PV1.7.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var PV1_Attending_Doctor_Last_Name = seg[&apos;PV1.7&apos;][&apos;PV1.7.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var PV1_Attending_Doctor_First_Name = seg[&apos;PV1.7&apos;][&apos;PV1.7.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var PV1_Attending_Doctor_Middle_Name = seg[&apos;PV1.7&apos;][&apos;PV1.7.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var PV1_Attending_Doctor_Degree = seg[&apos;PV1.7&apos;][&apos;PV1.7.7&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var PV1_Attending_Doctor_Professional_Suffix = seg[&apos;PV1.7&apos;][&apos;PV1.7.21&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  
+          var PV1_Visit_Number = seg[&apos;PV1.19&apos;][&apos;PV1.19.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          
+          var PV1_Servicing_Facility = seg[&apos;PV1.39&apos;][&apos;PV1.39.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var PV1_Admit_Date_Time = seg[&apos;PV1.44&apos;][&apos;PV1.44.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var PV1_Discharge_Date_Time = seg[&apos;PV1.45&apos;][&apos;PV1.45.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var PV1_Visit_Indicator = seg[&apos;PV1.51&apos;][&apos;PV1.51.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  
+		var result = dbConn.executeUpdate(&quot;INSERT INTO \&quot;Mirth_Inbound\&quot;.\&quot;HL7_PV1_Segment\&quot;(\&quot;Set_Id\&quot;,\&quot;PatientClass\&quot;, \&quot;Assigned_Location\&quot;,\&quot;Attending_Doctor\&quot;,\&quot;Last_Name\&quot;,\&quot;First_Name\&quot;,\&quot;Middle_Name\&quot;,\&quot;Degree\&quot;,\&quot;Professional_Suffix\&quot;,\&quot;Visitnumber\&quot;,\&quot;Servicing_Facility\&quot;,\&quot;Admit_Datetime\&quot;,\&quot;Discharge_Datetime\&quot;,\&quot;Visit_Indicator\&quot;,\&quot;HL7_Message_Id\&quot;,\&quot;Sending_Facility\&quot;,\&quot;Channel_Message_Id\&quot;,\&quot;Sending_Application\&quot;,data_direction) VALUES(&apos;&quot;+PV1_Set_ID_Patientid+&quot;&apos;,&apos;&quot;+PV1_Patient_Class+&quot;&apos;,&apos;&quot;+PV1_Point_Of_Care+&quot;&apos;,&apos;&quot;+PV1_Attending_Doctor_NPIID+&quot;&apos;,&apos;&quot;+PV1_Attending_Doctor_Last_Name+&quot;&apos;,&apos;&quot;+PV1_Attending_Doctor_First_Name+&quot;&apos;,&apos;&quot;+PV1_Attending_Doctor_Middle_Name+&quot;&apos;,&apos;&quot;+PV1_Attending_Doctor_Degree+&quot;&apos;,&apos;&quot;+PV1_Attending_Doctor_Professional_Suffix+&quot;&apos;,&apos;&quot;+PV1_Visit_Number+&quot;&apos;,&apos;&quot;+PV1_Servicing_Facility+&quot;&apos;,&apos;&quot;+PV1_Admit_Date_Time+&quot;&apos;,&apos;&quot;+PV1_Discharge_Date_Time+&quot;&apos;,&apos;&quot;+PV1_Visit_Indicator+&quot;&apos;,&apos;&quot;+id+&quot;&apos;,&apos;&quot;+SourceName+&quot;&apos;,&apos;&quot;+HL7_id+&quot;&apos;,&apos;&quot;+SendingApplication+&quot;&apos;,&apos;in&apos;)&quot;);
+
+       }
+
+
+      }
+      
+  function insertIN1() {
+     // for (var i = 0; i &lt; seg.length(); i++) 
+      for each (seg in msgXML..IN1)
+      {
+
+          var IN1_Setid_Insurance = seg[&apos;IN1.1&apos;][&apos;IN1.1.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_ID_Number = seg[&apos;IN1.2&apos;][&apos;IN1.2.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insurance_Company_Id = seg[&apos;IN1.3&apos;][&apos;IN1.3.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insurance_Company_Name = seg[&apos;IN1.4&apos;][&apos;IN1.4.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insurance_Company_Street = seg[&apos;IN1.5&apos;][&apos;IN1.5.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Insurance_Company_Street_2 = seg[&apos;IN1.5&apos;][&apos;IN1.5.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Insurance_Company_City     = seg[&apos;IN1.5&apos;][&apos;IN1.5.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Insurance_Company_State    = seg[&apos;IN1.5&apos;][&apos;IN1.5.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Insurance_Company_Zip      = seg[&apos;IN1.5&apos;][&apos;IN1.5.5&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Insurance_Company_Contact_Person = seg[&apos;IN1.6&apos;][&apos;IN1.6.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Insurance_Company_Contact_Phone_Number = seg[&apos;IN1.7&apos;][&apos;IN1.7.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insurance_Company_Contact_Email = seg[&apos;IN1.7&apos;][&apos;IN1.7.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Insurance_Company_Contact_Areacode = seg[&apos;IN1.7&apos;][&apos;IN1.7.6&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Insurance_Company_Contact_LocalNumber = seg[&apos;IN1.7&apos;][&apos;IN1.7.7&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Group_Number = seg[&apos;IN1.8&apos;][&apos;IN1.8.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Group_Name = seg[&apos;IN1.9&apos;][&apos;IN1.9.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Plan_Effective_Date = seg[&apos;IN1.12&apos;][&apos;IN1.12.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Plan_Expiration_Date = seg[&apos;IN1.13&apos;][&apos;IN1.13.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Authorization_Number = seg[&apos;IN1.14&apos;][&apos;IN1.14.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Authorization_Date = seg[&apos;IN1.14&apos;][&apos;IN1.14.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Plan_Type = seg[&apos;IN1.15&apos;][&apos;IN1.15.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insured_Last_Name = seg[&apos;IN1.16&apos;][&apos;IN1.16.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insured_First_Name = seg[&apos;IN1.16&apos;][&apos;IN1.16.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insured_Middle_Name = seg[&apos;IN1.16&apos;][&apos;IN1.16.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Insured_Suffix = seg[&apos;IN1.16&apos;][&apos;IN1.16.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insured_Relationship_Code = seg[&apos;IN1.17&apos;][&apos;IN1.17.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Insured_Relationship_Text = seg[&apos;IN1.17&apos;][&apos;IN1.17.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var IN1_Insured_DOB = seg[&apos;IN1.18&apos;][&apos;IN1.18.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insured_Street = seg[&apos;IN1.19&apos;][&apos;IN1.19.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insured_City  = seg[&apos;IN1.19&apos;][&apos;IN1.19.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insured_State  = seg[&apos;IN1.19&apos;][&apos;IN1.19.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insured_Zip = seg[&apos;IN1.19&apos;][&apos;IN1.19.5&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insured_Policy_Number  = seg[&apos;IN1.36&apos;][&apos;IN1.36.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Policy_Deductable = seg[&apos;IN1.37&apos;][&apos;IN1.37.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Insureds_Sex  = seg[&apos;IN1.43&apos;][&apos;IN1.43.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Signature_Code  = seg[&apos;IN1.50&apos;][&apos;IN1.50.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Signature_Code_Date  = seg[&apos;IN1.42&apos;][&apos;IN1.42.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_Coordination_Of_Number  = seg[&apos;IN1.22&apos;][&apos;IN1.22.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_WPN  = seg[&apos;IN1.7&apos;][&apos;IN1.7.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_PH_FX_Internet  = seg[&apos;IN1.7&apos;][&apos;IN1.7.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var IN1_HL70063  = seg[&apos;IN1.7&apos;][&apos;IN1.7.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          
+
+        var result = dbConn.executeUpdate(&quot;INSERT INTO \&quot;Mirth_Inbound\&quot;.\&quot;HL7_IN1_Segment\&quot;(\&quot;Set_Id\&quot;,\&quot;Insurance_Plan_Id\&quot;,\&quot;Insurance_Company_Id\&quot;,\&quot;Insurance_Company_Name\&quot;,\&quot;Street_Line_1\&quot;,\&quot;Street_Line_2_And_Suite_Number\&quot;,\&quot;City\&quot;,\&quot;State\&quot;,\&quot;Zip_Code\&quot;,\&quot;Insurance_Company_Contact_Person\&quot;,\&quot;Insurance_Company_Contact_Phonenumber\&quot;,\&quot;Email_Address\&quot;,\&quot;Area_Code\&quot;,\&quot;Local_Number\&quot;,\&quot;HL7_Message_Id\&quot;,\&quot;Sending_Facility\&quot;,\&quot;Channel_Message_Id\&quot;,\&quot;Group_Number\&quot;,\&quot;Group_Name\&quot;,\&quot;Plan_Effective_Date\&quot;,\&quot;Plan_Expiration_Date\&quot;,\&quot;Authorization_Number\&quot;,\&quot;Authorization_Date\&quot;,\&quot;Plantype\&quot;,\&quot;Insured’s_Last_Name\&quot;,\&quot;First_Name\&quot;,\&quot;Second_Or_Further_Given_Name\&quot;,\&quot;Suffix\&quot;,\&quot;Relationship_Code\&quot;,\&quot;Relationship_Text\&quot;,\&quot;Insurde’s_DOB\&quot;,\&quot;Insurde’s_Address_Street\&quot;,\&quot;Insurde’s_City\&quot;,\&quot;Insurde’s_State\&quot;,\&quot;Insurde’s_Zip_Code\&quot;,\&quot;Coordination_Of_Benifits\&quot;,\&quot;Policy_Number\&quot;,\&quot;Policy_Deductible\&quot;,\&quot;Insurde’s_Sex\&quot;,\&quot;Signature_Code\&quot;,\&quot;Signature_Date\&quot;,\&quot;Sending_Application\&quot;,\&quot;WPN\&quot;,\&quot;PH_FX_Internet\&quot;,\&quot;HL70063\&quot;,data_direction)VALUES(&apos;&quot;+IN1_Setid_Insurance+&quot;&apos;,&apos;&quot;+IN1_ID_Number+&quot;&apos;,&apos;&quot;+IN1_Insurance_Company_Id+&quot;&apos;,&apos;&quot;+IN1_Insurance_Company_Name+&quot;&apos;,&apos;&quot;+IN1_Insurance_Company_Street+&quot;&apos;,&apos;&quot;+IN1_Insurance_Company_Street_2+&quot;&apos;,&apos;&quot;+IN1_Insurance_Company_City+&quot;&apos;,&apos;&quot;+IN1_Insurance_Company_State+&quot;&apos;,&apos;&quot;+IN1_Insurance_Company_Zip+&quot;&apos;,&apos;&quot;+IN1_Insurance_Company_Contact_Person+&quot;&apos;,&apos;&quot;+IN1_Insurance_Company_Contact_Phone_Number+&quot;&apos;,&apos;&quot;+IN1_Insurance_Company_Contact_Email+&quot;&apos;,&apos;&quot;+IN1_Insurance_Company_Contact_Areacode+&quot;&apos;,&apos;&quot;+IN1_Insurance_Company_Contact_LocalNumber+&quot;&apos;,&apos;&quot;+id+&quot;&apos;,&apos;&quot;+SourceName+&quot;&apos;,&apos;&quot;+HL7_id+&quot;&apos;,&apos;&quot;+IN1_Group_Number+&quot;&apos;,&apos;&quot;+IN1_Group_Name+&quot;&apos;,&apos;&quot;+IN1_Plan_Effective_Date+&quot;&apos;,&apos;&quot;+IN1_Plan_Expiration_Date+&quot;&apos;,&apos;&quot;+IN1_Authorization_Number+&quot;&apos;,&apos;&quot;+IN1_Authorization_Date+&quot;&apos;,&apos;&quot;+IN1_Plan_Type+&quot;&apos;,&apos;&quot;+IN1_Insured_Last_Name+&quot;&apos;,&apos;&quot;+IN1_Insured_First_Name+&quot;&apos;,&apos;&quot;+IN1_Insured_Middle_Name+&quot;&apos;,&apos;&quot;+IN1_Insured_Suffix+&quot;&apos;,&apos;&quot;+IN1_Insured_Relationship_Code+&quot;&apos;,&apos;&quot;+IN1_Insured_Relationship_Text+&quot;&apos;,&apos;&quot;+IN1_Insured_DOB+&quot;&apos;,&apos;&quot;+IN1_Insured_Street+&quot;&apos;,&apos;&quot;+IN1_Insured_City+&quot;&apos;,&apos;&quot;+IN1_Insured_State+&quot;&apos;,&apos;&quot;+IN1_Insured_Zip+&quot;&apos;,&apos;&quot;+IN1_Coordination_Of_Number+&quot;&apos;,&apos;&quot;+IN1_Insured_Policy_Number+&quot;&apos;,&apos;&quot;+IN1_Policy_Deductable+&quot;&apos;,&apos;&quot;+IN1_Insureds_Sex+&quot;&apos;,&apos;&quot;+IN1_Signature_Code+&quot;&apos;,&apos;&quot;+IN1_Signature_Code_Date+&quot;&apos;,&apos;&quot;+SendingApplication+&quot;&apos;,&apos;&quot;+IN1_WPN+&quot;&apos;,&apos;&quot;+IN1_PH_FX_Internet+&quot;&apos;,&apos;&quot;+IN1_HL70063+&quot;&apos;,&apos;in&apos;)&quot;);
+
+
+
+      }
+      
+  }
+  function insertGT1()
+ 
+  {
+     
+      for each (seg in msgXML..GT1)
+       {
+          var GT1_Setid_Guarantor = seg[&apos;GT1.1&apos;][&apos;GT1.1.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var GT1_Guarantor_Number = seg[&apos;GT1.2&apos;][&apos;GT1.2.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var GT1_Guarantor_Last_Name = seg[&apos;GT1.3&apos;][&apos;GT1.3.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var GT1_Guarantor_First_Name = seg[&apos;GT1.3&apos;][&apos;GT1.3.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var GT1_Guarantor_Middle_Name = seg[&apos;GT1.3&apos;][&apos;GT1.3.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var GT1_Guarantor_Suffix = seg[&apos;GT1.3&apos;][&apos;GT1.3.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var GT1_Guarantor_NameType = seg[&apos;GT1.3&apos;][&apos;GT1.3.7&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var GT1_Guarantor_Address1 = seg[&apos;GT1.5&apos;][&apos;GT1.5.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var GT1_Guarantor_Address2 = seg[&apos;GT1.5&apos;][&apos;GT1.5.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var GT1_Gurantor_City = seg[&apos;GT1.5&apos;][&apos;GT1.5.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var GT1_Gurantor_State = seg[&apos;GT1.5&apos;][&apos;GT1.5.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var GT1_Gurantor_Zip = seg[&apos;GT1.5&apos;][&apos;GT1.5.5&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var GT1_Gurantor_Country = seg[&apos;GT1.5&apos;][&apos;GT1.5.6&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var GT1_Gurantor_Home_Phone_Number = seg[&apos;GT1.6&apos;][&apos;GT1.6.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var GT1_Gurantor_Home_EmailAddress = seg[&apos;GT1.6&apos;][&apos;GT1.6.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var GT1_Gurantor_AreaCode= seg[&apos;GT1.6&apos;][&apos;GT1.6.6&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var GT1_Gurantor_LocalNumber= seg[&apos;GT1.6&apos;][&apos;GT1.6.7&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var GT1_Gurantor_Business_Phone_Number = seg[&apos;GT1.7&apos;][&apos;GT1.7.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var GT1_Gurantor_Business_EmailAddress = seg[&apos;GT1.7&apos;][&apos;GT1.7.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var GT1_Gurantor_Business_AreaCode= seg[&apos;GT1.7&apos;][&apos;GT1.7.6&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var GT1_Gurantor_Business_LocalNumber= seg[&apos;GT1.7&apos;][&apos;GT1.7.7&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var GT1_Gurantor_DOB = seg[&apos;GT1.8&apos;][&apos;GT1.8.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  
+		  var GT1_Gurantor_Sex = seg[&apos;GT1.9&apos;][&apos;GT1.9.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var GT1_Relationship_Id = seg[&apos;GT1.11&apos;][&apos;GT1.11.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var GT1_Relationship_Text = seg[&apos;GT1.11&apos;][&apos;GT1.11.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+		  var GT1_Relationship_Coding_System = seg[&apos;GT1.11&apos;][&apos;GT1.11.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+          var GT1_Gurantor_SSN = seg[&apos;GT1.12&apos;][&apos;GT1.12.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+       var GT1_Gurtantor_Employer_Address = seg[&apos;GT1.17&apos;][&apos;GT1.17.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Gurtantor_Employer_City = seg[&apos;GT1.17&apos;][&apos;GT1.17.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Gurtantor_Employer_State = seg[&apos;GT1.17&apos;][&apos;GT1.17.4&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Gurtantor_Employer_Zip = seg[&apos;GT1.17&apos;][&apos;GT1.17.5&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   
+	   var GT1_Gurtantor_Employer_Phone = seg[&apos;GT1.18&apos;][&apos;GT1.17.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Gurtantor_Marital_Status = seg[&apos;GT1.30&apos;][&apos;GT1.30.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Gurtantor_Primary_Language = seg[&apos;GT1.36&apos;][&apos;GT1.36.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Gurtantor_Language_Text = seg[&apos;GT1.36&apos;][&apos;GT1.36.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Motherss_Maiden_Name = seg[&apos;GT1.42&apos;][&apos;GT1.42.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Gurtantor_Ethinic_Group = seg[&apos;GT1.44&apos;][&apos;GT1.44.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Gurtantor_Ethinic_Text = seg[&apos;GT1.44&apos;][&apos;GT1.44.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Contact_Persons_Name = seg[&apos;GT1.45&apos;][&apos;GT1.45.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Contact_Persons_Phone = seg[&apos;GT1.46&apos;][&apos;GT1.46.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Contact_Relationship = seg[&apos;GT1.48&apos;][&apos;GT1.48.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Gurtantor_Employer_organization = seg[&apos;GT1.51&apos;][&apos;GT1.51.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Race = seg[&apos;GT1.55&apos;][&apos;GT1.55.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Race_Text = seg[&apos;GT1.55&apos;][&apos;GT1.55.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Gurtantor_Birth_Place = seg[&apos;GT1.56&apos;][&apos;GT1.56.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Gurtantor_Birth_Place = seg[&apos;GT1.56&apos;][&apos;GT1.56.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	   var GT1_Home_PRN_PRS = seg[&apos;GT1.6&apos;][&apos;GT1.6.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	    var GT1_Home_PH = seg[&apos;GT1.6&apos;][&apos;GT1.6.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	    var GT1_WPN = seg[&apos;GT1.7&apos;][&apos;GT1.7.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	    var GT1_LanguageText = seg[&apos;GT1.36&apos;][&apos;GT1.36.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	    var GT1_ISOO639 = seg[&apos;GT1.36&apos;][&apos;GT1.36.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	    var GT1_HL70187 = seg[&apos;GT1.44&apos;][&apos;GT1.44.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	     var GT1_HL70005 = seg[&apos;GT1.55&apos;][&apos;GT1.55.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	     var GT1_PH_Internet = seg[&apos;GT1.7&apos;][&apos;GT1.7.3&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+
+          
+         var result = dbConn.executeUpdate(&quot;INSERT INTO \&quot;Mirth_Inbound\&quot;.\&quot;HL7_GT1_Segment\&quot;(\&quot;Set_Id\&quot;,\&quot;Patient_Id_Bc\&quot;,\&quot;Last_Name\&quot;,\&quot;First_Name\&quot;,\&quot;Middle_Initial\&quot;,\&quot;Suffix\&quot;,\&quot;Name_Type\&quot;,\&quot;Address_Line_1\&quot;,\&quot;Apartment\&quot;,\&quot;City\&quot;,\&quot;State\&quot;,\&quot;Zip_Code\&quot;,\&quot;Country\&quot;,\&quot;Home_Phone_Number\&quot;,\&quot;Email_Address\&quot;,\&quot;Area_Code\&quot;,\&quot;Local_Number\&quot;,\&quot;Work_Phone_Number\&quot;,\&quot;Work_Email_Address\&quot;,\&quot;Work_Area_Code\&quot;,\&quot;Work_Local_Number\&quot;,\&quot;Guarantor_Employee_Address_Street\&quot;,\&quot;Guarantor_Gmployee_Address_City\&quot;,\&quot;Guarantor_Employee_Address_State\&quot;,\&quot;Guarantor_Employee_Address_Zip\&quot;,\&quot;Guarantor_Employee_Phone\&quot;,\&quot;Guarantor_Martial_Status\&quot;,\&quot;Primary_Language\&quot;,\&quot;Contact_Person_Name\&quot;,\&quot;Contact_Person_Phone\&quot;,\&quot;Ethnic_Group\&quot;,\&quot;Ethnic_Text\&quot;,\&quot;Contact_Relationship\&quot;,\&quot;SSN\&quot;,\&quot;Guarantor_Employer’s_Organization_Name\&quot;,\&quot;Guarantor_Birthplace\&quot;,\&quot;Race\&quot;,\&quot;Race_Text\&quot;,\&quot;HL7_Message_Id\&quot;,\&quot;Sending_Facility\&quot;,\&quot;Channel_Message_Id\&quot;,\&quot;Mother’s_Maiden_Name\&quot;,\&quot;Sex\&quot;,\&quot;Identifier\&quot;,\&quot;Text\&quot;,\&quot;Coding_System\&quot;,\&quot;Sending_Application\&quot;,\&quot;Home_PRN_PRS\&quot;,\&quot;Home_PH_CP_Internet\&quot;,\&quot;Work_WPN\&quot;,\&quot;Language_Text\&quot;,\&quot;ISO0639\&quot;,\&quot;HL70187\&quot;,\&quot;HL70005\&quot;,\&quot;Work_PH_Internet\&quot;,data_direction)VALUES(&apos;&quot;+GT1_Setid_Guarantor+&quot;&apos;,&apos;&quot;+GT1_Guarantor_Number+&quot;&apos;,&apos;&quot;+GT1_Guarantor_Last_Name+&quot;&apos;,&apos;&quot;+GT1_Guarantor_First_Name+&quot;&apos;,&apos;&quot;+GT1_Guarantor_Middle_Name+&quot;&apos;,&apos;&quot;+GT1_Guarantor_Suffix +&quot;&apos;,&apos;&quot;+GT1_Guarantor_NameType+&quot;&apos;,&apos;&quot;+GT1_Guarantor_Address1+&quot;&apos;,&apos;&quot;+GT1_Guarantor_Address2+&quot;&apos;,&apos;&quot;+GT1_Gurantor_City+&quot;&apos;,&apos;&quot;+GT1_Gurantor_State+&quot;&apos;,&apos;&quot;+GT1_Gurantor_Zip+&quot;&apos;,&apos;&quot;+GT1_Gurantor_Country+&quot;&apos;,&apos;&quot;+GT1_Gurantor_Home_Phone_Number+&quot;&apos;,&apos;&quot;+GT1_Gurantor_Home_EmailAddress+&quot;&apos;,&apos;&quot;+GT1_Gurantor_AreaCode+&quot;&apos;,&apos;&quot;+GT1_Gurantor_LocalNumber+&quot;&apos;,&apos;&quot;+GT1_Gurantor_Business_Phone_Number+&quot;&apos;,&apos;&quot;+GT1_Gurantor_Business_EmailAddress+&quot;&apos;,&apos;&quot;+GT1_Gurantor_Business_AreaCode+&quot;&apos;,&apos;&quot;+GT1_Gurantor_Business_LocalNumber+&quot;&apos;,&apos;&quot;+GT1_Gurtantor_Employer_Address+&quot;&apos;,&apos;&quot;+GT1_Gurtantor_Employer_City+&quot;&apos;,&apos;&quot;+GT1_Gurtantor_Employer_State+&quot;&apos;,&apos;&quot;+GT1_Gurtantor_Employer_Zip+&quot;&apos;,&apos;&quot;+GT1_Gurtantor_Employer_Phone+&quot;&apos;,&apos;&quot;+GT1_Gurtantor_Marital_Status+&quot;&apos;,&apos;&quot;+GT1_Gurtantor_Primary_Language+&quot;&apos;,&apos;&quot;+GT1_Contact_Persons_Name+&quot;&apos;,&apos;&quot;+GT1_Contact_Persons_Phone+&quot;&apos;,&apos;&quot;+GT1_Gurtantor_Ethinic_Group+&quot;&apos;,&apos;&quot;+GT1_Gurtantor_Ethinic_Text+&quot;&apos;,&apos;&quot;+GT1_Contact_Relationship+&quot;&apos;,&apos;&quot;+GT1_Gurantor_SSN+&quot;&apos;,&apos;&quot;+GT1_Gurtantor_Employer_organization+&quot;&apos;,&apos;&quot;+GT1_Gurtantor_Birth_Place+&quot;&apos;,&apos;&quot;+GT1_Race+&quot;&apos;,&apos;&quot;+GT1_Race_Text+&quot;&apos;,&apos;&quot;+id+&quot;&apos;,&apos;&quot;+SourceName+&quot;&apos;,&apos;&quot;+HL7_id+&quot;&apos;,&apos;&quot;+GT1_Motherss_Maiden_Name+&quot;&apos;,&apos;&quot;+GT1_Gurantor_Sex+&quot;&apos;,&apos;&quot;+GT1_Relationship_Id+&quot;&apos;,&apos;&quot;+GT1_Relationship_Text+&quot;&apos;,&apos;&quot;+GT1_Relationship_Coding_System+&quot;&apos;,&apos;&quot;+SendingApplication+&quot;&apos;,&apos;&quot;+GT1_Home_PRN_PRS+&quot;&apos;,&apos;&quot;+GT1_Home_PH+&quot;&apos;,&apos;&quot;+GT1_WPN+&quot;&apos;,&apos;&quot;+GT1_LanguageText+&quot;&apos;,&apos;&quot;+GT1_ISOO639+&quot;&apos;,&apos;&quot;+GT1_HL70187+&quot;&apos;,&apos;&quot;+GT1_HL70005+&quot;&apos;,&apos;&quot;+GT1_PH_Internet+&quot;&apos;,&apos;in&apos;)&quot;);
+         
+
+       }     
+
+      }
+ function insertNTE()
+ {
+
+for each (seg in msgXML..NTE)
+ {
+     var NTE_Setid = seg[&apos;NTE.1&apos;][&apos;NTE.1.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	 var NTE_Comment = seg[&apos;NTE.3&apos;][&apos;NTE.3.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	 logger.info(&apos;NTE_Set_iD: &apos;+NTE_Setid);
+	 logger.info(&apos;NTE_Comment: &apos;+NTE_Comment);
+     
+ 
+    var result = dbConn.executeUpdate(&quot;INSERT INTO \&quot;Mirth_Inbound\&quot;.\&quot;HL7_NTE_Segment\&quot;(\&quot;Set_id\&quot;,\&quot;Comment\&quot;,\&quot;HL7_Message_Id\&quot;,\&quot;Sending_Facility\&quot;,\&quot;Channel_Message_Id\&quot;,\&quot;Sending_Application\&quot;,data_direction)values (&apos;&quot;+NTE_Setid+&quot;&apos;,&apos;&quot;+NTE_Comment+&quot;&apos;,&apos;&quot;+id+&quot;&apos;,&apos;&quot;+SourceName+&quot;&apos;,&apos;&quot;+HL7_id+&quot;&apos;,&apos;&quot;+SendingApplication+&quot;&apos;,&apos;in&apos;)&quot;);
+ }
+ }
+
+function insertMSH()
+{
+	 
+     for each (seg in msgXML..MSH)
+      {
+	var MSH_Field_Separator = seg[&apos;MSH.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	var MSH_Encoding_Characters = seg[&apos;MSH.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	var MSH_Sending_Application = seg[&apos;MSH.3&apos;][&apos;MSH.3.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	var MSH_Sending_Facility  = seg[&apos;MSH.4&apos;][&apos;MSH.4.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	var MSH_Receiving_Application = seg[&apos;MSH.5&apos;][&apos;MSH.5.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	var MSH_Receiving_Facility = seg[&apos;MSH.6&apos;][&apos;MSH.6.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	var MSH_Msg_DateTime = seg[&apos;MSH.7&apos;][&apos;MSH.7.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	
+	var MSH_Msg_Type = seg[&apos;MSH.9&apos;][&apos;MSH.9.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	
+	var MSH_Msg_Ctrl_Id = seg[&apos;MSH.10&apos;][&apos;MSH.10.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	var MSH_Processing_Type = seg[&apos;MSH.11&apos;][&apos;MSH.11.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	var MSH_Version_Id = seg[&apos;MSH.12&apos;][&apos;MSH.12.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	
+	var MSH_Accept_Ack_Type_ID = seg[&apos;MSH.15&apos;][&apos;MSH.15.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	var MSH_Application_Ack_Type = seg[&apos;MSH.16&apos;][&apos;MSH.16.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	
+	var MSH_Organization_Name = seg[&apos;MSH.22&apos;][&apos;MSH.22.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	var MSH_Type_Code = seg[&apos;MSH.22&apos;][&apos;MSH.22.2&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	
+
+	var result = dbConn.executeUpdate(&quot;INSERT INTO \&quot;Mirth_Inbound\&quot;.\&quot;HL7_MSH_Segment\&quot;(\&quot;Field_Separator\&quot;,\&quot;Encoding_Character\&quot;,\&quot;HL7_Message_Id\&quot;,\&quot;Channel_Message_Id\&quot;,\&quot;Sending_Application\&quot;,\&quot;Sending_Facility\&quot;,\&quot;Receiving_Application\&quot;,\&quot;Datetime\&quot;,\&quot;Message_Type\&quot;,\&quot;Messagecontrol_Id\&quot;,\&quot;Processing_Id\&quot;,\&quot;Version_Id\&quot;,\&quot;Accept_Acknowledgement_Type\&quot;,\&quot;Application_Acknowledgement_Type\&quot;,\&quot;Organization_Name\&quot;,\&quot;Type_Code\&quot;,data_direction) VALUES(&apos;&quot;+MSH_Field_Separator+&quot;&apos;,&apos;&quot;+MSH_Encoding_Characters+&quot;&apos;,&apos;&quot;+id+&quot;&apos;,&apos;&quot;+HL7_id+&quot;&apos;,&apos;&quot;+MSH_Sending_Application+&quot;&apos;,&apos;&quot;+MSH_Sending_Facility+&quot;&apos;,&apos;&quot;+MSH_Receiving_Application+&quot;&apos;,&apos;&quot;+MSH_Msg_DateTime+&quot;&apos;,&apos;&quot;+MSH_Msg_Type+&quot;&apos;,&apos;&quot;+MSH_Msg_Ctrl_Id+&quot;&apos;,&apos;&quot;+MSH_Processing_Type+&quot;&apos;,&apos;&quot;+MSH_Version_Id+&quot;&apos;,&apos;&quot;+MSH_Application_Ack_Type+&quot;&apos;,&apos;&quot;+MSH_Accept_Ack_Type_ID+&quot;&apos;,&apos;&quot;+MSH_Organization_Name+&quot;&apos;,&apos;&quot;+MSH_Type_Code+&quot;&apos;,&apos;in&apos;)&quot;);
+
+	
+      }
+}
+function insertEVN()
+ {
+ 
+for each (seg in msgXML..EVN)
+{
+     var EVN_Event_Type_Code = seg[&apos;EVN.1&apos;][&apos;EVN.1.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+     var EVN_Date_Time_Of_Event = seg[&apos;EVN.2&apos;][&apos;EVN.2.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+	 var EVN_Operator_Id = seg[&apos;EVN.5&apos;][&apos;EVN.5.1&apos;].toString().replace(&quot;&apos;&quot;,&quot;&apos;&apos;&quot;);
+
+    var result = dbConn.executeUpdate(&quot;INSERT INTO \&quot;Mirth_Inbound\&quot;.\&quot;HL7_EVN_Segment\&quot;(\&quot;Event_Type_Code\&quot;,\&quot;Recorded_Datetime\&quot;,\&quot;Operator_Id\&quot;,\&quot;HL7_Message_Id\&quot;,\&quot;Sending_Facility\&quot;,\&quot;Channel_Message_Id\&quot;,\&quot;Sending_Application\&quot;,data_direction)values (&apos;&quot;+EVN_Event_Type_Code+&quot;&apos;,&apos;&quot;+EVN_Date_Time_Of_Event+&quot;&apos;,&apos;&quot;+EVN_Operator_Id+&quot;&apos;,&apos;&quot;+id+&quot;&apos;,&apos;&quot;+SourceName+&quot;&apos;,&apos;&quot;+HL7_id+&quot;&apos;,&apos;&quot;+SendingApplication+&quot;&apos;,&apos;in&apos;)&quot;);
+}
+ 
+}</script>
+      </properties>
+      <transformer version="3.5.1">
+        <elements/>
+        <inboundTemplate encoding="base64"></inboundTemplate>
+        <outboundTemplate encoding="base64"></outboundTemplate>
+        <inboundDataType>HL7V2</inboundDataType>
+        <outboundDataType>HL7V2</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.5.1">
+          <serializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties" version="3.5.1">
+            <handleRepetitions>true</handleRepetitions>
+            <handleSubcomponents>true</handleSubcomponents>
+            <useStrictParser>false</useStrictParser>
+            <useStrictValidation>false</useStrictValidation>
+            <stripNamespaces>true</stripNamespaces>
+            <segmentDelimiter>\r</segmentDelimiter>
+            <convertLineBreaks>true</convertLineBreaks>
+          </serializationProperties>
+          <deserializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties" version="3.5.1">
+            <useStrictParser>false</useStrictParser>
+            <useStrictValidation>false</useStrictValidation>
+            <segmentDelimiter>\r</segmentDelimiter>
+          </deserializationProperties>
+          <batchProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties" version="3.5.1">
+            <splitType>MSH_Segment</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+          <responseGenerationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties" version="3.5.1">
+            <segmentDelimiter>\r</segmentDelimiter>
+            <successfulACKCode>AA</successfulACKCode>
+            <successfulACKMessage></successfulACKMessage>
+            <errorACKCode>AE</errorACKCode>
+            <errorACKMessage>An Error Occurred Processing Message.</errorACKMessage>
+            <rejectedACKCode>AR</rejectedACKCode>
+            <rejectedACKMessage>Message Rejected.</rejectedACKMessage>
+            <msh15ACKAccept>false</msh15ACKAccept>
+            <dateFormat>yyyyMMddHHmmss.SSS</dateFormat>
+          </responseGenerationProperties>
+          <responseValidationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties" version="3.5.1">
+            <successfulACKCode>AA,CA</successfulACKCode>
+            <errorACKCode>AE,CE</errorACKCode>
+            <rejectedACKCode>AR,CR</rejectedACKCode>
+            <validateMessageControlId>true</validateMessageControlId>
+            <originalMessageControlId>Destination_Encoded</originalMessageControlId>
+            <originalIdMapVariable></originalIdMapVariable>
+          </responseValidationProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.5.1">
+          <serializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties" version="3.5.1">
+            <handleRepetitions>true</handleRepetitions>
+            <handleSubcomponents>true</handleSubcomponents>
+            <useStrictParser>false</useStrictParser>
+            <useStrictValidation>false</useStrictValidation>
+            <stripNamespaces>true</stripNamespaces>
+            <segmentDelimiter>\r</segmentDelimiter>
+            <convertLineBreaks>true</convertLineBreaks>
+          </serializationProperties>
+          <deserializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties" version="3.5.1">
+            <useStrictParser>false</useStrictParser>
+            <useStrictValidation>false</useStrictValidation>
+            <segmentDelimiter>\r</segmentDelimiter>
+          </deserializationProperties>
+          <batchProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties" version="3.5.1">
+            <splitType>MSH_Segment</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+          <responseGenerationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties" version="3.5.1">
+            <segmentDelimiter>\r</segmentDelimiter>
+            <successfulACKCode>AA</successfulACKCode>
+            <successfulACKMessage></successfulACKMessage>
+            <errorACKCode>AE</errorACKCode>
+            <errorACKMessage>An Error Occurred Processing Message.</errorACKMessage>
+            <rejectedACKCode>AR</rejectedACKCode>
+            <rejectedACKMessage>Message Rejected.</rejectedACKMessage>
+            <msh15ACKAccept>false</msh15ACKAccept>
+            <dateFormat>yyyyMMddHHmmss.SSS</dateFormat>
+          </responseGenerationProperties>
+          <responseValidationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties" version="3.5.1">
+            <successfulACKCode>AA,CA</successfulACKCode>
+            <errorACKCode>AE,CE</errorACKCode>
+            <rejectedACKCode>AR,CR</rejectedACKCode>
+            <validateMessageControlId>true</validateMessageControlId>
+            <originalMessageControlId>Destination_Encoded</originalMessageControlId>
+            <originalIdMapVariable></originalIdMapVariable>
+          </responseValidationProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="3.5.1">
+        <elements/>
+        <inboundDataType>HL7V2</inboundDataType>
+        <outboundDataType>HL7V2</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.5.1">
+          <serializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties" version="3.5.1">
+            <handleRepetitions>true</handleRepetitions>
+            <handleSubcomponents>true</handleSubcomponents>
+            <useStrictParser>false</useStrictParser>
+            <useStrictValidation>false</useStrictValidation>
+            <stripNamespaces>true</stripNamespaces>
+            <segmentDelimiter>\r</segmentDelimiter>
+            <convertLineBreaks>true</convertLineBreaks>
+          </serializationProperties>
+          <deserializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties" version="3.5.1">
+            <useStrictParser>false</useStrictParser>
+            <useStrictValidation>false</useStrictValidation>
+            <segmentDelimiter>\r</segmentDelimiter>
+          </deserializationProperties>
+          <batchProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties" version="3.5.1">
+            <splitType>MSH_Segment</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+          <responseGenerationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties" version="3.5.1">
+            <segmentDelimiter>\r</segmentDelimiter>
+            <successfulACKCode>AA</successfulACKCode>
+            <successfulACKMessage></successfulACKMessage>
+            <errorACKCode>AE</errorACKCode>
+            <errorACKMessage>An Error Occurred Processing Message.</errorACKMessage>
+            <rejectedACKCode>AR</rejectedACKCode>
+            <rejectedACKMessage>Message Rejected.</rejectedACKMessage>
+            <msh15ACKAccept>false</msh15ACKAccept>
+            <dateFormat>yyyyMMddHHmmss.SSS</dateFormat>
+          </responseGenerationProperties>
+          <responseValidationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties" version="3.5.1">
+            <successfulACKCode>AA,CA</successfulACKCode>
+            <errorACKCode>AE,CE</errorACKCode>
+            <rejectedACKCode>AR,CR</rejectedACKCode>
+            <validateMessageControlId>true</validateMessageControlId>
+            <originalMessageControlId>Destination_Encoded</originalMessageControlId>
+            <originalIdMapVariable></originalIdMapVariable>
+          </responseValidationProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.5.1">
+          <serializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties" version="3.5.1">
+            <handleRepetitions>true</handleRepetitions>
+            <handleSubcomponents>true</handleSubcomponents>
+            <useStrictParser>false</useStrictParser>
+            <useStrictValidation>false</useStrictValidation>
+            <stripNamespaces>true</stripNamespaces>
+            <segmentDelimiter>\r</segmentDelimiter>
+            <convertLineBreaks>true</convertLineBreaks>
+          </serializationProperties>
+          <deserializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties" version="3.5.1">
+            <useStrictParser>false</useStrictParser>
+            <useStrictValidation>false</useStrictValidation>
+            <segmentDelimiter>\r</segmentDelimiter>
+          </deserializationProperties>
+          <batchProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties" version="3.5.1">
+            <splitType>MSH_Segment</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+          <responseGenerationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties" version="3.5.1">
+            <segmentDelimiter>\r</segmentDelimiter>
+            <successfulACKCode>AA</successfulACKCode>
+            <successfulACKMessage></successfulACKMessage>
+            <errorACKCode>AE</errorACKCode>
+            <errorACKMessage>An Error Occurred Processing Message.</errorACKMessage>
+            <rejectedACKCode>AR</rejectedACKCode>
+            <rejectedACKMessage>Message Rejected.</rejectedACKMessage>
+            <msh15ACKAccept>false</msh15ACKAccept>
+            <dateFormat>yyyyMMddHHmmss.SSS</dateFormat>
+          </responseGenerationProperties>
+          <responseValidationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties" version="3.5.1">
+            <successfulACKCode>AA,CA</successfulACKCode>
+            <errorACKCode>AE,CE</errorACKCode>
+            <rejectedACKCode>AR,CR</rejectedACKCode>
+            <validateMessageControlId>true</validateMessageControlId>
+            <originalMessageControlId>Destination_Encoded</originalMessageControlId>
+            <originalIdMapVariable></originalIdMapVariable>
+          </responseValidationProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="3.5.1">
+        <elements/>
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+  </destinationConnectors>
+  <preprocessingScript>// Modify the message variable below to pre process data
+return message;</preprocessingScript>
+  <postprocessingScript>
+return;</postprocessingScript>
+  <deployScript>// This script executes once when the channel is deployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</deployScript>
+  <undeployScript>// This script executes once when the channel is undeployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</undeployScript>
+  <properties version="3.5.1">
+    <clearGlobalChannelMap>true</clearGlobalChannelMap>
+    <messageStorageMode>DEVELOPMENT</messageStorageMode>
+    <encryptData>false</encryptData>
+    <removeContentOnCompletion>false</removeContentOnCompletion>
+    <removeOnlyFilteredOnCompletion>false</removeOnlyFilteredOnCompletion>
+    <removeAttachmentsOnCompletion>false</removeAttachmentsOnCompletion>
+    <initialState>STOPPED</initialState>
+    <storeAttachments>false</storeAttachments>
+    <metaDataColumns>
+      <metaDataColumn>
+        <name>SOURCE</name>
+        <type>STRING</type>
+        <mappingName>mirth_source</mappingName>
+      </metaDataColumn>
+      <metaDataColumn>
+        <name>TYPE</name>
+        <type>STRING</type>
+        <mappingName>mirth_type</mappingName>
+      </metaDataColumn>
+      <metaDataColumn>
+        <name>SENDINGAPPLICATION</name>
+        <type>STRING</type>
+        <mappingName>SendingApplication</mappingName>
+      </metaDataColumn>
+      <metaDataColumn>
+        <name>MESSAGECTRLID</name>
+        <type>STRING</type>
+        <mappingName>MessageControlId</mappingName>
+      </metaDataColumn>
+      <metaDataColumn>
+        <name>PATIENTID</name>
+        <type>STRING</type>
+        <mappingName>PatientId</mappingName>
+      </metaDataColumn>
+    </metaDataColumns>
+    <attachmentProperties version="3.5.1">
+      <type>None</type>
+      <properties/>
+    </attachmentProperties>
+    <resourceIds class="linked-hash-map">
+      <entry>
+        <string>Default Resource</string>
+        <string>[Default Resource]</string>
+      </entry>
+    </resourceIds>
+  </properties>
+  <exportData>
+    <metadata>
+      <enabled>true</enabled>
+      <lastModified>
+        <time>1528099715428</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <pruningSettings>
+        <archiveEnabled>true</archiveEnabled>
+      </pruningSettings>
+    </metadata>
+    <codeTemplateLibraries>
+      <codeTemplateLibrary version="3.5.1">
+        <id>6975d386-da5e-4267-aa01-5d181743a931</id>
+        <name>Utilities</name>
+        <revision>25</revision>
+        <lastModified>
+          <time>1527795423585</time>
+          <timezone>America/Chicago</timezone>
+        </lastModified>
+        <description>This library was added upon migration to version 3.3.0. It includes all pre-existing
+code templates, and is set to be included on all pre-existing and new channels.
+
+You should create your own new libraries and assign code templates to them as you
+see fit. You should also link libraries to specific channels, so that you&apos;re not
+necessarily including all code templates on all channels all the time.</description>
+        <includeNewChannels>true</includeNewChannels>
+        <enabledChannelIds>
+          <string>38e80069-5a80-4483-9a22-02c928973719</string>
+          <string>6a2a6c33-33da-4783-b823-bd95bf387981</string>
+          <string>3f5ab859-f917-484f-b841-7c9e39174b8e</string>
+          <string>42b2b012-ffc4-41ba-a71e-00fbd1cc1c67</string>
+          <string>24504c80-a7ef-496d-bca0-c25ce27f4d19</string>
+          <string>06d19851-fbd2-446b-be8f-12965d966d2a</string>
+          <string>280d822c-1479-4fb6-9e2a-b7267e540c63</string>
+          <string>0972a85f-5ad7-4a93-88e1-5f991b7f7879</string>
+          <string>3fdef7e5-20e2-4e6f-aad4-a156ddb2e5e2</string>
+          <string>6910529c-6cd1-4838-9a4f-d3c84faa2866</string>
+          <string>1ae4e7ac-e62f-468c-aa2a-99cbd6139838</string>
+          <string>2f6cd9fb-90e2-4121-b05a-cad72d278cc3</string>
+          <string>360b408e-86e7-43da-875a-11dd5f07db7e</string>
+          <string>0edf321a-b712-47e2-972a-03f2c4c8f0ac</string>
+          <string>05075884-fedf-4b8c-96b1-eecaaaf97842</string>
+          <string>1892f241-d643-4abb-b0af-b20b87e0cf12</string>
+          <string>9e040198-05cf-11e8-ba89-0ed5f89f718b</string>
+          <string>15708463-af53-428c-88f5-16351dd49b2e</string>
+          <string>0ace74f9-8ee8-45a5-8093-8d5bb95dae90</string>
+          <string>99b43124-34ef-4ead-a348-ef0ac0a52539</string>
+          <string>03bc65a0-25b4-48f5-8455-7e58e71b1446</string>
+          <string>0638775c-6c87-4a71-b4b3-7ae52be05c1b</string>
+          <string>2dbdcefd-11b5-42c8-a365-05038df92fef</string>
+          <string>082c9258-e026-460b-a7bb-e67391ef65f9</string>
+          <string>06bd4ce9-2338-4c78-86fb-2e04ff9f9e08</string>
+          <string>0df5acd6-0251-4546-9d35-ed7f1515e00b</string>
+          <string>27139815-1d29-4f32-ad00-fc266f2448cd</string>
+          <string>197d7939-edb9-4dc7-af2d-ab91ae9023ad</string>
+          <string>368263c0-b071-4c57-afeb-61dc82a898be</string>
+          <string>18803b99-6545-4d09-9277-a559ee2e94fd</string>
+        </enabledChannelIds>
+        <disabledChannelIds/>
+        <codeTemplates>
+          <codeTemplate version="3.5.1">
+            <id>3bff8e77-8269-463a-aa9d-b3539c885d70</id>
+            <name>calcSizeBase64EncodedMsg</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1518492121304</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	Modify the description here. Modify the function name and parameters as needed. One function per
+	template is recommended; create a new code template for each new function.
+
+	@param {String} arg1 - arg1 description
+	@return {String} return description
+*/
+function calcSizeBase64EncodedMsg(size) {
+
+	var code_size=    ((size*4)/3)
+	var padding_size= (size % 3) ? (3- (size % 3)) : 0;
+	var crlfs_size=   2 + (2 * (code_size + padding_size) / 72);
+	var total_size=   code_size + padding_size + crlfs_size;
+
+	return total_size;
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>b9651842-7ccb-4761-aedf-a9a1461dd5f7</id>
+            <name>Convert HL7 Date Format to ISO</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1525526013518</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	Converts standard HL7 v2.x date format to human-readable ISO date format
+*/
+
+/*
+	Author: IntegrateIT.us LLC
+	toISODate: Returns an ISO-formatted date string with specified timezone offset
+
+	Arguments
+	---------
+		Required
+		--------
+			hl7DateString:		An HL7-formatted date string (ex: &quot;yyyyMMddHHmmss&quot;
+
+		Optional
+		--------
+			timezome:			A timezone identifier string corresponding to one of the java.util.TimeZone values (ex: &quot;US/Central&quot;)
+*/
+
+function toISODate( hl7DateString, timezone ) {
+	var isoDate;
+	var dateString;
+	var hl7Formatter;
+	var isoFormatter = new Packages.java.text.SimpleDateFormat(&quot;yyyy-MM-dd&apos;T&apos;HH:mm:ssZ&quot;);
+
+	if (timezone) {
+		isoFormatter.setTimeZone(Packages.java.util.TimeZone.getTimeZone(timezone));
+	}
+	
+	if ( hl7DateString != null &amp;&amp; !isNaN(hl7DateString.substring(0,13)) &amp;&amp; hl7DateString.length &gt; 14 ) {
+		hl7Formatter = new Packages.java.text.SimpleDateFormat(&quot;yyyyMMddHHmmssZ&quot;);
+	}
+	else if ( hl7DateString != null &amp;&amp; !isNaN(hl7DateString) &amp;&amp; hl7DateString &gt; 0 &amp;&amp; hl7DateString.length == 14 ) {
+		hl7Formatter = new Packages.java.text.SimpleDateFormat(&quot;yyyyMMddHHmmss&quot;);
+	} 
+	else if ( hl7DateString != null &amp;&amp; !isNaN(hl7DateString) &amp;&amp; hl7DateString &gt; 0 &amp;&amp; hl7DateString.length == 12 ) {
+		hl7Formatter = new Packages.java.text.SimpleDateFormat(&quot;yyyyMMddHHmm&quot;);
+	} 
+	else if ( hl7DateString != null &amp;&amp; !isNaN(hl7DateString) &amp;&amp; hl7DateString &gt; 0 &amp;&amp; hl7DateString.length == 8 ) {
+		hl7Formatter = new Packages.java.text.SimpleDateFormat(&quot;yyyyMMdd&quot;);
+	} 
+	else dateString = hl7DateString;
+	
+	try {
+		if (hl7Formatter) {
+			isoDate = hl7Formatter.parse(hl7DateString);
+			isoDate = isoFormatter.format(isoDate);
+			dateString = new String(isoDate);
+		}
+	} catch (err) {
+		dateString = hl7DateString;
+	} finally {
+		return dateString;
+	}
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>95e528b7-1e7f-490e-86da-7c14b23ee4f3</id>
+            <name>Convert ISO Date Format to HL7</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1525526031270</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	Converts ISO date format to HL7 v2 format
+*/
+
+/*
+	Author: IntegrateIT.us LLC
+	toHL7Date: Returns an HL7-formatted date string with specified timezone offset
+
+	Arguments
+	---------
+		Required
+		--------
+			isoDateString:		An ISO-formatted date string (ex: &quot;yyyy-MM-ddTHH:mm:ssZ&quot;
+
+		Optional
+		--------
+			timezome:			A timezone identifier string corresponding to one of the java.util.TimeZone values (ex: &quot;US/Central&quot;)
+*/
+
+function toHL7Date( isoDateString, timezone ) 
+{
+	var hl7Date;
+	var dateString;
+	var isoFormatter;
+	var hl7Formatter;
+
+	// ISO Date Format: yyyy-MM-dd&apos;T&apos;HH:mm:ss&apos;Z&apos;
+	if ( isoDateString != null &amp;&amp; isoDateString.length &lt;= 25 &amp;&amp; isoDateString.length &gt;= 22) {
+		isoFormatter = new Packages.java.text.SimpleDateFormat(&quot;yyyy-MM-dd&apos;T&apos;HH:mm:ssZ&quot;);
+		hl7Formatter = new Packages.java.text.SimpleDateFormat(&quot;yyyyMMddHHmmssZ&quot;);
+		if (timezone) {
+			hl7Formatter.setTimeZone(Packages.java.util.TimeZone.getTimeZone(timezone));
+		}
+	}
+	// ISO Date Format: yyyy-MM-dd HH:mm:ss
+	else if ( isoDateString != null &amp;&amp; isoDateString.length == 19 ) {
+		isoFormatter = new Packages.java.text.SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+		hl7Formatter = new Packages.java.text.SimpleDateFormat(&quot;yyyyMMddHHmmss&quot;);
+	}
+	// ISO Date Format: yyyy-MM-dd HH:mm
+	else if ( isoDateString != null &amp;&amp; isoDateString.length == 16 ) {
+		isoFormatter = new Packages.java.text.SimpleDateFormat(&quot;yyyy-MM-dd HH:mm&quot;);
+		hl7Formatter = new Packages.java.text.SimpleDateFormat(&quot;yyyyMMddHHmm&quot;);	
+	} 
+	// ISO Date Format: yyyy-MM-dd
+	else if ( isoDateString != null &amp;&amp; isoDateString.length == 10 ) {
+		isoFormatter = new Packages.java.text.SimpleDateFormat(&quot;yyyy-MM-dd&quot;);
+		hl7Formatter = new Packages.java.text.SimpleDateFormat(&quot;yyyyMMdd&quot;);	
+	}
+	// None of the above, return original date string.
+	else dateString = isoDateString;
+
+	try {
+		if (isoFormatter) {
+			hl7Date = isoFormatter.parse(isoDateString);
+			hl7Date = hl7Formatter.format(hl7Date);
+			dateString = new String(hl7Date);
+		}
+	} catch (err) {
+		dateString = isoDateString;
+	} finally {
+		return dateString;
+	}
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>1e4358bb-21bc-4823-bc55-e41caff65bea</id>
+            <name>convertDate</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1502489831341</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	convertDate(date, outpattern)
+*/
+// modify function_name and parameters as you wish.
+// one function per template is recommended. i.e.) create a new code template for each new function.
+var patterns = [
+	&apos;yyyy-MM-dd HH:mm:ss:SSS&apos;,
+	&apos;yyyy-MM-dd HH:mm:ss.SSS&apos;,
+	&apos;yyyy-MM-dd HH:mm:ss&apos;,
+	&apos;yyyy-MM-dd HH:mm&apos;,
+	&apos;EEE MMM dd HH:mm:ss:SSS zzz yyyy&apos;,
+	&apos;EEE MMM dd HH:mm:ss.SSS zzz yyyy&apos;,
+	&apos;EEE MMM dd HH:mm:ss zzz yyyy&apos;,
+	&apos;EEE MMM dd zzz yyyy&apos;,
+	&apos;dd-MMM-yyyy HH:mm:ss:SSS&apos;,
+	&apos;dd-MMM-yyyy HH:mm:ss.SSS&apos;,
+	&apos;dd-MMM-yyyy HH:mm:ss&apos;,
+	&apos;yyyy-MM-dd&apos;,
+	&apos;yyyy MM dd&apos;,
+	&apos;yyyy.MM.dd&apos;,
+	&apos;MM-dd-yyyy&apos;,
+	&apos;MM dd yyyy&apos;,
+	&apos;MM.dd.yyyy&apos;,
+	&apos;HH:mm:ss:SSS&apos;,
+	&apos;HH:mm:ss.SSS&apos;,
+	&apos;HH:mm:ss&apos;,
+	&apos;yyyyMMddHHmmssSSS&apos;,
+	&apos;yyyyMMddHHmmss&apos;,
+	&apos;yyyyMMddHHmm&apos;,
+	&apos;hh:mm aa&apos;];
+
+var formatters = [];
+for each (pattern in patterns) {
+	formatters.push(org.joda.time.format.DateTimeFormat.forPattern(pattern));
+}
+
+function convertDate(date, outpattern) {
+	var instant = 0;
+	if (typeof date == &apos;number&apos; || date instanceof java.lang.Number)
+		instant = new Number(date);
+	else if (date instanceof Date || date instanceof java.util.Date)
+		instant = date.getTime();
+	else if (date instanceof org.joda.time.ReadableInstant)
+		instant = date.getMillis();
+	else {
+		for each (formatter in formatters) {
+			try {
+				instant = formatter.parseMillis(new String(date));
+				break;
+			} catch(e) {}
+		}
+	}
+
+	return org.joda.time.format.DateTimeFormat.forPattern(outpattern).print(instant);
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>c741ad20-3baa-4880-a355-79761040ed4a</id>
+            <name>createSegmentBefore</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1502489831364</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	createSegmentBefore
+*/
+// modify function_name and parameters as you wish.
+// one function per template is recommended. i.e.) create a new code template for each new function.
+function createSegmentBefore(insertSegmentName, beforeThisSegment) {
+	var msgObj = beforeThisSegment;
+	while (msgObj.parent() != undefined) {
+		msgObj = msgObj.parent();
+	}
+	msgObj.insertChildBefore(beforeThisSegment[0], new XML(&apos;&lt;&apos; + insertSegmentName + &apos;&gt;&lt;/&apos; + insertSegmentName + &apos;&gt;&apos;));
+	return msgObj.child(beforeThisSegment[0].childIndex() - 1);
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>a5e92dbd-69ee-408e-90bf-7ab5f0539f2f</id>
+            <name>currentDate_yyyyMMddhhmmss</name>
+            <revision>8</revision>
+            <lastModified>
+              <time>1517525072758</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/** currentDate_yyyyMMddhhmmss
+
+	@return {String} return currentDate in yyyyMMddhhmmss string format
+
+	// Modified: To include addition checks on the length of each datepart 
+*/
+function currentDate_yyyyMMddhhmmss() {
+
+	var debug= 0;
+	
+	var today = new Date();
+	var day = today.getDate();
+	var month = today.getMonth()+1; //January is 0!
+	var year = today.getFullYear();
+	var hour = today.getHours();	// 0-23
+	var minute = today.getMinutes();	// 0-59
+	var second = today.getSeconds();  // 0-59
+
+	if(day.toString().length&lt;2) { day = &apos;0&apos;+day } 
+	if(month.toString().length&lt;2) { month = &apos;0&apos;+month }
+	if(hour.toString().length&lt;2) { hour = &apos;0&apos;+hour }
+	if(minute.toString().length&lt;2) { minute = &apos;0&apos;+minute }
+	if(second.toString().length&lt;2) { second = &apos;0&apos;+second }
+
+	var newDate= year+month+day+hour+minute+second;
+	if(debug&gt;0) { logger.error(&quot;currentDate_yyyyMMddhhmmss() returns: &quot;+newDate); }
+	return newDate;
+
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>d0d5a392-cea8-40e7-9c12-dd8547c8b51e</id>
+            <name>daysBetween</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1502489831376</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	daysBetween(begin, end, pattern)
+*/
+// modify function_name and parameters as you wish.
+// one function per template is recommended. i.e.) create a new code template for each new function.
+function daysBetween(begin,end,pattern) {
+	importPackage(org.joda.time);
+	importPackage(org.joda.time.format);
+	String.prototype.toDate = function(pattern) {return DateTimeFormat.forPattern(pattern || &apos;yyyyMMddHHmmss&apos;).parseDateTime(this);};
+	return Days.daysBetween(convert(begin),convert(end)).getDays();
+	function convert(object) {
+		if (&apos;string&apos; === typeof object || object instanceof String)
+			return (object + &apos;19700101000000&apos;.substr(object.length)).toDate(pattern);
+		else if (object instanceof Date || object instanceof java.util.Date)
+			return new DateTime(object.getTime());
+		else 
+			return new DateTime(object);
+	}
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>8ee9e3a6-5cf4-4b68-bdcc-7b5013860cb8</id>
+            <name>executeOperation</name>
+            <revision>3</revision>
+            <lastModified>
+              <time>1527795423647</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	Executes executeOperation(operation, expression, parameters) - references getDBConnection
+
+	@param 
+	{string operation} - executeUpdate (INSERT|UPDATE), executeCachedQuery (SELECT) operations 
+	{string expression} - expression of INSERT, UPDATE, DELETE or SELECT statements
+	{string parameters} - parameterized parameter values accompanying the expression statement
+	@return {DatabaseConnection} The database connection dbConn object.
+	
+	Example
+	executeOperation(&apos;executeUpdate&apos;, expression, parameters);
+	WHERE
+	var expression = &quot;INSERT INTO hl7_test_sample (patient_last_name, patient_first_name, patient_middle_initial) VALUES (?, ?, ?);&quot;
+	var result = dbConn.executeUpdate(expression, params);
+*/
+
+function executeOperation(operation, expression, parameters) {
+
+	var dbConn = getDBConnection(true);
+	var attempts = 0;
+	var maxAttempts = NumberUtils.toInt($(&apos;dbRetries&apos;) + &apos;&apos;, 0) + 1;
+
+	while (attempts &lt; maxAttempts) {
+		attempts++;
+
+		try {
+			if (parameters) {
+				for (var i in parameters) {
+					var param = parameters[i];
+					if (param instanceof Number) {
+						parameters[i] = new java.lang.Integer(param);
+					}
+				}
+				
+				return dbConn[operation](expression, java.util.Arrays.asList(parameters));
+			} else {
+				return dbConn[operation](expression);
+			}
+		} catch (e) {
+			logger.info(&apos;Error executing statement, checking if valid...&apos;);
+
+			try {
+				dbConn.executeCachedQuery(&apos;SELECT 1&apos;);
+			} catch (e2) {
+				logger.info(&apos;Connection invalid, recreating...&apos;);
+
+				try {
+					dbConn = getDBConnection(true);
+				} catch (e3) {}
+			}
+
+			if (attempts &gt;= maxAttempts) {
+				var errorMessage = &apos;Unable to execute statement.\n&apos;;
+				errorMessage += &apos;Expression: &apos; + expression + &apos;\n&apos;;
+				if (parameters) {
+					errorMessage += &apos;Parameters: &apos; + java.util.Arrays.asList(parameters).toString();
+				}
+				logger.error(errorMessage, e.javaException);
+				throw e;
+			}
+
+			java.lang.Thread.sleep(1000);
+		}
+	}
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>7a091e64-db98-4f28-9990-59e8a7a67b4a</id>
+            <name>getByteCount</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1518489356999</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/** getByteCount
+	
+	- Desc: provide string and determine the byteSize of the string
+
+	@param {String} arg1 - arg1 description
+	@return {String} return description
+*/
+function getByteCount( s )
+{
+  var count = 0, stringLength = s.length, i;
+  s = String( s || &quot;&quot; );
+  for( i = 0 ; i &lt; stringLength ; i++ )
+  {
+    var partCount = encodeURI( s[i] ).split(&quot;%&quot;).length;
+    count += partCount==1?1:partCount-1;
+  }
+  return count;
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>6c50e580-bb31-4b00-9b20-d47caa381eb9</id>
+            <name>getByteLen</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1518489683097</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/** getByteLen 
+
+	Using UTF-8 character determine number of Bytes in UTF-8 string
+ 	Count bytes in a string&apos;s UTF-8 representation.
+ 
+ 	@param   string
+ 	@return  int
+*/
+
+function getByteLen(normal_val) {
+    // Force string type
+    normal_val = String(normal_val);
+
+    var byteLen = 0;
+    for (var i = 0; i &lt; normal_val.length; i++) {
+        var c = normal_val.charCodeAt(i);
+        byteLen += c &lt; (1 &lt;&lt;  7) ? 1 :
+                   c &lt; (1 &lt;&lt; 11) ? 2 :
+                   c &lt; (1 &lt;&lt; 16) ? 3 :
+                   c &lt; (1 &lt;&lt; 21) ? 4 :
+                   c &lt; (1 &lt;&lt; 26) ? 5 :
+                   c &lt; (1 &lt;&lt; 31) ? 6 : Number.NaN;
+    }
+    return byteLen;
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>1c06363e-daf9-4a6c-b35c-f4208db4b701</id>
+            <name>getDBConnection</name>
+            <revision>2</revision>
+            <lastModified>
+              <time>1527381258822</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	getDBConnection - Retrieves the database connection from the global channel map, creating a new one if necessary.
+
+	@param {Boolean} recreate - If true, the connection will always be closed and created anew.
+	@return {DatabaseConnection} The database connection object.
+*/
+function getDBConnection(recreate) {
+	var dbConn = $gc(&apos;dbConn&apos;);
+
+	if (!dbConn || recreate) {
+		if (dbConn) {
+			try {
+				dbConn.close();
+			} catch (e) {}
+		}
+		dbConn = DatabaseConnectionFactory.createDatabaseConnection($(&apos;mysqlDriverString&apos;), $(&apos;mysqlUrlLocalHostString&apos;), $(&apos;mysqlUser&apos;), $(&apos;mysqlPassword&apos;));
+		$gc(&apos;dbConn&apos;, dbConn);
+	}
+
+	return dbConn;
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>6bc382b4-149d-4c27-a333-a76af0a63fb9</id>
+            <name>getMySqlConn</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1502489831350</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>GLOBAL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>CHANNEL_ATTACHMENT</contextType>
+                <contextType>CHANNEL_BATCH</contextType>
+                <contextType>CHANNEL_PREPROCESSOR</contextType>
+                <contextType>CHANNEL_UNDEPLOY</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>CHANNEL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>CHANNEL_DEPLOY</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	getMySqlConn
+*/
+// code template
+function getMySqlConn() { 
+    return DatabaseConnectionFactory.createDatabaseConnection($(&apos;mysqlDriverString&apos;) , $(&apos;mysqlUrlLocalHostString&apos;) , $(&apos;mysqlUser&apos;) , $(&apos;mysqlPassword&apos;));
+} // end function</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>4cb42e06-7c9a-4fd2-bcb5-b9f4053a9c19</id>
+            <name>getSegmentsAfter</name>
+            <revision>2</revision>
+            <lastModified>
+              <time>1525526636419</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	Returns an array of segments with the specified name that come after a given segment in the message.
+*/
+/*
+	Author: Nick Rupley
+	Date Modified: 2/13/2013
+	getSegmentsAfter: Returns an array of segments with the specified name that come after a given segment in the message.
+
+	Arguments
+	---------
+		Required
+		--------
+			root:			The root HL7Message node of the message, or the parent of the segment node.
+			startSeg:		The segment AFTER which to start collecting segments.
+			segName:		The name (String or RegExp) of the segments you want to collect.
+
+		Optional
+		--------
+			consecutiveInd:	If true, indicates that the segments are expected to come directly after startSeg. 
+							If false, segments are collected until another segment with the same name as startSeg is encountered.
+							Defaults to false.
+			stopSegNames:	An array of segment names that, when encountered, stop the collection of segments.
+*/
+
+function getSegmentsAfter(root, startSeg, segName, consecutiveInd, stopSegNames) {
+	function test(str) {
+		return segName instanceof RegExp ? segName.test(str) : segName === str;
+	}
+
+	// The index to start collection is the next one up from the starting segment
+	var index = startSeg.childIndex()+1;
+	// The return array
+	var out = [];
+	// Boolean placeholder to stop iteration
+	var done = false;
+	// Object that will contain all of the stopSegNames strings, bound to a truthy value (1)
+	var stopNames = {};
+	// Indicates whether we have any stop segments
+	var stopNamesInd = false;
+	// If stopSegNames is defined
+	if (stopSegNames !== undefined &amp;&amp; stopSegNames !== null) {
+		// Set our indicator to true
+		stopNamesInd = true;
+		// Add each string in the array to our object
+		for each (name in stopSegNames)
+			stopNames[name] = 1;
+	}
+
+	// Iterate through each child in the root, starting at the segment after startSeg, and
+	// ending at the final segment, or when the done flag is set to true.
+	while (index &lt; root.children().length() &amp;&amp; !done) {
+		// If a stop segment is encountered, stop iteration
+		if (stopNamesInd &amp;&amp; root.children()[index].name().toString() in stopNames)
+			done = true;
+		// If a segment with the same name as startSeg is encountered, stop iteration
+		else if (root.children()[index].name().toString() == startSeg.name().toString() &amp;&amp; !consecutiveInd)
+			done = true;
+		// If we&apos;re only collecting consecutive segments and we encounter a segment with a name other than segName, stop iteration
+		else if (!test(root.children()[index].name().toString()) &amp;&amp; consecutiveInd)
+			done = true;
+		// If all previous tests passed, and the current segment has a name of segName, then add it to our array
+		else if (test(root.children()[index].name().toString()))
+			out.push(root.children()[index]);
+		// Increment our index counter
+		index++;
+	}
+
+	// Return the output array
+	return out;
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>9fd1f0f6-a856-483d-a8b5-ec707df483d4</id>
+            <name>getXSLTransformation</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1502489831355</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	getXSLTransformation(source, xsltFilePath)
+*/
+function getXSLTransformation(source, xsltFilePath) { 
+	var reader = new Packages.java.io.StringReader(source.toString()); 
+	var result = new Packages.java.io.StringWriter(); 
+	var xsltFile = new Packages.java.io.File(xsltFilePath); 
+	var xsltSource = new Packages.javax.xml.transform.stream.StreamSource(xsltFile); 
+	try { 
+		var transFact = new Packages.javax.xml.transform.TransformerFactory.newInstance(); 
+		var transXSLT = transFact.newTemplates(xsltSource); 
+		var trans = transXSLT.newTransformer(); 
+		trans.transform(new Packages.javax.xml.transform.stream.StreamSource(reader), new Packages.javax.xml.transform.stream.StreamResult(result)); 
+	} catch(err) {
+		logger.error(&apos;getXSLTransformation exception: &apos; + err); 
+	} // end try
+	return result.toString().replace(&apos;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&apos;,&apos;&apos;); 
+} // end function</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>4bf0193f-6728-4c89-ae26-63d8c913ba67</id>
+            <name>insert_into_table</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1502489831346</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>GLOBAL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>CHANNEL_ATTACHMENT</contextType>
+                <contextType>CHANNEL_BATCH</contextType>
+                <contextType>CHANNEL_PREPROCESSOR</contextType>
+                <contextType>CHANNEL_UNDEPLOY</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>CHANNEL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>CHANNEL_DEPLOY</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	insert_into_table(tableName, columnArray, debug, select_log)
+*/
+function insert_into_table(tableName, columnArray, debug, select_log) {
+	// targetColumnArray= {&apos;exam_code&apos;,&apos;exam_source&apos;};
+	// columnArray= {&apos;exam_code:ARTMJRT&apos;,&apos;exam_description:ARTHROGRAM TEMPOROMANDIBULAR JOINT RIGHT&apos;,&apos;exam_source:RISIC&apos;,&apos;source_description:FINAL RISIC EXAM IC CODES POST 8-11-15&apos;};
+	var insert_log= select_log
+	if(typeof(debug)== &apos;undefined&apos;) 		var debug= 0;
+	if(typeof(insert_log)== &apos;undefined&apos;)	var insert_log= &apos;&apos;;
+	var i= 1;
+	// define insert statement
+	// 		if(column.split(&quot;:&quot;)[0].toString().indexOf(&apos;date&apos;)&lt;0)
+	var insert= &quot;INSERT INTO &quot; + tableName + &quot; (&quot;;
+	for each(column in columnArray) {
+		if(i&lt;columnArray.length)
+			insert+= column.split(&quot;:&quot;)[0]+&quot;,&quot;;
+		else
+			insert+= column.split(&quot;:&quot;)[0] + &quot;)&quot;;
+		i++;
+	} // end for each
+	insert+= &quot; VALUES (&quot;;
+	var i= 1;
+	for each(colValue in columnArray) {
+		if(colValue.split(&quot;:&quot;)[0].toString().indexOf(&apos;date&apos;)&lt;0)
+			if(i&lt;columnArray.length)
+				insert+= &quot;&apos;&quot;+colValue.split(&quot;:&quot;)[1]+&quot;&apos;,&quot;;
+			else
+				insert+= &quot;&apos;&quot;+colValue.split(&quot;:&quot;)[1] + &quot;&apos;);&quot;;
+		else
+			if(i&gt;=columnArray.length)
+				insert+= &quot;NOW());&quot;;
+			else
+				insert+= &quot;NOW(),&quot;;
+		i++;
+	} // end for each
+	if(debug&gt;=1) channelMap.put(&apos;insert_&apos;+tableName,insert);
+	try {
+		var dbConn= getMySqlConn();
+		// dbConn = DatabaseConnectionFactory.createDatabaseConnection($(&apos;mysqlDriverString&apos;),$(&apos;mysqlUrlLocalHostString&apos;),$(&apos;mysqlUser&apos;),$(&apos;mysqlPassword&apos;));
+		var result = dbConn.executeUpdate(insert);
+		if (result != null) {
+			insert_log+= &apos; Attempt to insert record for exam_source. &apos;;
+			var i= 1;
+			for each(column in columnArray) {
+				var columnName=   column.split(&quot;:&quot;)[0].toString();
+				var columnValue=  column.split(&quot;:&quot;)[1].toString();
+				if(i&lt;columnArray.length) 
+					insert_log+= columnName+&apos;= &apos;+columnValue+&apos; AND &apos;;
+				else
+					insert_log+= columnName+&apos;= &apos;+columnValue+&apos;.&apos;;
+				i++;
+			} // end for each
+			channelMap.put(&apos;action&apos;,&apos;INSERT&apos;);
+			if(debug&gt;=1) channelMap.put(&apos;insert_log_&apos;+tableName,insert_log);
+			if(debug&gt;=2) logger.error(&quot;[Insert &quot;+tableName+&quot;] &quot;+insert_log);
+			channelMap.put(&apos;select_log&apos;,insert_log+=&apos; [Inserted record]&apos;);
+		} else {
+			channelMap.put(&apos;action&apos;,&apos;FAILED INSERT&apos;);
+			channelMap.put(&apos;select_log&apos;,insert_log+=&apos; [Failed to insert record]&apos;);
+		} // end if	
+		dbConn.close();
+	} catch(err){
+		logger.error(err);
+		channelMap.put(&apos;action&apos;,&apos;ERROR&apos;);
+	} finally {	
+		if (dbConn) { 
+			dbConn.close();
+		}
+	} // end try
+} // end function</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>e250b526-5bcc-4973-ae7b-7efa49605a2a</id>
+            <name>insertSegmentAfter</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1502489831380</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	insertSegmentAfter
+*/
+// modify function_name and parameters as you wish.
+// one function per template is recommended. i.e.) create a new code template for each new function.
+function insertSegmentAfter(insertSegment, afterThisSegment) {
+	var msgObj = afterThisSegment;
+	while (msgObj.parent() != undefined) {
+		msgObj = msgObj.parent();
+	}
+	msgObj.insertChildAfter(afterThisSegment[0], insertSegment);
+	return msgObj.child(afterThisSegment[0].childIndex() + 1);
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>1525b940-91eb-4afc-871c-b0d5ad6ac337</id>
+            <name>insertSegmentBefore</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1502489831336</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	insertSegmentBefore
+*/
+// modify function_name and parameters as you wish.
+// one function per template is recommended. i.e.) create a new code template for each new function.
+function insertSegmentBefore(insertSegment, beforeThisSegment) {
+	var msgObj = beforeThisSegment;
+	while (msgObj.parent() != undefined) {
+		msgObj = msgObj.parent();
+	}
+	msgObj.insertChildBefore(beforeThisSegment[0], insertSegment);
+	return msgObj.child(beforeThisSegment[0].childIndex() - 1);
+}</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>0a6a03d5-9525-4090-ad10-d17c3ab742e9</id>
+            <name>removeDupAttributesFromXML</name>
+            <revision>1</revision>
+            <lastModified>
+              <time>1502489831325</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>GLOBAL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>CHANNEL_ATTACHMENT</contextType>
+                <contextType>CHANNEL_BATCH</contextType>
+                <contextType>CHANNEL_PREPROCESSOR</contextType>
+                <contextType>CHANNEL_UNDEPLOY</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>CHANNEL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>CHANNEL_DEPLOY</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	removeDuplicateAttributesFromXML
+*/
+// modify function_name and parameters as you wish.
+// one function per template is recommended. i.e.) create a new code template for each new function.
+function removeDuplicateAttributesFromXML(section) {
+	// desc: Remove Duplicate Telecom Attributes from XML
+	var debug= 1 // 0= OFF, 1= channelMap, 2= logger.error
+	var tDescription= &apos;[Pre-Processor][Remove Duplicate Telecom Attributes from XML]&apos;;
+	var arrObservation= new Array();
+	var i= 0
+	// use section instead of message but convert section to message variable
+	var message= section;
+	if(debug&gt;=2) logger.error(&apos;original msg Section= &apos;+message);
+
+	if(message.toString().indexOf(&apos;author&apos;)&gt;-1) {
+		author= message;
+		if(debug&gt;=2) logger.error(&apos;message= &apos;+message);
+		if(author.toString().indexOf(&apos;assignedAuthor&apos;)&gt;-1) {
+			var beginAssignedAuthor= author.toString().indexOf(&apos;&lt;assignedAuthor&gt;&apos;);
+			var endAssignedAuthor= author.toString().indexOf(&apos;&lt;/assignedAuthor&gt;&apos;);
+			var assignedAuthor= author.toString().substring(beginAssignedAuthor, endAssignedAuthor);
+			if(debug&gt;=2) logger.error(&apos;assignedAuthor= &apos;+assignedAuthor);
+			if(assignedAuthor.toString().indexOf(&apos;representedOrganization&apos;)&gt;-1) {
+				var beginRepresentedOrganization= assignedAuthor.toString().indexOf(&apos;&lt;representedOrganization&gt;&apos;);
+				var endRepresentedOrganization= assignedAuthor.toString().indexOf(&apos;&lt;/representedOrganization&gt;&apos;);
+				var representedOrganization= assignedAuthor.toString().substring(beginRepresentedOrganization, endRepresentedOrganization);
+				if(debug&gt;=2) logger.error(&apos;begin= &apos;+beginRepresentedOrganization+&apos; end= &apos;+endRepresentedOrganization+&apos; representedOrganization= &apos;+representedOrganization);
+				if(representedOrganization.toString().indexOf(&apos;telecom&apos;)&gt;-1) {
+					var beginTelecom= representedOrganization.toString().indexOf(&apos;&lt;telecom&apos;);
+					var endTelecom= representedOrganization.toString().indexOf(&apos;&lt;addr&apos;);
+					var telecom= representedOrganization.toString().substring(beginTelecom, endTelecom);
+					if(debug&gt;=2) logger.error(&apos;begin= &apos;+beginTelecom+&apos; end= &apos;+endTelecom+&apos; telecom= &apos;+telecom);
+					var objObservation= new Object();
+					objObservation.id= i;
+					beginTelecomValue= 		telecom.toString().indexOf(&apos;value=&apos;);
+					endTelecomValue=   		telecom.toString().indexOf(&apos; use=&apos;);
+					objObservation.value=	telecom.toString().substring(beginTelecomValue+6, endTelecomValue).replace(/&quot;/g,&apos;&apos;)
+					beginTelecomUse=   		telecom.toString().indexOf(&apos;use=&apos;);
+					objObservation.use= 	telecom.toString().substring(beginTelecomUse+4, beginTelecomUse+7).replace(/&quot;/g,&apos;&apos;);
+					arrObservation.push(objObservation);
+					var newTelecom= &apos;&lt;telecom value=&quot;&apos;+objObservation.value+&apos;&quot; use=&quot;&apos;+objObservation.use+&apos;&quot;/&gt;&apos;;
+					var newRepresentedOrganization= representedOrganization.replace(telecom, newTelecom);
+					if(debug&gt;=1) channelMap.put(tDescription,&apos;old= &apos;+telecom+&apos; new= &apos;+newTelecom);
+					if(debug&gt;=2) logger.error(tDescription+&apos; old= &apos;+telecom+&apos; new= &apos;+newTelecom);
+				} // end if
+			} // end if 
+			var newAssignedAuthor= assignedAuthor.replace(representedOrganization,newRepresentedOrganization);
+		} // end if 
+		var newAuthor=		author.replace(assignedAuthor,newAssignedAuthor);
+		var newXmlMsg=		message.replace(author,newAuthor);
+	} else if(message.toString().indexOf(&apos;custodian&apos;)&gt;-1) {
+		custodian= message;
+		if(debug&gt;=2) logger.error(&apos;message= &apos;+message);
+		if(custodian.toString().indexOf(&apos;assignedCustodian&apos;)&gt;-1) {
+			var beginAssignedCustodian= custodian.toString().indexOf(&apos;&lt;assignedCustodian&gt;&apos;);
+			var endAssignedCustodian= 	custodian.toString().indexOf(&apos;&lt;/assignedCustodian&gt;&apos;);
+			var assignedCustodian= 		custodian.toString().substring(beginAssignedCustodian, endAssignedCustodian);
+			if(debug&gt;=2) logger.error(&apos;assignedCustodian= &apos;+assignedCustodian);
+			if(assignedCustodian.toString().indexOf(&apos;representedCustodianOrganization&apos;)&gt;-1) {
+				var beginRepresentedCustodianOrganization=	assignedCustodian.toString().indexOf(&apos;&lt;representedCustodianOrganization&gt;&apos;);
+				var endRepresentedCustodianOrganization=	assignedCustodian.toString().indexOf(&apos;&lt;/representedCustodianOrganization&gt;&apos;);
+				var representedCustodianOrganization= assignedCustodian.toString().substring(beginRepresentedCustodianOrganization, endRepresentedCustodianOrganization);
+				if(debug&gt;=2) logger.error(&apos;begin= &apos;+beginRepresentedCustodianOrganization+&apos; end= &apos;+endRepresentedCustodianOrganization+&apos; representedOrganization= &apos;+representedCustodianOrganization);
+				if(representedCustodianOrganization.toString().indexOf(&apos;telecom&apos;)&gt;-1) {
+					var beginTelecom=		representedCustodianOrganization.toString().indexOf(&apos;&lt;telecom&apos;);
+					var endTelecom= 		representedCustodianOrganization.toString().indexOf(&apos;&lt;addr&apos;);
+					var telecom= 			representedCustodianOrganization.toString().substring(beginTelecom, endTelecom);
+					if(debug&gt;=2) logger.error(&apos;begin= &apos;+beginTelecom+&apos; end= &apos;+endTelecom+&apos; telecom= &apos;+telecom);
+					var objObservation= 	new Object();
+					objObservation.id= 		i;
+					beginTelecomValue= 		telecom.toString().indexOf(&apos;value=&apos;);
+					endTelecomValue=   		telecom.toString().indexOf(&apos; use=&apos;);
+					objObservation.value=	telecom.toString().substring(beginTelecomValue+6, endTelecomValue).replace(/&quot;/g,&apos;&apos;)
+					beginTelecomUse=   		telecom.toString().indexOf(&apos;use=&apos;);
+					objObservation.use= 	telecom.toString().substring(beginTelecomUse+4, beginTelecomUse+7).replace(/&quot;/g,&apos;&apos;);
+					arrObservation.push(objObservation);
+					var newTelecom= &apos;&lt;telecom value=&quot;&apos;+objObservation.value+&apos;&quot; use=&quot;&apos;+objObservation.use+&apos;&quot;/&gt;&apos;;
+					var newRepresentedCustodianOrganization= representedCustodianOrganization.replace(telecom, newTelecom);
+					if(debug&gt;=1) channelMap.put(tDescription,&apos;old= &apos;+telecom+&apos; new= &apos;+newTelecom);
+					if(debug&gt;=2) logger.error(tDescription+&apos; old= &apos;+telecom+&apos; new= &apos;+newTelecom);
+				} // end if
+			} // end if 
+			var newAssignedCustodian= assignedCustodian.replace(representedCustodianOrganization,newRepresentedCustodianOrganization);
+		} // end if 
+		var newCustodian=	custodian.replace(assignedCustodian,newAssignedCustodian);
+		var newXmlMsg=    	message.replace(custodian,newCustodian);
+	}// end if 
+
+	if(debug&gt;=2) logger.error(&apos;new msg Section= &apos;+newXmlMsg);
+	return newXmlMsg;			// return section
+} // end function</code>
+            </properties>
+          </codeTemplate>
+          <codeTemplate version="3.5.1">
+            <id>ccc6ffcd-366c-445a-8cc6-4a087b9611c3</id>
+            <name>select_table</name>
+            <revision>2</revision>
+            <lastModified>
+              <time>1527381331549</time>
+              <timezone>America/Chicago</timezone>
+            </lastModified>
+            <contextSet>
+              <delegate>
+                <contextType>DESTINATION_DISPATCHER</contextType>
+                <contextType>GLOBAL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+                <contextType>CHANNEL_ATTACHMENT</contextType>
+                <contextType>CHANNEL_BATCH</contextType>
+                <contextType>CHANNEL_PREPROCESSOR</contextType>
+                <contextType>CHANNEL_UNDEPLOY</contextType>
+                <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+                <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+                <contextType>CHANNEL_POSTPROCESSOR</contextType>
+                <contextType>SOURCE_RECEIVER</contextType>
+                <contextType>CHANNEL_DEPLOY</contextType>
+              </delegate>
+            </contextSet>
+            <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+              <type>FUNCTION</type>
+              <code>/**
+	select_table(tableName, columnArray, debug, select_log) uses getMySqlConn() function.
+*/
+function select_table(tableName, columnArray, debug, select_log) {
+
+	if(typeof(debug)== &apos;undefined&apos;) 		var debug= 0;
+	if(typeof(select_log)== &apos;undefined&apos;) 	var select_log= &apos;&apos;;
+	var select= &quot;SELECT * FROM &quot;+tableName+ &quot; WHERE &quot;;
+	var i= 1;
+	for each(column in columnArray) {
+		if(i&lt;columnArray.length)
+			select+= column.split(&quot;:&quot;)[0].toString() + &quot;= &apos;&quot; + column.split(&quot;:&quot;)[1].toString() + &quot;&apos; AND &quot;;
+		else
+			select+= column.split(&quot;:&quot;)[0].toString() + &quot;= &apos;&quot; + column.split(&quot;:&quot;)[1].toString() + &quot;&apos;;&quot;;
+		i++;
+	} // end for each
+	var select= String(select);
+	if(debug&gt;=1) channelMap.put(&apos;select_&apos;+tableName,select);
+	try {
+		var dbConn= getMySqlConn();
+		// dbConn = DatabaseConnectionFactory.createDatabaseConnection($(&apos;mysqlDriverString&apos;),$(&apos;mysqlUrlLocalHostString&apos;),$(&apos;mysqlUser&apos;),$(&apos;mysqlPassword&apos;));
+		// var result = dbConn.executeUpdate(update);
+		var result= dbConn.executeCachedQuery(select);
+		if (result != null) {
+			if(result.size()&gt;0) {
+				select_log+= &apos; Found record for exam_source.&apos;;
+				channelMap.put(&apos;action&apos;,&apos;FILTER FOUND&apos;);
+				if(debug&gt;=1) channelMap.put(&apos;select_log_&apos;+tableName,select_log);
+				if(debug&gt;=2) logger.error(&apos;[Select &apos;+tableName+&apos;]: &apos;+select_log);
+				// return true;
+			} else {
+				select_log+= &apos; Failed to find 0 records for exam source.&apos;;
+				if(debug&gt;=1) channelMap.put(&apos;select_log_&apos;+tableName,select_log);
+				if(debug&gt;=2) logger.error(&apos;[Select &apos;+tableName+&apos;]: &apos;+select_log);
+			} // end if 
+		} else {
+			select_log+= &apos; Failed to find 0 records for exam source.&apos;;
+			if(debug&gt;=1) channelMap.put(&apos;select_log_&apos;+tableName,select_log);
+			if(debug&gt;=2) logger.error(&apos;[Select &apos;+tableName+&apos;]: &apos;+select_log);
+			// return false;
+		} // end if	
+		dbConn.close();
+	} catch(err){
+		logger.error(err);
+	} finally {	
+		if (dbConn) { 
+			dbConn.close();
+		}
+	} // end try
+	channelMap.put(&apos;select_log&apos;,select_log);
+	return select_log;
+} // end function</code>
+            </properties>
+          </codeTemplate>
+        </codeTemplates>
+      </codeTemplateLibrary>
+    </codeTemplateLibraries>
+    <channelTags>
+      <channelTag>
+        <id>e8b82067-9d5b-4c24-8faa-f1377d4f5d6f</id>
+        <name>ADT</name>
+        <channelIds>
+          <string>6a2a6c33-33da-4783-b823-bd95bf387981</string>
+          <string>1ae4e7ac-e62f-468c-aa2a-99cbd6139838</string>
+          <string>5beae4c2-e7f8-4ae3-9fca-703dea9233a2</string>
+          <string>0638775c-6c87-4a71-b4b3-7ae52be05c1b</string>
+        </channelIds>
+        <backgroundColor>
+          <red>128</red>
+          <green>0</green>
+          <blue>0</blue>
+          <alpha>255</alpha>
+        </backgroundColor>
+      </channelTag>
+      <channelTag>
+        <id>28cdc2db-4028-4249-b1b8-c2ba3961a137</id>
+        <name>HL7</name>
+        <channelIds>
+          <string>6a2a6c33-33da-4783-b823-bd95bf387981</string>
+          <string>1ae4e7ac-e62f-468c-aa2a-99cbd6139838</string>
+          <string>5beae4c2-e7f8-4ae3-9fca-703dea9233a2</string>
+          <string>0638775c-6c87-4a71-b4b3-7ae52be05c1b</string>
+        </channelIds>
+        <backgroundColor>
+          <red>128</red>
+          <green>128</green>
+          <blue>0</blue>
+          <alpha>255</alpha>
+        </backgroundColor>
+      </channelTag>
+      <channelTag>
+        <id>8659dfd8-aca6-4aaa-87e5-ee414ccb63e1</id>
+        <name>PostgreSQL</name>
+        <channelIds>
+          <string>5beae4c2-e7f8-4ae3-9fca-703dea9233a2</string>
+        </channelIds>
+        <backgroundColor>
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+          <alpha>255</alpha>
+        </backgroundColor>
+      </channelTag>
+      <channelTag>
+        <id>f8ff6663-72dc-4235-bf33-5fc871c786b6</id>
+        <name>SIU</name>
+        <channelIds>
+          <string>5beae4c2-e7f8-4ae3-9fca-703dea9233a2</string>
+        </channelIds>
+        <backgroundColor>
+          <red>255</red>
+          <green>0</green>
+          <blue>0</blue>
+          <alpha>255</alpha>
+        </backgroundColor>
+      </channelTag>
+    </channelTags>
+  </exportData>
+</channel>
