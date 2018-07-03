@@ -1,0 +1,1801 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type='text/xsl' href='docutap_ccda.xsl'?>
+<ClinicalDocument
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:voc="urn:hl7-org:v3/voc"
+    xmlns="urn:hl7-org:v3"
+    xmlns:sdtc="urn:hl7-org:sdtc">
+<!-- US Realm Header -->
+<realmCode code="US" />
+<typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040" />
+<templateId root="2.16.840.1.113883.10.20.22.1.1" />
+<templateId root="2.16.840.1.113883.10.20.22.1.2" />
+<id root="2.16.840.1.113883.3.3704.1.9999" extension="28518" />
+<code
+    code="34133-9"
+    displayName="Summarization of Episode Note"
+    codeSystem="2.16.840.1.113883.6.1"
+    codeSystemName="LOINC" />
+<title>AFC Urgent Care Herndon: Health Summary</title>
+<effectiveTime value="20161010" />
+<confidentialityCode code="N" displayName="Normal" codeSystem="2.16.840.1.113883.5.25" codeSystemName="Confidentiality Code" />
+<languageCode code="eng" />
+<!-- RecordTarget -->
+<recordTarget>
+    <patientRole>
+        <id root="2.16.840.1.113883.3.3704.1.9999" extension="28518"/>
+<addr use="HP">
+    <country>US</country>
+    <state>SD</state>
+    <city>SIOUX FALLS</city>
+    <postalCode>57107</postalCode>
+    <streetAddressLine>123 W Main</streetAddressLine>
+</addr>
+<telecom use="HP" value="tel: 605-1235413" />
+        <!-- Patient -->
+        <patient>
+ 
+<name use="L">
+    <family>Test</family>
+    <given>Two</given>
+</name>
+            <administrativeGenderCode 
+code="M"  
+displayName="Male"                 codeSystem="2.16.840.1.113883.5.1"
+                codeSystemName="AdministrativeGender" />
+            <birthTime value="19800101" />
+            <raceCode nullFlavor="UNK"/>
+                <ethnicGroupCode nullFlavor="UNK"/>
+            <!-- Guardian -->
+            <!-- Birthplace -->
+            <!-- LanguageCommunication -->
+            <languageCommunication>
+                <languageCode nullFlavor="UNK"/>
+            </languageCommunication>
+        </patient>
+        <!-- ProviderOrganization -->
+    </patientRole>
+</recordTarget>
+
+<!-- Author -->
+<author>
+<time value="201610101317" />
+    <assignedAuthor>
+        <id root="2.16.840.1.113883.4.6" extension="123456789"  assigningAuthorityName="National Provider ID" />
+<addr use="WP">
+    <country>US</country>
+    <state>VA</state>
+    <city>Herndon</city>
+    <postalCode>20170-4818</postalCode>
+    <streetAddressLine>334 Elden Street</streetAddressLine>
+</addr>
+            <telecom nullFlavor="UNK"/>
+            <assignedPerson>
+<name use="L">
+    <family>Docutap</family>
+    <given>Doctor</given>
+</name>
+            </assignedPerson>
+    </assignedAuthor>
+</author>
+
+<!-- Custodian -->
+<custodian>
+    <assignedCustodian>
+        <representedCustodianOrganization>
+        <id root="2.16.840.1.113883.3.3704.1.9999" />
+            <name>AFC Urgent Care Herndon</name>
+<telecom use="WP" value="tel: 571-6654000" />
+<addr use="WP">
+    <country>US</country>
+    <state>VA</state>
+    <city>Herndon</city>
+    <postalCode>20170-4818</postalCode>
+    <streetAddressLine>334 Elden Street</streetAddressLine>
+</addr>
+        </representedCustodianOrganization>
+    </assignedCustodian>
+</custodian>
+
+<!-- DocumentationOf/serviceEvent -->
+<documentationOf>
+    <serviceEvent classCode="PCPR">
+<effectiveTime>
+    <low nullFlavor="UNK"/>
+    <high nullFlavor="UNK"/>
+</effectiveTime>
+        <performer typeCode="PRF">
+            <assignedEntity>
+                <id root="2.16.840.1.113883.4.6"  />
+<addr use="WP">
+    <country>US</country>
+    <state>VA</state>
+    <city>Herndon</city>
+    <postalCode>201704818</postalCode>
+    <streetAddressLine>334 Elden Street</streetAddressLine>
+</addr>
+<telecom use="WP" value="tel: 571-6654000" />
+                <assignedPerson>
+<name use="L">
+    <family>Docutap</family>
+    <given>Doctor</given>
+</name>
+                </assignedPerson>
+            </assignedEntity>
+        </performer>
+    </serviceEvent>
+</documentationOf>
+
+<!-- ComponentOf -->
+<componentOf>
+    <encompassingEncounter>
+            <id root="2.16.840.1.113883.3.3704.1.9999" extension="51214" />
+        <effectiveTime xsi:type="IVL_TS">
+            <low value="20160930" />
+        </effectiveTime>
+        <responsibleParty>
+            <assignedEntity>
+                <id root="49c48e00-ddbd-46d0-9086-09b69be02a53" />
+                <code code="207QA0505X" codeSystem="2.16.840.1.113883.6.101" codeSystemName="NUCC" displayName="Adult Medicine"/>
+<addr use="WP">
+    <country>US</country>
+    <state>VA</state>
+    <city>Herndon</city>
+    <postalCode>20170-4818</postalCode>
+    <streetAddressLine>334 Elden Street</streetAddressLine>
+</addr>
+<telecom use="WP" value="tel: 571-6654000" />
+                <representedOrganization>
+                    <name>AFC Urgent Care Herndon</name>
+                </representedOrganization>
+            </assignedEntity>
+        </responsibleParty>
+        <encounterParticipant typeCode="ATND">
+            <time>
+                <low value="20160930" />
+            </time>
+            <assignedEntity>
+                <id root="2.16.840.1.113883.4.6" extension="123456789" />
+                <code code="207QA0505X" codeSystem="2.16.840.1.113883.6.101" codeSystemName="NUCC" displayName="Adult Medicine"/>
+<addr use="WP">
+    <country>US</country>
+    <state>VA</state>
+    <city>Herndon</city>
+    <postalCode>20170-4818</postalCode>
+    <streetAddressLine>334 Elden Street</streetAddressLine>
+</addr>
+<telecom use="WP" value="tel: 571-6654000" />
+                <assignedPerson>
+<name use="L">
+    <family>Docutap</family>
+    <given>Doctor</given>
+</name>
+                </assignedPerson>
+            </assignedEntity>
+        </encounterParticipant>
+        <location>
+            <healthCareFacility>
+                <id root="2.16.840.1.113883.3.3704.1.9999" extension="1" />
+                <location>
+                    <name>AFC Urgent Care Herndon</name>
+<addr use="WP">
+    <country>US</country>
+    <state>VA</state>
+    <city>Herndon</city>
+    <postalCode>20170-4818</postalCode>
+    <streetAddressLine>334 Elden Street</streetAddressLine>
+</addr>
+                </location>
+            </healthCareFacility>
+        </location>
+    </encompassingEncounter>
+</componentOf>
+
+    <component>
+        <structuredBody>
+<!-- Allergies -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.6.1" assigningAuthorityName="CCDA Allergies Section (Entries Required)" />
+        <id root="ecdf929a-76f0-4d1b-a8cb-1209e2d606ad" />
+        <code code="48765-2" displayName="Allergies, adverse reactions, alerts" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"></code>
+        <title>Allergies</title>
+        <text>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Substance</th>
+                        <th>Reaction</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td ID="allergyType1">Propensity to adverse reactions to drug (disorder)</td>
+                        <td ID="allergyDescription1">Avandia</td>
+                        <td>
+                            <list>
+                                <item ID="allergyReaction11">Anxiety</item>
+                            </list>
+                        </td>
+                        <td>Active</td>
+                    </tr>
+                    <tr>
+                        <td ID="allergyType2">Propensity to adverse reactions to drug (disorder)</td>
+                        <td ID="allergyDescription2">Cefzil</td>
+                        <td>
+                            <list>
+                                <item ID="allergyReaction21"></item>
+                            </list>
+                        </td>
+                        <td>Active</td>
+                    </tr>
+                </tbody>
+            </table>
+        </text>
+<entry typeCode="DRIV">
+    <act classCode="ACT" moodCode="EVN">
+      <templateId root="2.16.840.1.113883.10.20.22.4.30" assigningAuthorityName="CCDA Allergy Problem Act" />
+      <id root="fe381517-9973-4577-ad41-9c3947ab528e"/>
+      <code code="48765-2" displayName="Allergies, adverse reactions, alerts" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"></code>
+      <statusCode code="active" />
+<effectiveTime>
+    <low value="201609301114" />
+    <high nullFlavor="UNK"/>
+</effectiveTime>
+      <entryRelationship typeCode="SUBJ">
+<!-- Allergy - Intolerance Observation -->
+<observation classCode="OBS" moodCode="EVN" negationInd="false">
+    <templateId root="2.16.840.1.113883.10.20.22.4.7" assigningAuthorityName="CCDA Allergy Observation" />
+    <id root="99b01c4a-707f-4c28-ace1-38001c2723fb" />
+    <code
+        code="ASSERTION"
+        displayName="Assertion"
+        codeSystem="2.16.840.1.113883.5.4"
+        codeSystemName="ActCode" >
+        <originalText>
+            <reference value="#allergyDescription1" />
+        </originalText>
+    </code>
+    <statusCode code="completed" />
+<effectiveTime>
+    <low value="201609301114" />
+    <high nullFlavor="UNK"/>
+</effectiveTime>
+        <value
+code="419511003" displayName="Propensity to adverse reactions to drug (disorder)"             codeSystem="2.16.840.1.113883.6.96"
+            codeSystemName="SNOMED CT"
+            xsi:type="CD"
+ >
+            <originalText>
+                <reference value="#allergyType1" />
+            </originalText>
+        </value>
+    <participant typeCode="CSM">
+        <participantRole classCode="MANU">
+            <playingEntity classCode="MMAT">
+                <code
+code="261455" displayName="Avandia"                     codeSystem="2.16.840.1.113883.6.88"
+                    codeSystemName="RxNorm"
+ >
+                    <originalText>
+                        <reference value="#allergyDescription1" />
+                    </originalText>
+                </code>
+            </playingEntity>
+        </participantRole>
+    </participant>
+    <entryRelationship typeCode="MFST" inversionInd="true">
+        <observation classCode="OBS" moodCode="EVN">
+            <templateId root="2.16.840.1.113883.10.20.22.4.9" assigningAuthorityName="CCDA Allergy Reaction Observation" />
+            <id root="a37e03f7-7efb-46b0-b091-3821a7a8004b" />
+            <code
+                code="55607006"
+                displayName="Problem"
+                codeSystem="2.16.840.1.113883.6.96"
+                codeSystemName="SNOMED CT" />
+            <text>
+                <reference value="#allergyReaction11" />
+            </text>
+            <statusCode code="completed" />
+            <effectiveTime>
+                <low nullFlavor="UNK" />
+            </effectiveTime>
+            <value
+                xsi:type="CD"
+code="48694002"  displayName="Anxiety"                 codeSystem="2.16.840.1.113883.6.96"
+                codeSystemName="SNOMED CT"
+ />
+        </observation>
+    </entryRelationship>
+    <entryRelationship typeCode="SUBJ" inversionInd="true">
+        <observation classCode="OBS" moodCode="EVN">
+        <templateId root="2.16.840.1.113883.10.20.22.4.8"/>
+        <!-- ** Severity observation template ** -->
+        <code code="SEV" displayName="Severity Observation" codeSystem="2.16.840.1.113883.5.4" codeSystemName="ActCode"></code>
+        <statusCode code="completed" />
+        <value xsi:type="CD" nullFlavor="UNK"  codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" />
+        </observation>
+    </entryRelationship>
+</observation>
+      </entryRelationship>
+    </act>
+</entry>
+<entry typeCode="DRIV">
+    <act classCode="ACT" moodCode="EVN">
+      <templateId root="2.16.840.1.113883.10.20.22.4.30" assigningAuthorityName="CCDA Allergy Problem Act" />
+      <id root="0864c12f-2e1c-467c-8578-55557932bfd8"/>
+      <code code="48765-2" displayName="Allergies, adverse reactions, alerts" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"></code>
+      <statusCode code="active" />
+<effectiveTime>
+    <low value="201609301114" />
+    <high nullFlavor="UNK"/>
+</effectiveTime>
+      <entryRelationship typeCode="SUBJ">
+<!-- Allergy - Intolerance Observation -->
+<observation classCode="OBS" moodCode="EVN" negationInd="false">
+    <templateId root="2.16.840.1.113883.10.20.22.4.7" assigningAuthorityName="CCDA Allergy Observation" />
+    <id root="b2a0ec09-2254-4df9-bd0e-dc706c77e1fa" />
+    <code
+        code="ASSERTION"
+        displayName="Assertion"
+        codeSystem="2.16.840.1.113883.5.4"
+        codeSystemName="ActCode" >
+        <originalText>
+            <reference value="#allergyDescription2" />
+        </originalText>
+    </code>
+    <statusCode code="completed" />
+<effectiveTime>
+    <low value="201609301114" />
+    <high nullFlavor="UNK"/>
+</effectiveTime>
+        <value
+code="419511003" displayName="Propensity to adverse reactions to drug (disorder)"             codeSystem="2.16.840.1.113883.6.96"
+            codeSystemName="SNOMED CT"
+            xsi:type="CD"
+ >
+            <originalText>
+                <reference value="#allergyType2" />
+            </originalText>
+        </value>
+    <participant typeCode="CSM">
+        <participantRole classCode="MANU">
+            <playingEntity classCode="MMAT">
+                <code
+code="224901" displayName="Cefzil"                     codeSystem="2.16.840.1.113883.6.88"
+                    codeSystemName="RxNorm"
+ >
+                    <originalText>
+                        <reference value="#allergyDescription2" />
+                    </originalText>
+                </code>
+            </playingEntity>
+        </participantRole>
+    </participant>
+    <entryRelationship typeCode="MFST" inversionInd="true">
+        <observation classCode="OBS" moodCode="EVN">
+            <templateId root="2.16.840.1.113883.10.20.22.4.9" assigningAuthorityName="CCDA Allergy Reaction Observation" />
+            <id root="ebb9b19b-9a08-42bb-9cd2-c6db5ce4e59f" />
+            <code
+                code="55607006"
+                displayName="Problem"
+                codeSystem="2.16.840.1.113883.6.96"
+                codeSystemName="SNOMED CT" />
+            <text>
+                <reference value="#allergyReaction21" />
+            </text>
+            <statusCode code="completed" />
+            <effectiveTime>
+                <low nullFlavor="UNK" />
+            </effectiveTime>
+            <value code="416098002" displayName="drug allergy" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" xsi:type="CD"/>
+        </observation>
+    </entryRelationship>
+    <entryRelationship typeCode="SUBJ" inversionInd="true">
+        <observation classCode="OBS" moodCode="EVN">
+        <templateId root="2.16.840.1.113883.10.20.22.4.8"/>
+        <!-- ** Severity observation template ** -->
+        <code code="SEV" displayName="Severity Observation" codeSystem="2.16.840.1.113883.5.4" codeSystemName="ActCode"></code>
+        <statusCode code="completed" />
+        <value xsi:type="CD" nullFlavor="UNK"  codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" />
+        </observation>
+    </entryRelationship>
+</observation>
+      </entryRelationship>
+    </act>
+</entry>
+    </section>
+</component>
+
+<!-- Encounters -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.22" assigningAuthorityName="CCDA Encounters Section (Entries Optional)" />
+        <templateId root="2.16.840.1.113883.10.20.22.2.22.1" assigningAuthorityName="CCDA Encounters Section (Entries Required)" />
+        <code code="46240-8" displayName="Encounters" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+        <title>Encounter Diagnosis</title>
+        <text>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Encounter Date</th>
+                        <th>Diagnosis</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ID="encounter1">
+                        <td>09/30/2016</td>
+                        <td>Allergic rhinitis, unspecified</td>
+                    </tr>
+                    <tr ID="encounter2">
+                        <td>09/30/2016</td>
+                        <td>Hypertension, essential</td>
+                    </tr>
+                </tbody>
+            </table>
+        </text>
+        <entry>
+            <!-- Encounter Activities -->
+            <encounter classCode="ENC" moodCode="EVN">
+                <templateId root="2.16.840.1.113883.10.20.22.4.49" assigningAuthorityName="CCDA Encounter Activity" />
+                <id root="387969bd-5205-4874-b56b-a7d802aa7bbe" />
+                <effectiveTime value="201609300000" />
+                <entryRelationship typeCode="RSON">
+                    <!-- Encounter Diagnosis -->
+                    <act classCode="ACT" moodCode="EVN">
+                        <templateId root="2.16.840.1.113883.10.20.22.4.80" assigningAuthorityName="CCDA Encounter Diagnosis" />
+                        <code xsi:type="CE" code="29308-4" displayName="Diagnosis" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+                        <entryRelationship typeCode="SUBJ">
+<!--  Problem Observation -->
+<observation classCode="OBS" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.4" assigningAuthorityName="CCDA Problem Observation" />
+    <id root="f0e6dd2c-11f8-4d4d-b2df-f87a569dbf2f" />
+    <code
+        code=" 409586006"
+        displayName=" Complaint"
+        codeSystem="2.16.840.1.113883.6.96"
+        codeSystemName="SNOMED CT" />
+    <text>
+        <reference value="#encounter1" />
+    </text>
+    <statusCode code="completed" />
+    <value
+        xsi:type="CD"
+code="61582004" displayName="Allergic rhinitis, unspecified"         codeSystem="2.16.840.1.113883.6.96"
+        codeSystemName="SNOMED CT"
+ />
+</observation>
+                        </entryRelationship>
+                    </act>
+                </entryRelationship>
+            </encounter>
+        </entry>
+        <entry>
+            <!-- Encounter Activities -->
+            <encounter classCode="ENC" moodCode="EVN">
+                <templateId root="2.16.840.1.113883.10.20.22.4.49" assigningAuthorityName="CCDA Encounter Activity" />
+                <id root="863b7de9-bd1d-4531-b89a-fbfe19116a3e" />
+                <effectiveTime value="201609300000" />
+                <entryRelationship typeCode="RSON">
+                    <!-- Encounter Diagnosis -->
+                    <act classCode="ACT" moodCode="EVN">
+                        <templateId root="2.16.840.1.113883.10.20.22.4.80" assigningAuthorityName="CCDA Encounter Diagnosis" />
+                        <code xsi:type="CE" code="29308-4" displayName="Diagnosis" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+                        <entryRelationship typeCode="SUBJ">
+<!--  Problem Observation -->
+<observation classCode="OBS" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.4" assigningAuthorityName="CCDA Problem Observation" />
+    <id root="9dd130a9-36ee-4e84-a1d8-544c67441fc4" />
+    <code
+        code=" 409586006"
+        displayName=" Complaint"
+        codeSystem="2.16.840.1.113883.6.96"
+        codeSystemName="SNOMED CT" />
+    <text>
+        <reference value="#encounter2" />
+    </text>
+    <statusCode code="completed" />
+    <value
+        xsi:type="CD"
+code="59621000" displayName="Hypertension, essential"         codeSystem="2.16.840.1.113883.6.96"
+        codeSystemName="SNOMED CT"
+ />
+</observation>
+                        </entryRelationship>
+                    </act>
+                </entryRelationship>
+            </encounter>
+        </entry>
+    </section>
+</component>
+
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.15" assigningAuthorityName="CCDA Family History Section" />
+        <code code="10157-6" displayName="History of Family Member diseases" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+        <title>Family History</title>
+        <text>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Relation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Breast cancer</td>
+                        <td>Father</td>
+                    </tr>
+                </tbody>
+            </table>
+        </text>
+        <entry typeCode="DRIV">
+<!-- Family History Organizer -->
+<organizer moodCode="EVN" classCode="CLUSTER">
+    <templateId root="2.16.840.1.113883.10.20.22.4.45" assigningAuthorityName="CCDA Family History Organizer" />
+    <statusCode code="completed" />
+    <subject>
+        <relatedSubject classCode="PRS">
+            <code 
+code="NPRN"  
+displayName="Father"  
+                codeSystemName="HL7 FamilyMember" 
+                codeSystem="2.16.840.1.113883.1.11.19579" />
+        </relatedSubject>
+    </subject>
+    <component>
+        <!-- Family History Observation --> 
+        <observation classCode="OBS" moodCode="EVN">
+            <templateId root="2.16.840.1.113883.10.20.22.4.46" assigningAuthorityName="CCDA Family History Observation" />
+            <id root="55d1169c-7c7b-4f8a-8fa2-57ca56c6b9b9"/>
+            <code code="64572001" displayName="Condition" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" />
+            <statusCode code="completed" />
+            <effectiveTime>
+                <low nullFlavor="UNK" />
+            </effectiveTime>
+            <value 
+                xsi:type="CD"
+code="254837009"  
+displayName="Breast cancer"                 codeSystem="2.16.840.1.113883.6.96" 
+                codeSystemName="SNOMED CT" />
+        </observation>
+    </component>
+</organizer>
+        </entry>
+ 
+    </section>
+</component>
+
+<!-- Functional Status -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.14" assigningAuthorityName="CCDA Functional Status Section" />
+        <code
+            code="47420-5"
+            displayName="Functional Status"
+            codeSystem="2.16.840.1.113883.6.1"
+            codeSystemName="LOINC" />
+        <title>Functional Status</title>
+        <text>
+            <content>None recorded.</content>
+        </text>
+        <!-- Cognitive Status Problem Observations -->
+        <!-- Cognitive Status Result Organizers -->
+        <!-- Functional Status Problem Observations -->
+        <!-- Functional Status Result Observations -->
+    </section>
+</component>
+
+<!-- Immunizations -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.2" />
+        <templateId root="2.16.840.1.113883.10.20.22.2.2.1" />
+        <code code="11369-6" displayName="Immunizations" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+        <title>Immunizations</title>
+        <text>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Vaccine</th>
+                        <th>Date Administered</th>
+                        <th>Contraindications</th>
+                        <th>Evidence of Immunity</th>
+                        <th>Partially Administered</th>
+                        <th>Historical/New</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ID="immunizationActivity1">
+                        <td colspan="7">
+                            None Recorded.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </text>
+        <entry>
+            <substanceAdministration moodCode="EVN" classCode="SBADM" negationInd="false" nullFlavor="NI">
+                <templateId root="2.16.840.1.113883.10.20.22.4.52"/>
+                <!--  ****   Immunization activity template    **** -->
+                <id root="e6f1ba43-c0ed-4b9b-9f12-f435d8ad8f88"/>
+                <!-- I do not know whether or not patient received a vaccination -->
+                <text>
+                    <reference value="#immunizationActivity1"/>
+                </text>
+                <statusCode code="completed"/>
+                <effectiveTime nullFlavor="UNK"/>
+                <consumable>
+                    <manufacturedProduct classCode="MANU">
+                        <!-- ** Immunization medication information ** -->
+                        <templateId root="2.16.840.1.113883.10.20.22.4.54"/>
+                        <manufacturedMaterial>
+                            <code nullFlavor="OTH">
+                                <translation code="71181003" displayName="vaccine"
+                                    codeSystem="2.16.840.1.113883.6.96"
+                                    codeSystemName="SNOMED CT"/>
+                            </code>
+                        </manufacturedMaterial>
+                    </manufacturedProduct>
+                </consumable>
+            </substanceAdministration>
+        </entry>
+    </section>
+</component>
+
+<!-- Instructions -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.45" />
+        <code
+            code="69730-0"
+            displayName="Instructions"
+            codeSystem="2.16.840.1.113883.6.1"
+            codeSystemName="LOINC" />
+        <title>Instructions</title>
+        <text>
+            <content>None recorded.</content>
+        </text>
+    </section>
+</component>
+
+<!-- Medications -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.1" />
+        <templateId root="2.16.840.1.113883.10.20.22.2.1.1" /> 
+        <code code="10160-0" displayName="History of Medication Use" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" ></code>
+        <title>Medications</title>
+        <text>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Medication</th>
+                        <th>Route/Frequency</th>
+                        <th>Status</th>
+                        <th>Directions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ID="PrescriptionInstructions1">
+                        <td>Adderall   </td>
+                        <td>  </td>
+                        <td>Active</td>
+                        <td>Take</td>
+                    </tr>
+                    <tr ID="PrescriptionInstructions2">
+                        <td>ampicillin   </td>
+                        <td>  </td>
+                        <td>Active</td>
+                        <td>Take</td>
+                    </tr>
+                    <tr ID="PrescriptionInstructions3">
+                        <td>Ativan   </td>
+                        <td>  </td>
+                        <td>Active</td>
+                        <td>Take</td>
+                    </tr>
+                    <tr ID="PrescriptionInstructions4">
+                        <td>lisinopril 10 MG tablet</td>
+                        <td>oral 1 time per day </td>
+                        <td>Active</td>
+                        <td>Take 1 tablet (oral) 1 time per day</td>
+                    </tr>
+                    <tr ID="PrescriptionInstructions5">
+                        <td>Singulair 10 MG tablet</td>
+                        <td>oral 1 time per day </td>
+                        <td>Active</td>
+                        <td>Take 1 tablet (oral) 1 time per day for 30 days</td>
+                    </tr>
+                </tbody>
+            </table>
+        </text>
+        <entry>
+<!-- Medication Activity -->
+<substanceAdministration classCode="SBADM" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.16" assigningAuthorityName="CCDA Medication Activity" />
+    <id root="f88a862b-9871-4f9f-a29a-cccaad408b3d" />
+    <statusCode code="completed" />
+    <effectiveTime xsi:type="IVL_TS">
+        <low nullFlavor="UNK" />
+        <high nullFlavor="UNK" />
+    </effectiveTime>
+    <!-- Medication Information -->
+    <consumable>
+<manufacturedProduct classCode="MANU">
+    <templateId root="2.16.840.1.113883.10.20.22.4.23" assigningAuthorityName="CCDA Medication Information" />
+    <id root="e0570b70-f8e2-44bd-be8d-91a4d410c1cf" />
+    <manufacturedMaterial>
+        <code
+nullFlavor="UNK" displayName="Adderall"             codeSystem="2.16.840.1.113883.6.88"
+            codeSystemName="RxNorm"
+ />
+    </manufacturedMaterial>
+</manufacturedProduct>
+    </consumable>
+    <!-- Medication Supply Order -->
+    <entryRelationship typeCode="REFR">
+        <supply classCode="SPLY" moodCode="INT">
+            <templateId root="2.16.840.1.113883.10.20.22.4.17" assigningAuthorityName="CCDA Medication Supply Order" />
+            <id root="a8ef6df2-8dfe-4d92-a484-0f5a83c89b2b"  />
+            <statusCode code="completed" />
+            <effectiveTime xsi:type="IVL_TS">
+                <low nullFlavor="UNK" />
+                <high nullFlavor="UNK" />
+            </effectiveTime>
+            <product>
+                <!-- Medication Information -->
+<manufacturedProduct classCode="MANU">
+    <templateId root="2.16.840.1.113883.10.20.22.4.23" assigningAuthorityName="CCDA Medication Information" />
+    <id root="e0570b70-f8e2-44bd-be8d-91a4d410c1cf" />
+    <manufacturedMaterial>
+        <code
+nullFlavor="UNK" displayName="Adderall"             codeSystem="2.16.840.1.113883.6.88"
+            codeSystemName="RxNorm"
+ />
+    </manufacturedMaterial>
+</manufacturedProduct>
+            </product>
+            <entryRelationship typeCode="SUBJ" inversionInd="true">
+                <!-- Instructions -->
+                <act classCode="ACT" moodCode="INT">
+                    <templateId root="2.16.840.1.113883.10.20.22.4.20" />
+                    <code xsi:type="CE" code="311401005" displayName="Patient Education" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" />
+                    <text>
+                        <reference value="#PrescriptionInstructions1" />
+                        Take
+                    </text>
+                    <statusCode code="completed" />
+                </act>
+            </entryRelationship>
+        </supply>
+    </entryRelationship>
+</substanceAdministration>
+        </entry>
+        <entry>
+<!-- Medication Activity -->
+<substanceAdministration classCode="SBADM" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.16" assigningAuthorityName="CCDA Medication Activity" />
+    <id root="8d6ad174-07cf-44b8-82be-7852342446ec" />
+    <statusCode code="completed" />
+    <effectiveTime xsi:type="IVL_TS">
+        <low nullFlavor="UNK" />
+        <high nullFlavor="UNK" />
+    </effectiveTime>
+    <!-- Medication Information -->
+    <consumable>
+<manufacturedProduct classCode="MANU">
+    <templateId root="2.16.840.1.113883.10.20.22.4.23" assigningAuthorityName="CCDA Medication Information" />
+    <id root="9d65aaa5-63a4-4094-a82d-f450a75bd60e" />
+    <manufacturedMaterial>
+        <code
+nullFlavor="UNK" displayName="ampicillin"             codeSystem="2.16.840.1.113883.6.88"
+            codeSystemName="RxNorm"
+ />
+    </manufacturedMaterial>
+</manufacturedProduct>
+    </consumable>
+    <!-- Medication Supply Order -->
+    <entryRelationship typeCode="REFR">
+        <supply classCode="SPLY" moodCode="INT">
+            <templateId root="2.16.840.1.113883.10.20.22.4.17" assigningAuthorityName="CCDA Medication Supply Order" />
+            <id root="fc4c75dd-7c34-46f0-8a4d-749cf19cb9a9"  />
+            <statusCode code="completed" />
+            <effectiveTime xsi:type="IVL_TS">
+                <low nullFlavor="UNK" />
+                <high nullFlavor="UNK" />
+            </effectiveTime>
+            <product>
+                <!-- Medication Information -->
+<manufacturedProduct classCode="MANU">
+    <templateId root="2.16.840.1.113883.10.20.22.4.23" assigningAuthorityName="CCDA Medication Information" />
+    <id root="9d65aaa5-63a4-4094-a82d-f450a75bd60e" />
+    <manufacturedMaterial>
+        <code
+nullFlavor="UNK" displayName="ampicillin"             codeSystem="2.16.840.1.113883.6.88"
+            codeSystemName="RxNorm"
+ />
+    </manufacturedMaterial>
+</manufacturedProduct>
+            </product>
+            <entryRelationship typeCode="SUBJ" inversionInd="true">
+                <!-- Instructions -->
+                <act classCode="ACT" moodCode="INT">
+                    <templateId root="2.16.840.1.113883.10.20.22.4.20" />
+                    <code xsi:type="CE" code="311401005" displayName="Patient Education" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" />
+                    <text>
+                        <reference value="#PrescriptionInstructions2" />
+                        Take
+                    </text>
+                    <statusCode code="completed" />
+                </act>
+            </entryRelationship>
+        </supply>
+    </entryRelationship>
+</substanceAdministration>
+        </entry>
+        <entry>
+<!-- Medication Activity -->
+<substanceAdministration classCode="SBADM" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.16" assigningAuthorityName="CCDA Medication Activity" />
+    <id root="0ea30cf4-1411-40be-be21-2160650e7ff9" />
+    <statusCode code="completed" />
+    <effectiveTime xsi:type="IVL_TS">
+        <low nullFlavor="UNK" />
+        <high nullFlavor="UNK" />
+    </effectiveTime>
+    <!-- Medication Information -->
+    <consumable>
+<manufacturedProduct classCode="MANU">
+    <templateId root="2.16.840.1.113883.10.20.22.4.23" assigningAuthorityName="CCDA Medication Information" />
+    <id root="49fa245d-98fa-4b7f-9d3f-3ad0574b7610" />
+    <manufacturedMaterial>
+        <code
+nullFlavor="UNK" displayName="Ativan"             codeSystem="2.16.840.1.113883.6.88"
+            codeSystemName="RxNorm"
+ />
+    </manufacturedMaterial>
+</manufacturedProduct>
+    </consumable>
+    <!-- Medication Supply Order -->
+    <entryRelationship typeCode="REFR">
+        <supply classCode="SPLY" moodCode="INT">
+            <templateId root="2.16.840.1.113883.10.20.22.4.17" assigningAuthorityName="CCDA Medication Supply Order" />
+            <id root="18385502-7f23-4728-9356-d8c9f19c7f95"  />
+            <statusCode code="completed" />
+            <effectiveTime xsi:type="IVL_TS">
+                <low nullFlavor="UNK" />
+                <high nullFlavor="UNK" />
+            </effectiveTime>
+            <product>
+                <!-- Medication Information -->
+<manufacturedProduct classCode="MANU">
+    <templateId root="2.16.840.1.113883.10.20.22.4.23" assigningAuthorityName="CCDA Medication Information" />
+    <id root="49fa245d-98fa-4b7f-9d3f-3ad0574b7610" />
+    <manufacturedMaterial>
+        <code
+nullFlavor="UNK" displayName="Ativan"             codeSystem="2.16.840.1.113883.6.88"
+            codeSystemName="RxNorm"
+ />
+    </manufacturedMaterial>
+</manufacturedProduct>
+            </product>
+            <entryRelationship typeCode="SUBJ" inversionInd="true">
+                <!-- Instructions -->
+                <act classCode="ACT" moodCode="INT">
+                    <templateId root="2.16.840.1.113883.10.20.22.4.20" />
+                    <code xsi:type="CE" code="311401005" displayName="Patient Education" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" />
+                    <text>
+                        <reference value="#PrescriptionInstructions3" />
+                        Take
+                    </text>
+                    <statusCode code="completed" />
+                </act>
+            </entryRelationship>
+        </supply>
+    </entryRelationship>
+</substanceAdministration>
+        </entry>
+        <entry>
+<!-- Medication Activity -->
+<substanceAdministration classCode="SBADM" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.16" assigningAuthorityName="CCDA Medication Activity" />
+    <id root="aa8ef734-a5df-4e1f-a50f-d3d2339c2e02" />
+    <statusCode code="completed" />
+    <effectiveTime xsi:type="IVL_TS">
+        <low value="20161007" />
+        <high nullFlavor="UNK" />
+    </effectiveTime>
+    <doseQuantity value="1" unit="tablet" />
+    <!-- Medication Information -->
+    <consumable>
+<manufacturedProduct classCode="MANU">
+    <templateId root="2.16.840.1.113883.10.20.22.4.23" assigningAuthorityName="CCDA Medication Information" />
+    <id root="23a19cfe-fb48-475b-a2bd-39674910b47d" />
+    <manufacturedMaterial>
+        <code
+code="314076" displayName="lisinopril"             codeSystem="2.16.840.1.113883.6.88"
+            codeSystemName="RxNorm"
+ />
+    </manufacturedMaterial>
+</manufacturedProduct>
+    </consumable>
+    <!-- Medication Supply Order -->
+    <entryRelationship typeCode="REFR">
+        <supply classCode="SPLY" moodCode="INT">
+            <templateId root="2.16.840.1.113883.10.20.22.4.17" assigningAuthorityName="CCDA Medication Supply Order" />
+            <id root="5ec69599-e9b6-41b5-aed4-bb8050fee6b1"  />
+            <statusCode code="completed" />
+            <effectiveTime xsi:type="IVL_TS">
+                <low value="20161007" />
+                <high nullFlavor="UNK" />
+            </effectiveTime>
+            <product>
+                <!-- Medication Information -->
+<manufacturedProduct classCode="MANU">
+    <templateId root="2.16.840.1.113883.10.20.22.4.23" assigningAuthorityName="CCDA Medication Information" />
+    <id root="23a19cfe-fb48-475b-a2bd-39674910b47d" />
+    <manufacturedMaterial>
+        <code
+code="314076" displayName="lisinopril"             codeSystem="2.16.840.1.113883.6.88"
+            codeSystemName="RxNorm"
+ />
+    </manufacturedMaterial>
+</manufacturedProduct>
+            </product>
+            <entryRelationship typeCode="SUBJ" inversionInd="true">
+                <!-- Instructions -->
+                <act classCode="ACT" moodCode="INT">
+                    <templateId root="2.16.840.1.113883.10.20.22.4.20" />
+                    <code xsi:type="CE" code="311401005" displayName="Patient Education" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" />
+                    <text>
+                        <reference value="#PrescriptionInstructions4" />
+                        Take 1 tablet (oral) 1 time per day
+                    </text>
+                    <statusCode code="completed" />
+                </act>
+            </entryRelationship>
+        </supply>
+    </entryRelationship>
+</substanceAdministration>
+        </entry>
+        <entry>
+<!-- Medication Activity -->
+<substanceAdministration classCode="SBADM" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.16" assigningAuthorityName="CCDA Medication Activity" />
+    <id root="aba8e9bc-7bd9-4f0b-85a6-1edf36148200" />
+    <statusCode code="completed" />
+    <effectiveTime xsi:type="IVL_TS">
+        <low value="20161007" />
+        <high value="20161106" />
+    </effectiveTime>
+    <doseQuantity value="1" unit="tablet" />
+    <!-- Medication Information -->
+    <consumable>
+<manufacturedProduct classCode="MANU">
+    <templateId root="2.16.840.1.113883.10.20.22.4.23" assigningAuthorityName="CCDA Medication Information" />
+    <id root="f93d48f9-a1d9-490a-9007-68d9a815ba6d" />
+    <manufacturedMaterial>
+        <code
+code="200224" displayName="Singulair"             codeSystem="2.16.840.1.113883.6.88"
+            codeSystemName="RxNorm"
+ />
+    </manufacturedMaterial>
+</manufacturedProduct>
+    </consumable>
+    <!-- Medication Supply Order -->
+    <entryRelationship typeCode="REFR">
+        <supply classCode="SPLY" moodCode="INT">
+            <templateId root="2.16.840.1.113883.10.20.22.4.17" assigningAuthorityName="CCDA Medication Supply Order" />
+            <id root="f20eebeb-be76-4d55-a58f-4c9bb83fde9c"  />
+            <statusCode code="completed" />
+            <effectiveTime xsi:type="IVL_TS">
+                <low value="20161007" />
+                <high value="20161106" />
+            </effectiveTime>
+            <quantity value="30" />
+            <product>
+                <!-- Medication Information -->
+<manufacturedProduct classCode="MANU">
+    <templateId root="2.16.840.1.113883.10.20.22.4.23" assigningAuthorityName="CCDA Medication Information" />
+    <id root="f93d48f9-a1d9-490a-9007-68d9a815ba6d" />
+    <manufacturedMaterial>
+        <code
+code="200224" displayName="Singulair"             codeSystem="2.16.840.1.113883.6.88"
+            codeSystemName="RxNorm"
+ />
+    </manufacturedMaterial>
+</manufacturedProduct>
+            </product>
+            <entryRelationship typeCode="SUBJ" inversionInd="true">
+                <!-- Instructions -->
+                <act classCode="ACT" moodCode="INT">
+                    <templateId root="2.16.840.1.113883.10.20.22.4.20" />
+                    <code xsi:type="CE" code="311401005" displayName="Patient Education" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" />
+                    <text>
+                        <reference value="#PrescriptionInstructions5" />
+                        30
+                        Take 1 tablet (oral) 1 time per day for 30 days
+                    </text>
+                    <statusCode code="completed" />
+                </act>
+            </entryRelationship>
+        </supply>
+    </entryRelationship>
+</substanceAdministration>
+        </entry>
+    </section>
+</component>
+
+<!-- Medications Administered -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.38" assigningAuthorityName="CCDA Medications Administered Section" />
+        <code code="29549-3" displayName="Medications Administered" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+        <title>Medications Administered</title>
+        <text>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Medication</th>
+                        <th>Administration Date</th>
+                        <th>Dose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ID="medicationAdministered1">
+                        <td>butorphanol tartrate   </td>
+                        <td>09/30/2016</td>
+                        <td>3 mg</td>
+                    </tr>
+                </tbody>
+            </table>
+        </text>
+        <entry>
+<!-- Medication Activity -->
+<substanceAdministration classCode="SBADM" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.16" assigningAuthorityName="CCDA Medication Activity" />
+    <id root="9615e08e-0a1e-46dd-94f7-702796af2a26" />
+    <text>
+        <reference value="#medicationAdministered1" />
+    </text>
+    <statusCode code="completed" />
+    <effectiveTime xsi:type="IVL_TS">
+        <low value="20160930" />
+        <high nullFlavor="UNK" />
+    </effectiveTime>
+    <doseQuantity value="3" unit="mg" />
+    <!-- Medication Information -->
+    <consumable>
+<manufacturedProduct classCode="MANU">
+    <templateId root="2.16.840.1.113883.10.20.22.4.23" assigningAuthorityName="CCDA Medication Information" />
+    <id root="509c3f34-636f-484a-82d8-b287ff33b154" />
+    <manufacturedMaterial>
+        <code
+nullFlavor="UNK" displayName="butorphanol tartrate"             codeSystem="2.16.840.1.113883.6.88"
+            codeSystemName="RxNorm"
+ >
+            <originalText>
+                <reference value="#medicationAdministered1" />
+            </originalText>
+        </code>
+    </manufacturedMaterial>
+</manufacturedProduct>
+    </consumable>
+</substanceAdministration>
+        </entry>
+    </section>
+</component>
+
+<!-- Payers -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.18" assigningAuthorityName="CCDA Payers Section" />
+        <code
+            code="48768-6"
+            displayName="Payers"
+            codeSystem="2.16.840.1.113883.6.1"
+            codeSystemName="LOINC" />
+        <title>Insurance Providers</title>
+        <text>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Plan Name</th>
+                        <th>Member Id</th>
+                        <th>Policy Id</th>
+                        <th>Subscriber</th>
+                        <th>Relationship</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ID="payer1">
+                        <td>BCBS</td>
+                        <td>INS516</td>
+                        <td></td>
+                        <td>Two Test</td>
+                        <td>Self</td>
+                    </tr>
+                </tbody>
+            </table>
+        </text>
+        <entry>
+            <act classCode="ACT" moodCode="EVN">
+                <templateId root="2.16.840.1.113883.10.20.22.4.60" assigningAuthorityName="CCDA Coverage Activity" />
+                <id root="6ce9ddc8-6dd4-41e0-aafb-ebd98aaa5397" />
+                <code
+                    xsi:type="CE"
+                    code="48768-6"
+                    displayName="Payment Sources"
+                    codeSystem="2.16.840.1.113883.6.1"
+                    codeSystemName="LOINC" />
+                <statusCode code="completed" />
+                <entryRelationship typeCode="COMP">
+                    <act classCode="ACT" moodCode="EVN">
+                        <templateId root="2.16.840.1.113883.10.20.22.4.61" assigningAuthorityName="CCDA Policy Activity" />
+                        <id root="cbf4b981-4db5-4ae2-bb11-225a1f1f214f"  />
+                        <code
+                            code="SELF"
+                            codeSystem="2.16.840.1.113883.5.110"
+                            codeSystemName="HL7 RoleClassRelationship" />
+                        <statusCode code="completed" />
+                        <!-- Insurance Company Information -->
+                        <performer typeCode="PRF">
+                            <templateId root="2.16.840.1.113883.10.20.22.4.87" assigningAuthorityName="Payer Performer" />
+                            <assignedEntity>
+                                <id root="56daf775-0180-499c-926c-c61e1f49772e" />
+                                <code
+                                    code="PAYOR"
+                                    codeSystem="2.16.840.1.113883.5.110"
+                                    codeSystemName="RoleCode" />
+    <addr use="BAD">
+    <country>US</country>
+    <state nullFlavor="UNK"/>
+    <city nullFlavor="UNK"/>
+    <postalCode>00000</postalCode>
+    <streetAddressLine nullFlavor="UNK"/>
+</addr>
+<telecom nullFlavor="UNK"/>
+                                <representedOrganization>
+                                    <name>BCBS</name>
+<telecom nullFlavor="UNK"/>
+    <addr use="BAD">
+    <country>US</country>
+    <state nullFlavor="UNK"/>
+    <city nullFlavor="UNK"/>
+    <postalCode>00000</postalCode>
+    <streetAddressLine nullFlavor="UNK"/>
+</addr>
+                                </representedOrganization>
+                            </assignedEntity>
+                        </performer>
+                        <!-- Covered Party Participant -->
+                        <participant typeCode="COV">
+                            <templateId root="2.16.840.1.113883.10.20.22.4.89" assigningAuthorityName="Covered Party Participant" />
+                            <participantRole classCode="PAT">
+                                <id root="be9d7414-479e-41d9-8670-cf5523ccf366" extension="INS516"  />
+                                <code
+code="SELF"  
+                                    displayName="Self"
+                                    codeSystem="2.16.840.1.113883.5.111"
+                                    codeSystemName="RoleCode" />
+<addr use="HP">
+    <country>US</country>
+    <state>SD</state>
+    <city>SIOUX FALLS</city>
+    <postalCode>57107</postalCode>
+    <streetAddressLine>123 W Main</streetAddressLine>
+</addr>
+                                <playingEntity>
+<name use="L">
+    <family>Test</family>
+    <given>Two</given>
+</name>
+                                </playingEntity>
+                            </participantRole>
+                        </participant>
+                        <!-- Policy Holder -->
+                        <participant typeCode="HLD">
+                            <templateId root="2.16.840.1.113883.10.20.22.4.90" assigningAuthorityName="Policy Holder Participant" />
+                            <participantRole>
+                                <id root="c9ffba72-5bf2-4b0b-af44-19f4a23844c8" />
+<addr use="HP">
+    <country>US</country>
+    <state>SD</state>
+    <city>SIOUX FALLS</city>
+    <postalCode>57107</postalCode>
+    <streetAddressLine>123 W Main</streetAddressLine>
+</addr>
+                            </participantRole>
+                        </participant>
+                        <!-- Coverage Plan Description -->
+                        <entryRelationship typeCode="REFR">
+                            <act classCode="ACT" moodCode="DEF">
+                                <id root="09d9f821-8200-4e53-a4a6-04e97668fd9a" />
+                                <code nullFlavor="NA" />
+                                <text>BCBS</text>
+                            </act>
+                        </entryRelationship>
+                    </act>
+                </entryRelationship>
+            </act>
+        </entry>
+    </section>
+</component>
+
+<!-- Plan of Care -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.10" assigningAuthorityName="CCDA Plan of Care Section" />
+        <id root="33d63c6e-3ddd-4d15-84ba-b19170e2a63c" />
+        <code code="18776-5" displayName="Plan of Care" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+        <title>Plan of Care</title>
+        <text>
+            <content>None recorded.</content>
+        </text>
+        <!-- Future Appointments -->
+        <!-- Future Labs -->
+        <!-- Future X-Rays -->
+        <!-- Advice -->
+    </section>
+</component>
+
+<!-- Problem -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.5" assigningAuthorityName="CCDA Problem Section (Entries Optional)" />
+        <templateId root="2.16.840.1.113883.10.20.22.2.5.1" assigningAuthorityName="CCDA Problem Section (Entries Required)" />
+        <code
+            code="11450-4"
+            displayName="Problem List"
+            codeSystem="2.16.840.1.113883.6.1"
+            codeSystemName="LOINC" />
+        <title>Problems</title>
+        <text>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Problem</th>
+                        <th>Effective Date</th>
+                        <th>Problem Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ID="problemList1">
+                        <td>Alzheimer&#39;s disease</td>
+                        <td>Unknown</td>
+                        <td>Active</td>
+                    </tr>
+                    <tr ID="problemList2">
+                        <td>Allergic rhinitis, unspecified</td>
+                        <td>09/30/2016</td>
+                        <td>Active</td>
+                    </tr>
+                    <tr ID="problemList3">
+                        <td>Hypertension, essential</td>
+                        <td>09/30/2016</td>
+                        <td>Active</td>
+                    </tr>
+                </tbody>
+            </table>
+        </text>
+        <!-- Problem Concern Act (Condition) -->
+        <entry typeCode="DRIV">
+            <act classCode="ACT" moodCode="EVN">
+                <templateId root="2.16.840.1.113883.10.20.22.4.3" assigningAuthorityName="CCDA Problem Concern Act (Condition)" />
+                <id root="84765f93-ede0-44eb-92a3-d7b35e3a8243" />
+                <code
+                    code="CONC"
+                    displayName="Concern"
+                    codeSystem="2.16.840.1.113883.5.6"
+                    codeSystemName="HL7ActClass" />
+                <statusCode code="active" />
+<effectiveTime>
+    <low nullFlavor="UNK"/>
+    <high nullFlavor="UNK"/>
+</effectiveTime>
+                <entryRelationship typeCode="SUBJ">
+<!--  Problem Observation -->
+<observation classCode="OBS" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.4" assigningAuthorityName="CCDA Problem Observation" />
+    <id root="a1f2b224-27b7-4f94-9e0c-3309aeeecc74" />
+    <code
+        code=" 55607006"
+        displayName=" Problem"
+        codeSystem="2.16.840.1.113883.6.96"
+        codeSystemName="SNOMED CT" />
+    <text>
+        <reference value="#problemList1" />
+    </text>
+    <statusCode code="completed" />
+    <effectiveTime >
+        <low nullFlavor="UNK" />
+        <high nullFlavor="UNK" />
+    </effectiveTime>
+    <value
+        xsi:type="CD"
+code="26929004" displayName="Alzheimer&#39;s disease"         codeSystem="2.16.840.1.113883.6.96"
+        codeSystemName="SNOMED CT"
+ />
+</observation>
+                </entryRelationship>
+            </act>
+        </entry>
+        <!-- Problem Concern Act (Condition) -->
+        <entry typeCode="DRIV">
+            <act classCode="ACT" moodCode="EVN">
+                <templateId root="2.16.840.1.113883.10.20.22.4.3" assigningAuthorityName="CCDA Problem Concern Act (Condition)" />
+                <id root="a81e96dc-626f-4ef6-9a4e-f6acd4677f6b" />
+                <code
+                    code="CONC"
+                    displayName="Concern"
+                    codeSystem="2.16.840.1.113883.5.6"
+                    codeSystemName="HL7ActClass" />
+                <statusCode code="active" />
+<effectiveTime>
+    <low value="201609300000" />
+    <high nullFlavor="UNK"/>
+</effectiveTime>
+                <entryRelationship typeCode="SUBJ">
+<!--  Problem Observation -->
+<observation classCode="OBS" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.4" assigningAuthorityName="CCDA Problem Observation" />
+    <id root="e5f3d61a-1456-4bdd-9092-648f458f551c" />
+    <code
+        code=" 55607006"
+        displayName=" Problem"
+        codeSystem="2.16.840.1.113883.6.96"
+        codeSystemName="SNOMED CT" />
+    <text>
+        <reference value="#problemList2" />
+    </text>
+    <statusCode code="completed" />
+    <effectiveTime >
+        <low value="20160930" />
+        <high nullFlavor="UNK" />
+    </effectiveTime>
+    <value
+        xsi:type="CD"
+code="61582004" displayName="Allergic rhinitis, unspecified"         codeSystem="2.16.840.1.113883.6.96"
+        codeSystemName="SNOMED CT"
+ />
+</observation>
+                </entryRelationship>
+            </act>
+        </entry>
+        <!-- Problem Concern Act (Condition) -->
+        <entry typeCode="DRIV">
+            <act classCode="ACT" moodCode="EVN">
+                <templateId root="2.16.840.1.113883.10.20.22.4.3" assigningAuthorityName="CCDA Problem Concern Act (Condition)" />
+                <id root="b05116fc-dbda-448d-80f7-9b1f49d281ea" />
+                <code
+                    code="CONC"
+                    displayName="Concern"
+                    codeSystem="2.16.840.1.113883.5.6"
+                    codeSystemName="HL7ActClass" />
+                <statusCode code="active" />
+<effectiveTime>
+    <low value="201609300000" />
+    <high nullFlavor="UNK"/>
+</effectiveTime>
+                <entryRelationship typeCode="SUBJ">
+<!--  Problem Observation -->
+<observation classCode="OBS" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.4" assigningAuthorityName="CCDA Problem Observation" />
+    <id root="70348a92-d266-4b40-91f4-59f08223e37f" />
+    <code
+        code=" 55607006"
+        displayName=" Problem"
+        codeSystem="2.16.840.1.113883.6.96"
+        codeSystemName="SNOMED CT" />
+    <text>
+        <reference value="#problemList3" />
+    </text>
+    <statusCode code="completed" />
+    <effectiveTime >
+        <low value="20160930" />
+        <high nullFlavor="UNK" />
+    </effectiveTime>
+    <value
+        xsi:type="CD"
+code="59621000" displayName="Hypertension, essential"         codeSystem="2.16.840.1.113883.6.96"
+        codeSystemName="SNOMED CT"
+ />
+</observation>
+                </entryRelationship>
+            </act>
+        </entry>
+    </section>
+</component>
+
+<!-- Procedures -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.7" />
+        <templateId root="2.16.840.1.113883.10.20.22.2.7.1" />
+        <code code="47519-4" displayName="Procedures" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+        <title>Procedures</title>
+        <text>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ID="procedureProcedure1">
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr ID="procedureAct1">
+                        <td>VENIPUNCTURE</td>
+                        <td>09/30/2016</td>
+                    </tr>
+                    <tr ID="procedureAct2">
+                        <td>*Med Administration</td>
+                        <td>09/30/2016</td>
+                    </tr>
+                    <tr ID="procedureAct3">
+                        <td>S9088</td>
+                        <td>09/30/2016</td>
+                    </tr>
+                </tbody>
+            </table>
+        </text>
+        <entry>
+            <!-- Procedure Activity Procedure (Empty) -->
+            <procedure classCode="PROC" moodCode="EVN" negationInd="false" nullFlavor="NI">
+                <templateId root="2.16.840.1.113883.10.20.22.4.14" />
+                <id root="e74d9644-47fa-11e3-97f6-0050568c4f60" />
+                <code nullFlavor="UNK">
+                    <originalText>
+                        <reference value="#procedureProcedure1" />
+                    </originalText>
+                </code>
+                <statusCode code="completed" />
+                <effectiveTime nullFlavor="UNK" />
+            </procedure>
+        </entry>
+        <!-- Procedure Activity Act -->
+        <entry>
+            <act classCode="ACT" moodCode="INT">
+                <templateId root="2.16.840.1.113883.10.20.22.4.12" />
+                <id root="03a62ac2-d4c1-466c-9663-e696d410afd5" />
+                <code 
+                    xsi:type="CE"
+code="36415"                     displayName="VENIPUNCTURE" 
+                    codeSystem="2.16.840.1.113883.6.12"
+                    codeSystemName="CPT-4">
+                    <originalText>
+                        <reference value="#procedureAct1" />
+                    </originalText>
+                </code>
+                <statusCode code="completed" />
+                <effectiveTime value="201609300000" />
+            </act>
+        </entry>
+        <!-- Procedure Activity Act -->
+        <entry>
+            <act classCode="ACT" moodCode="INT">
+                <templateId root="2.16.840.1.113883.10.20.22.4.12" />
+                <id root="b727273b-0e4a-4b23-ab76-1e75eb52f07e" />
+                <code 
+                    xsi:type="CE"
+code="NONE"                     displayName="*Med Administration" 
+                    codeSystem="2.16.840.1.113883.6.12"
+                    codeSystemName="CPT-4">
+                    <originalText>
+                        <reference value="#procedureAct2" />
+                    </originalText>
+                </code>
+                <statusCode code="completed" />
+                <effectiveTime value="201609300000" />
+            </act>
+        </entry>
+        <!-- Procedure Activity Act -->
+        <entry>
+            <act classCode="ACT" moodCode="INT">
+                <templateId root="2.16.840.1.113883.10.20.22.4.12" />
+                <id root="c3823ab8-7268-45b7-8631-bcb384f991c4" />
+                <code 
+                    xsi:type="CE"
+nullFlavor="UNK"                     displayName="S9088" 
+                    codeSystem="2.16.840.1.113883.6.12"
+                    codeSystemName="CPT-4">
+                    <originalText>
+                        <reference value="#procedureAct3" />
+                    </originalText>
+                </code>
+                <statusCode code="completed" />
+                <effectiveTime value="201609300000" />
+            </act>
+        </entry>
+    </section>
+</component>
+
+<!-- Reason for Referral -->
+<component>
+    <section>
+        <templateId root="1.3.6.1.4.1.19376.1.5.3.1.3.1"/>
+        <code code="42349-1" displayName="REASON FOR REFERRAL"
+            codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC"/>
+        <title>Referrals</title>
+        <text>
+            <content>None recorded.</content>
+        </text>
+    </section>
+</component>
+
+<!-- Reason for Visit -->
+<!-- Chief Complaint and Reason for Visit -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.13" />
+        <code
+            code="46239-0"
+            displayName="Chief Complaint and Reason for Visit"
+            codeSystem="2.16.840.1.113883.6.1"
+            codeSystemName="LOINC" />
+        <title>Chief Complaint and Reason for Visit</title>
+        <text>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Reason for Visit/Chief Complaint</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <list>
+                                <item>Patient comes in today for a Anxiety, Diarrhea and Flu symptoms.</item>
+                                <item>Patient Reports: Anxiety; Diarrhea [Onset: 5 Day(s); Frequency: 5 Day(s); Duration: 2 Day(s)]; Flu symptoms; Night sweats.</item>
+                            </list>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </text>
+    </section>
+</component>
+<!-- Chief Complaint -->
+
+<!-- Results -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.3" />
+        <templateId root="2.16.840.1.113883.10.20.22.2.3.1" />
+        <code
+            code="30954-2"
+            displayName="Relevant diagnostic tests and/or laboratory data"
+            codeSystem="2.16.840.1.113883.6.1"
+            codeSystemName="LOINC" />
+        <title>Lab Results</title>
+        <text>
+            <content ID="labResult11">None recorded.</content>
+        </text>
+        <entry>
+            <!-- Result Organizer (Empty) -->
+            <organizer classCode="CLUSTER" moodCode="EVN" nullFlavor="NI">
+                <templateId root="2.16.840.1.113883.10.20.22.4.1" assigningAuthorityName="CCDA Result Organizer" />
+                <id root="e74d9644-47fa-11e3-97f6-0050568c4f60" />
+                <code nullFlavor="UNK" />
+                <statusCode code="completed" />
+                <!-- Result Observation (Empty) -->
+                <component>
+                    <observation classCode="OBS" moodCode="EVN" nullFlavor="NI">
+                        <templateId root="2.16.840.1.113883.10.20.22.4.2" assigningAuthorityName="CCDA Result Observation" />
+                        <id root="e74d9644-47fa-11e3-97f6-0050568c4f60" />
+                        <code nullFlavor="UNK" />
+                        <text>
+                            <reference value="#labResult11" />
+                        </text>
+                        <statusCode code="completed" />
+                        <effectiveTime nullFlavor="UNK" />
+                        <value xsi:type="PQ" nullFlavor="UNK" />
+                        <referenceRange>
+                            <observationRange>
+                                <text>Not Recorded.</text>
+                            </observationRange>
+                        </referenceRange>
+                    </observation>
+                </component>
+            </organizer>
+        </entry>
+    </section>
+</component>
+
+<!-- Social History -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.17" assigningAuthorityName="CCDA Social History Section" />
+        <code code="29762-2" codeSystem="2.16.840.1.113883.6.1" displayName="Social History"/>
+        <title>Social History</title>
+        <text>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Social History Element</th>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ID="socialHistory1">
+                        <td>Smoking Status</td>
+                        <td>Current every day smoker</td>
+                        <td>2016</td>
+                    </tr>
+                </tbody>
+            </table>
+        </text>
+        <entry typeCode="DRIV">
+<observation classCode="OBS" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.22.4.78" assigningAuthorityName="CCDA Smoking Status Observation" />
+    <templateId root="2.16.840.1.113883.10.20.22.4.78"/>
+    <code code="ASSERTION" codeSystem="2.16.840.1.113883.5.4"/>
+    <statusCode code="completed"/>
+<effectiveTime xsi:type="IVL_TS" >
+    <low value="201609301114" />
+    <high value="201609301114" />
+</effectiveTime>
+    <value 
+        xsi:type="CD"
+code="449868002"  displayName="Current every day smoker"         codeSystem="2.16.840.1.113883.6.96"
+        codeSystemName="SNOMED CT"
+ />
+</observation>
+        </entry>
+    </section>
+</component>
+
+<!-- Vital Signs -->
+<component>
+    <section>
+        <templateId root="2.16.840.1.113883.10.20.22.2.4.1" assigningAuthorityName="CCDA Vital Signs Section (Entries Required)" />
+        <code code="8716-3" displayName="VITAL SIGNS" codeSystem="2.16.840.1.113883.6.1" codeSystemName="LOINC" />
+        <title>Vital Signs</title>
+        <text>
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Vital Name</th>
+                        <th>Measurement</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr ID="vitalSign11">
+                    <td>BP Systolic</td>
+                    <td>90 mmHg</td>
+                    <td>09/30/2016</td>
+                </tr>
+                <tr ID="vitalSign12">
+                    <td>BP Diastolic</td>
+                    <td>60 mmHg</td>
+                    <td>09/30/2016</td>
+                </tr>
+                <tr ID="vitalSign13">
+                    <td>Height</td>
+                    <td>62 in</td>
+                    <td>09/30/2016</td>
+                </tr>
+                <tr ID="vitalSign14">
+                    <td>Weight</td>
+                    <td>98 lb</td>
+                    <td>09/30/2016</td>
+                </tr>
+                <tr ID="vitalSign15">
+                    <td>BMI</td>
+                    <td>17.924 kg/m2</td>
+                    <td>09/30/2016</td>
+                </tr>
+                </tbody>
+            </table>
+        </text>
+        <entry typeCode="DRIV">
+<!-- Vital Signs Organizer -->
+<organizer classCode="CLUSTER" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.26" assigningAuthorityName="CCDA Vital Signs Organizer" />
+    <id root="4c2c688a-66b4-4cd8-b3b6-ecf9a21d1ef0" />
+    <code code="46680005" displayName="Vital signs" codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMED CT" />
+    <statusCode code="completed" />
+    <effectiveTime value="201609301112" />
+    <component>
+<observation classCode="OBS" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.27" assigningAuthorityName="CCDA Vital Sign Observation" />
+    <id root="7db44b24-8ffa-4fea-917c-1b31622904f0" />
+    <code 
+code="8480-6"  
+displayName="BP Systolic"  
+        codeSystem="2.16.840.1.113883.6.1" 
+        codeSystemName="LOINC" />
+    <text>
+        <reference value="#vitalSign11" />
+    </text>
+    <statusCode code="completed" />
+    <effectiveTime value="201609301112" />
+    <value value="90" unit="mmHg" xsi:type="PQ" />
+</observation>
+    </component>
+    <component>
+<observation classCode="OBS" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.27" assigningAuthorityName="CCDA Vital Sign Observation" />
+    <id root="77bf83cf-1be4-409d-8925-9f383523c30b" />
+    <code 
+code="8462-4"  
+displayName="BP Diastolic"  
+        codeSystem="2.16.840.1.113883.6.1" 
+        codeSystemName="LOINC" />
+    <text>
+        <reference value="#vitalSign12" />
+    </text>
+    <statusCode code="completed" />
+    <effectiveTime value="201609301112" />
+    <value value="60" unit="mmHg" xsi:type="PQ" />
+</observation>
+    </component>
+    <component>
+<observation classCode="OBS" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.27" assigningAuthorityName="CCDA Vital Sign Observation" />
+    <id root="09ac008b-ff80-499d-be98-d2d07bf9b079" />
+    <code 
+code="8302-2"  
+displayName="Height"  
+        codeSystem="2.16.840.1.113883.6.1" 
+        codeSystemName="LOINC" />
+    <text>
+        <reference value="#vitalSign13" />
+    </text>
+    <statusCode code="completed" />
+    <effectiveTime value="201609301112" />
+    <value value="62" unit="in" xsi:type="PQ" />
+</observation>
+    </component>
+    <component>
+<observation classCode="OBS" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.27" assigningAuthorityName="CCDA Vital Sign Observation" />
+    <id root="7f8435b0-e5e4-488c-9747-694a406b00c8" />
+    <code 
+code="3141-9"  
+displayName="Weight"  
+        codeSystem="2.16.840.1.113883.6.1" 
+        codeSystemName="LOINC" />
+    <text>
+        <reference value="#vitalSign14" />
+    </text>
+    <statusCode code="completed" />
+    <effectiveTime value="201609301112" />
+    <value value="98" unit="lb" xsi:type="PQ" />
+</observation>
+    </component>
+    <component>
+<observation classCode="OBS" moodCode="EVN">
+    <templateId root="2.16.840.1.113883.10.20.22.4.27" assigningAuthorityName="CCDA Vital Sign Observation" />
+    <id root="5becdd36-e7e1-43b9-b4e2-023070309529" />
+    <code 
+code="39156-5"  
+displayName="BMI"  
+        codeSystem="2.16.840.1.113883.6.1" 
+        codeSystemName="LOINC" />
+    <text>
+        <reference value="#vitalSign15" />
+    </text>
+    <statusCode code="completed" />
+    <effectiveTime value="201609301112" />
+    <value value="17.924" unit="kg/m2" xsi:type="PQ" />
+</observation>
+    </component>
+</organizer>
+        </entry>
+ 
+    </section>
+</component>
+        </structuredBody>
+    </component>
+</ClinicalDocument>
