@@ -1,0 +1,150 @@
+<codeTemplateLibrary version="3.5.1">
+  <id>ee8d4c72-de8a-4e42-8de4-e56376c99c69</id>
+  <name>HL7v3</name>
+  <revision>7</revision>
+  <lastModified>
+    <time>1528296902752</time>
+    <timezone>America/Chicago</timezone>
+  </lastModified>
+  <description>HL7v3 Library</description>
+  <includeNewChannels>false</includeNewChannels>
+  <enabledChannelIds>
+    <string>38e80069-5a80-4483-9a22-02c928973719</string>
+    <string>9e040198-05cf-11e8-ba89-0ed5f89f718b</string>
+    <string>e882ff76-1127-4e35-838c-93cbc2655ef9</string>
+  </enabledChannelIds>
+  <disabledChannelIds>
+    <string>6a2a6c33-33da-4783-b823-bd95bf387981</string>
+    <string>5beae4c2-e7f8-4ae3-9fca-703dea9233a2</string>
+    <string>3f5ab859-f917-484f-b841-7c9e39174b8e</string>
+    <string>82ac96ff-a32d-42b2-81a4-80ebda4783db</string>
+    <string>42b2b012-ffc4-41ba-a71e-00fbd1cc1c67</string>
+    <string>24504c80-a7ef-496d-bca0-c25ce27f4d19</string>
+    <string>06d19851-fbd2-446b-be8f-12965d966d2a</string>
+    <string>280d822c-1479-4fb6-9e2a-b7267e540c63</string>
+    <string>0972a85f-5ad7-4a93-88e1-5f991b7f7879</string>
+    <string>3fdef7e5-20e2-4e6f-aad4-a156ddb2e5e2</string>
+    <string>6910529c-6cd1-4838-9a4f-d3c84faa2866</string>
+    <string>1ae4e7ac-e62f-468c-aa2a-99cbd6139838</string>
+    <string>2f6cd9fb-90e2-4121-b05a-cad72d278cc3</string>
+    <string>360b408e-86e7-43da-875a-11dd5f07db7e</string>
+    <string>0edf321a-b712-47e2-972a-03f2c4c8f0ac</string>
+    <string>05075884-fedf-4b8c-96b1-eecaaaf97842</string>
+    <string>1892f241-d643-4abb-b0af-b20b87e0cf12</string>
+    <string>15708463-af53-428c-88f5-16351dd49b2e</string>
+    <string>0ace74f9-8ee8-45a5-8093-8d5bb95dae90</string>
+    <string>99b43124-34ef-4ead-a348-ef0ac0a52539</string>
+    <string>03bc65a0-25b4-48f5-8455-7e58e71b1446</string>
+    <string>0638775c-6c87-4a71-b4b3-7ae52be05c1b</string>
+    <string>2dbdcefd-11b5-42c8-a365-05038df92fef</string>
+    <string>082c9258-e026-460b-a7bb-e67391ef65f9</string>
+    <string>06bd4ce9-2338-4c78-86fb-2e04ff9f9e08</string>
+    <string>0df5acd6-0251-4546-9d35-ed7f1515e00b</string>
+    <string>27139815-1d29-4f32-ad00-fc266f2448cd</string>
+    <string>197d7939-edb9-4dc7-af2d-ab91ae9023ad</string>
+    <string>368263c0-b071-4c57-afeb-61dc82a898be</string>
+    <string>18803b99-6545-4d09-9277-a559ee2e94fd</string>
+  </disabledChannelIds>
+  <codeTemplates>
+    <codeTemplate version="3.5.1">
+      <id>46863fa1-cc19-42b4-b713-5048a69d7fe1</id>
+      <name>getHL7v3AdministrativeGender</name>
+      <revision>2</revision>
+      <lastModified>
+        <time>1517325488064</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getHL7v3AdministrativeGender(code)
+
+  	- Desc: This function receives a code system code (string) and returns adminGender array contains both the code and displayName
+
+   	@param {String} code - this contains a code system code (string)
+	@return {array} adminGender - this array contains the Gender and DisplayName (key,value) pair in the adminGender array.
+*/
+
+function getHL7v3AdministrativeGender(code) {
+
+	// define local variables
+	var adminGender= {};
+	adminGender.codeSystem= &quot;2.16.840.1.133883.5.1&quot;
+	adminGender.codeSystemName= &quot;HL7:AdministrativeGender&quot;;
+
+	if(&quot;M&quot; == code) {
+		adminGender.code= &quot;M&quot;;
+		adminGender.displayName= &quot;Male&quot;;
+	} else if (&quot;F&quot; == code) {
+		adminGender.code= &quot;F&quot;;
+		adminGender.displayName= &quot;Female&quot;;
+	} else {
+		adminGender.code= &quot;UN&quot;;
+		adminGender.displayName= &quot;Undifferentiated&quot;;
+	}
+
+	return adminGender;
+
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>e48db441-8556-4a03-a3e2-d018a8f9f608</id>
+      <name>getHL7v3Confidentiality</name>
+      <revision>3</revision>
+      <lastModified>
+        <time>1517325488301</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getHL7v3Confidentiality(code)
+
+  	- Desc: This function receives a code system code (string) and returns confidentiality array contains both the code and displayName
+
+   	@param {String} code - this contains a code system code (string)
+	@return {array} confidentiality - this array contains the Confidentiality Code and DisplayName (key,value) pair in the confidentialityCode array.
+*/
+
+function getHL7v3Confidentiality(code) {
+
+	// define local variables
+	var confidentiality= {};
+	confidentiality.codeSystem= &quot;2.16.840.1.113883.5.25&quot;
+	confidentiality.codeSystemName= &quot;HL7:Confidentiality&quot;;
+
+	if(&quot;N&quot; == code) {
+		confidentiality.code= &quot;N&quot;;
+		confidentiality.displayName= &quot;Normal&quot;;
+	} else if (&quot;R&quot; == code) {
+		confidentiality.code= &quot;R&quot;;
+		confidentiality.displayName= &quot;Restricted&quot;;
+	} else {
+		confidentiality.code= &quot;V&quot;;
+		confidentiality.displayName= &quot;Very Restricted&quot;;
+	}
+
+	return confidentiality;
+
+}</code>
+      </properties>
+    </codeTemplate>
+  </codeTemplates>
+</codeTemplateLibrary>

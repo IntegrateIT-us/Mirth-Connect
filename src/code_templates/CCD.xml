@@ -1,0 +1,1551 @@
+<codeTemplateLibrary version="3.5.1">
+  <id>690e66f5-be75-4877-9354-42bb679b7bf6</id>
+  <name>CCD</name>
+  <revision>33</revision>
+  <lastModified>
+    <time>1528296884011</time>
+    <timezone>America/Chicago</timezone>
+  </lastModified>
+  <description>CCD</description>
+  <includeNewChannels>false</includeNewChannels>
+  <enabledChannelIds>
+    <string>38e80069-5a80-4483-9a22-02c928973719</string>
+    <string>9e040198-05cf-11e8-ba89-0ed5f89f718b</string>
+    <string>e882ff76-1127-4e35-838c-93cbc2655ef9</string>
+  </enabledChannelIds>
+  <disabledChannelIds>
+    <string>6a2a6c33-33da-4783-b823-bd95bf387981</string>
+    <string>5beae4c2-e7f8-4ae3-9fca-703dea9233a2</string>
+    <string>3f5ab859-f917-484f-b841-7c9e39174b8e</string>
+    <string>82ac96ff-a32d-42b2-81a4-80ebda4783db</string>
+    <string>42b2b012-ffc4-41ba-a71e-00fbd1cc1c67</string>
+    <string>24504c80-a7ef-496d-bca0-c25ce27f4d19</string>
+    <string>06d19851-fbd2-446b-be8f-12965d966d2a</string>
+    <string>280d822c-1479-4fb6-9e2a-b7267e540c63</string>
+    <string>0972a85f-5ad7-4a93-88e1-5f991b7f7879</string>
+    <string>3fdef7e5-20e2-4e6f-aad4-a156ddb2e5e2</string>
+    <string>6910529c-6cd1-4838-9a4f-d3c84faa2866</string>
+    <string>1ae4e7ac-e62f-468c-aa2a-99cbd6139838</string>
+    <string>2f6cd9fb-90e2-4121-b05a-cad72d278cc3</string>
+    <string>360b408e-86e7-43da-875a-11dd5f07db7e</string>
+    <string>0edf321a-b712-47e2-972a-03f2c4c8f0ac</string>
+    <string>05075884-fedf-4b8c-96b1-eecaaaf97842</string>
+    <string>1892f241-d643-4abb-b0af-b20b87e0cf12</string>
+    <string>15708463-af53-428c-88f5-16351dd49b2e</string>
+    <string>0ace74f9-8ee8-45a5-8093-8d5bb95dae90</string>
+    <string>99b43124-34ef-4ead-a348-ef0ac0a52539</string>
+    <string>03bc65a0-25b4-48f5-8455-7e58e71b1446</string>
+    <string>0638775c-6c87-4a71-b4b3-7ae52be05c1b</string>
+    <string>2dbdcefd-11b5-42c8-a365-05038df92fef</string>
+    <string>082c9258-e026-460b-a7bb-e67391ef65f9</string>
+    <string>06bd4ce9-2338-4c78-86fb-2e04ff9f9e08</string>
+    <string>0df5acd6-0251-4546-9d35-ed7f1515e00b</string>
+    <string>27139815-1d29-4f32-ad00-fc266f2448cd</string>
+    <string>197d7939-edb9-4dc7-af2d-ab91ae9023ad</string>
+    <string>368263c0-b071-4c57-afeb-61dc82a898be</string>
+    <string>18803b99-6545-4d09-9277-a559ee2e94fd</string>
+  </disabledChannelIds>
+  <codeTemplates>
+    <codeTemplate version="3.5.1">
+      <id>6b3af922-f209-40b0-a3d2-074f147abe37</id>
+      <name>getAssignedAuthor</name>
+      <revision>22</revision>
+      <lastModified>
+        <time>1519634065036</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getAssignedAuthor(msg)
+
+  	- Desc: This function receives CCD assignedAuthor XML Object and returns JavaScript object
+  	- Modified 
+  	2018-02-24 04:18 CT JER - Modified the msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;].toString() evaluation !== undefined to length&gt;0
+	
+   	@param {XML} msg - this contains the raw message (string)
+	@return {object} getAssignedAuthor - contains getAssignedAuthor JS object and related properties.
+*/
+
+function getAssignedAuthor(msg) {
+
+	var debug= 0;
+	var objAssignedAuthor= new Object;
+
+	if(debug&gt;0) { 
+		logger.error(&apos;getAssignedAuthor msg: &apos;+msg);
+		logger.error(&apos;getAssignedAuthor msg[assignedAuthor]: &apos;+JSON.stringify(msg[&apos;assignedAuthor&apos;])+
+		&apos; typeof: &apos;+msg[&apos;assignedAuthor&apos;]+
+		&apos; length: &apos;+msg[&apos;assignedAuthor&apos;].toString().length); 
+	} // end if 
+	
+	if(typeof msg[&apos;assignedAuthor&apos;] !== &apos;undefined&apos;) {
+		if(msg[&apos;assignedAuthor&apos;].children().length()&gt;0) {
+			
+			// &lt;assignedAuthor classCode=&quot;ASSIGNED&quot;&gt;
+			// set assignedAuthor classCode
+			if(typeof msg[&apos;assignedAuthor&apos;][&apos;@classCode&apos;] !== &apos;undefined&apos;) {
+				if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][@classCode]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;@classCode&apos;].toString()); }
+				objAssignedAuthor.classCode= msg[&apos;assignedAuthor&apos;][&apos;@classCode&apos;].toString();
+			} // end if
+			
+			// &lt;id assigningAuthorityName=&quot;INLP_FIN&quot; extension=&quot;INLP&quot; root=&quot;2.16.840.1.113883.3.2139.200&quot;/&gt;
+			// set assignedAuthor Id
+			if(typeof msg[&apos;assignedAuthor&apos;][&apos;id&apos;] !== &apos;undefined&apos;) {
+				// set assignedAuthor Id assigningAuthorityName
+				if(typeof msg[&apos;assignedAuthor&apos;][&apos;id&apos;][&apos;@assigningAuthorityName&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][id][@assigningAuthorityName]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;id&apos;][&apos;@assigningAuthorityName&apos;].toString()); }
+					objAssignedAuthor.assigningAuthorityName= msg[&apos;assignedAuthor&apos;][&apos;id&apos;][&apos;@assigningAuthorityName&apos;].toString();
+				} // end if
+				// set assignedAuthor Id root
+				if(typeof msg[&apos;assignedAuthor&apos;][&apos;id&apos;][&apos;@root&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][id][@root]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;id&apos;][&apos;@root&apos;].toString()); }
+					objAssignedAuthor.root= msg[&apos;assignedAuthor&apos;][&apos;id&apos;][&apos;@root&apos;].toString();
+				} // end if
+				// set assignedAuthor Id extension
+				if(typeof msg[&apos;assignedAuthor&apos;][&apos;id&apos;][&apos;@extension&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][id][@extension]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;id&apos;][&apos;@extension&apos;].toString()); }
+					objAssignedAuthor.extension= msg[&apos;assignedAuthor&apos;][&apos;id&apos;][&apos;@extension&apos;].toString();
+				} // end if
+			} // end if
+			
+			// set assignedAuthor Code
+			if(typeof msg[&apos;assignedAuthor&apos;][&apos;code&apos;] !== &apos;undefined&apos;) {
+				// set assignedAuthor code code
+				if(typeof msg[&apos;assignedAuthor&apos;][&apos;code&apos;][&apos;@code&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][code][@code]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;code&apos;][&apos;@code&apos;].toString()); }
+					objAssignedAuthor.code= msg[&apos;assignedAuthor&apos;][&apos;code&apos;][&apos;@code&apos;].toString();
+				} // end if
+				// set assignedAuthor code codeSystemOid
+				if(typeof msg[&apos;assignedAuthor&apos;][&apos;code&apos;][&apos;@codeSystem&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][code][@codeSystem]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;code&apos;][&apos;@codeSystem&apos;].toString()); }
+					objAssignedAuthor.codeSystem= msg[&apos;assignedAuthor&apos;][&apos;code&apos;][&apos;@codeSystem&apos;].toString();
+				} // end if
+				// set assignedAuthor code codeSystemName
+				if(typeof msg[&apos;assignedAuthor&apos;][&apos;code&apos;][&apos;@codeSystemName&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][code][@codeSystemName]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;code&apos;][&apos;@codeSystemName&apos;].toString()); }
+					objAssignedAuthor.codeSystemName= msg[&apos;assignedAuthor&apos;][&apos;code&apos;][&apos;@codeSystemName&apos;].toString();
+				} // end if
+				// set assignedAuthor code displayName
+				if(typeof msg[&apos;assignedAuthor&apos;][&apos;code&apos;][&apos;@displayName&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][code][@displayName]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;code&apos;][&apos;@displayName&apos;].toString()); }
+					objAssignedAuthor.codeDisplayName= msg[&apos;assignedAuthor&apos;][&apos;code&apos;][&apos;@displayName&apos;].toString();
+				} // end if
+			} // end if
+			
+	
+			// set assignedAuthor assignedAuthoringDevice
+			/* &lt;assignedAuthoringDevice&gt;&lt;manufacturerModelName&gt;Cerner Corporation&lt;/manufacturerModelName&gt;&lt;softwareName&gt;Millennium Clinical Document Generator&lt;/softwareName&gt;&lt;/assignedAuthoringDevice&gt; */
+			if(typeof msg[&apos;assignedAuthor&apos;][&apos;assignedAuthoringDevice&apos;] !== &apos;undefined&apos;) {
+				// get manufacturer
+				if(typeof msg[&apos;assignedAuthor&apos;][&apos;assignedAuthoringDevice&apos;][&apos;manufacturerModelName&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][assignedAuthoringDevice][manufacturerModelName]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;assignedAuthoringDevice&apos;][&apos;manufacturerModelName&apos;].toString()); }
+					objAssignedAuthor.assignedAuthorizingDevice_manufacturer= msg[&apos;assignedAuthor&apos;][&apos;assignedAuthoringDevice&apos;][&apos;manufacturerModelName&apos;].toString();
+				} // end if 
+				// get softwareName
+				if(typeof msg[&apos;assignedAuthor&apos;][&apos;assignedAuthoringDevice&apos;][&apos;softwareName&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][assignedAuthoringDevice][softwareName]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;assignedAuthoringDevice&apos;][&apos;softwareName&apos;].toString()); }
+					objAssignedAuthor.assignedAuthorizingDevice_softwareName= msg[&apos;assignedAuthor&apos;][&apos;assignedAuthoringDevice&apos;][&apos;softwareName&apos;].toString();
+				} // end if 
+			} // end if 
+			
+			// set assignedAuthor representedOrganization
+			/*  &lt;representedOrganization classCode=&quot;ORG&quot; determinerCode=&quot;INSTANCE&quot;&gt;&lt;id assigningAuthorityName=&quot;INLP_FIN&quot; extension=&quot;INLP&quot; root=&quot;2.16.840.1.113883.3.2139.200&quot;/&gt;&lt;id root=&quot;2.16.840.1.113883.3.2139&quot;/&gt;&lt;name&gt;La Porte Hospital&lt;/name&gt;
+			*/
+
+			if(debug&gt;0) { 
+				logger.error(&apos;msg[assignedAuthor][representedOrganization]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;]+
+					&apos; typeof: &apos;+typeof msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;]+
+					&apos; toString: &apos;+msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;].toString()+
+					&apos; length: &apos;+msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;].toString().length); 
+			}
+			
+			if(msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;].toString().length&gt;0) {
+				if(typeof msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;id&apos;] !== &apos;undefined&apos;) {
+					// set representedOrganization Id assigningAuthorityName
+					if(typeof msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;id&apos;][&apos;@assigningAuthorityName&apos;] !== &apos;undefined&apos;) {
+						if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][representedOrganization][id][@assigningAuthorityName]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;id&apos;][&apos;@assigningAuthorityName&apos;].toString()); }
+						objAssignedAuthor.representedOrganization_assigningAuthorityName= msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;id&apos;][&apos;@assigningAuthorityName&apos;].toString();
+					} // end if
+					// set representedOrganization Id extension
+					if(typeof msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;id&apos;][0][&apos;@extension&apos;] !== &apos;undefined&apos;) {
+						if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][representedOrganization][id][@extension]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;id&apos;][0][&apos;@extension&apos;].toString()); }
+						objAssignedAuthor.representedOrganization_extension= msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;id&apos;][0][&apos;@extension&apos;].toString();
+					} // end if
+					// set representedOrganization Id root
+					if(typeof msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;id&apos;][0][&apos;@root&apos;] !== &apos;undefined&apos;) {
+						if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][representedOrganization][id][@root]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;id&apos;][0][&apos;@root&apos;].toString()); }
+						objAssignedAuthor.representedOrganization_root= msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;id&apos;][0][&apos;@root&apos;].toString();
+					} // end if
+				} // end if 
+			} // end if
+				
+			// check for assignedAuthor representedOrganization name child element
+			if(typeof msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;name&apos;] !== &apos;undefined&apos;) {
+				if(msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;name&apos;].toString().length&gt;0) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][representedOrganization][name]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;name&apos;].toString()); }
+					objAssignedAuthor.representedOrganizationName= msg[&apos;assignedAuthor&apos;][&apos;representedOrganization&apos;][&apos;name&apos;].toString();	// Walgreens Drug Store 12562
+				} else if (msg[&apos;assignedAuthor&apos;][&apos;assignedPerson&apos;][&apos;name&apos;].toString().length&gt;0) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedAuthor][assignedPerson][name]: &apos;+msg[&apos;assignedAuthor&apos;][&apos;assignedPerson&apos;][&apos;name&apos;].toString()); }
+					objAssignedAuthor.representedOrganizationName= msg[&apos;assignedAuthor&apos;][&apos;assignedPerson&apos;][&apos;name&apos;].toString();	// Walgreens Drug Store 12562
+				} // end if
+			} // end if 
+		} // end if
+	} // end if 
+	return objAssignedAuthor;
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>ee2d85ee-4285-4f11-9947-e1a96874d3f5</id>
+      <name>getAssignedEntity</name>
+      <revision>29</revision>
+      <lastModified>
+        <time>1524433683434</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getAssignedEntity(msg)
+
+  	- Desc: This function receives CCD assignedEntity XML Object and returns JavaScript object
+  	- Modified 	
+	2018-04-22 16:43 CT JER - Modified to include the storing of the id.root element.attribute for reference purposes
+	2018-04-15 23:42 CT JER - Modified to include additional if no value or sizeable value handling (length()&gt;1, length= 1 and the else) for givenName element value.
+	2018-02-16 17:48 CT JER - Added the assignedPerson Name suffix and the representedOrganization Name
+
+   	@param {XML} msg - this contains the raw message (string)
+	@return {object} objAssignedEntity - contains objAssignedEntity JS object and related properties.
+*/
+
+function getAssignedEntity(msg) {
+
+	var debug= 0;
+	var objAssignedEntity= new Object;
+	default xml namespace = &apos;urn:hl7-org:v3&apos;;
+	// &lt;given xmlns=&quot;urn:hl7-org:v3&quot;&gt;Julius&lt;/given&gt;&lt;given xmlns=&quot;urn:hl7-org:v3&quot;&gt;R&lt;/given&gt;
+	
+	if(typeof msg[&apos;assignedEntity&apos;] !== &apos;undefined&apos;) {
+		if(msg[&apos;assignedEntity&apos;].children().length()&gt;0) {
+			
+			// set assignedEntity classCode
+			if(typeof msg[&apos;assignedEntity&apos;][&apos;@classCode&apos;] !== &apos;undefined&apos;) {
+				if(debug&gt;0) { logger.error(&apos;msg[assignedEntity][@classCode]: &apos;+msg[&apos;assignedEntity&apos;][&apos;@classCode&apos;].toString()); }
+				objAssignedEntity.classCode= msg[&apos;assignedEntity&apos;][&apos;@classCode&apos;].toString();
+			} // end if
+			
+			// set assignedEntity Id
+			if(typeof msg[&apos;assignedEntity&apos;][&apos;id&apos;][0] !== &apos;undefined&apos;) {
+				// set assignedEntity Id assigningAuthorityName
+				if(typeof msg[&apos;assignedEntity&apos;][&apos;id&apos;][0][&apos;@assigningAuthorityName&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedEntity][id][0][@assigningAuthorityName]: &apos;+msg[&apos;assignedEntity&apos;][&apos;id&apos;][0][&apos;@assigningAuthorityName&apos;].toString()); }
+					objAssignedEntity.assigningAuthorityName= msg[&apos;assignedEntity&apos;][&apos;id&apos;][0][&apos;@assigningAuthorityName&apos;].toString();
+				} // end if
+				// set assignedEntity Id root
+				if(typeof msg[&apos;assignedEntity&apos;][&apos;id&apos;][0][&apos;@root&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedEntity][id][0][@root]: &apos;+msg[&apos;assignedEntity&apos;][&apos;id&apos;][0][&apos;@root&apos;].toString()); }
+					objAssignedEntity.root= msg[&apos;assignedEntity&apos;][&apos;id&apos;][0][&apos;@root&apos;].toString();
+				} // end if
+				// set assignedEntity Id extension
+				if(typeof msg[&apos;assignedEntity&apos;][&apos;id&apos;][0][&apos;@extension&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedEntity][id][0][@extension]: &apos;+msg[&apos;assignedEntity&apos;][&apos;id&apos;][0][&apos;@extension&apos;].toString()); }
+					objAssignedEntity.extension= msg[&apos;assignedEntity&apos;][&apos;id&apos;][0][&apos;@extension&apos;].toString();
+				} // end if
+			} // end if
+			
+			// set assignedEntity Code
+			if(typeof msg[&apos;assignedEntity&apos;][&apos;code&apos;] !== &apos;undefined&apos;) {
+				// set assignedEntity code code
+				if(typeof msg[&apos;assignedEntity&apos;][&apos;code&apos;][&apos;@code&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedEntity][code][@code]: &apos;+msg[&apos;assignedEntity&apos;][&apos;code&apos;][&apos;@code&apos;].toString()); }
+					objAssignedEntity.code= msg[&apos;assignedEntity&apos;][&apos;code&apos;][&apos;@code&apos;].toString();
+				} // end if
+				// set assignedEntity code codeSystemOid
+				if(typeof msg[&apos;assignedEntity&apos;][&apos;code&apos;][&apos;@codeSystem&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedEntity][code][@codeSystem]: &apos;+msg[&apos;assignedEntity&apos;][&apos;code&apos;][&apos;@codeSystem&apos;].toString()); }
+					objAssignedEntity.codeSystem= msg[&apos;assignedEntity&apos;][&apos;code&apos;][&apos;@codeSystem&apos;].toString();
+				} // end if
+				// set assignedEntity code codeSystemName
+				if(typeof msg[&apos;assignedEntity&apos;][&apos;code&apos;][&apos;@codeSystemName&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedEntity][code][@codeSystemName]: &apos;+msg[&apos;assignedEntity&apos;][&apos;code&apos;][&apos;@codeSystemName&apos;].toString()); }
+					objAssignedEntity.codeSystemName= msg[&apos;assignedEntity&apos;][&apos;code&apos;][&apos;@codeSystemName&apos;].toString();
+				} // end if
+				// set assignedEntity code displayName
+				if(typeof msg[&apos;assignedEntity&apos;][&apos;code&apos;][&apos;@displayName&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedEntity][code][@displayName]: &apos;+msg[&apos;assignedEntity&apos;][&apos;code&apos;][&apos;@displayName&apos;].toString()); }
+					objAssignedEntity.codeDisplayName= msg[&apos;assignedEntity&apos;][&apos;code&apos;][&apos;@displayName&apos;].toString();
+				} // end if
+			} // end if
+
+		
+			// set assignedEntity assignedPerson name
+			if(typeof msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;] !== &apos;undefined&apos;) {
+				if(debug&gt;0) { 
+					logger.error(&apos;toXMLString msg[assignedEntity][assignedPerson][name][given]: &apos;+msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;given&apos;].toXMLString()+
+					&apos;msg[assignedEntity][assignedPerson][name][given]: &apos;+msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;given&apos;].toString()+
+					&apos; typeof: &apos;+typeof msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;given&apos;]+
+					&apos; length: &apos;+msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;given&apos;].length()
+					);
+				}
+				if(typeof msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;] !== &apos;undefined&apos;) {
+					// get assignedEntity Given name	
+					if((typeof msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;given&apos;] !== &apos;undefined&apos;)||(msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;given&apos;].toString().length&gt;0)) {	
+						if(debug&gt;0) { 
+							logger.error(&apos;msg[assignedEntity][assignedPerson][name][given]: &apos;+msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;given&apos;][0].toString()); 
+						} // end if 
+						if(msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;given&apos;].length()&gt;1) {
+							objAssignedEntity.givenName= msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;given&apos;][0].toString();
+						} else if(msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;given&apos;].length()== 1) {
+							objAssignedEntity.givenName= msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;given&apos;].toString();
+						} else {
+							objAssignedEntity.givenName= &apos;&apos;;
+						} // end if 
+					} // end if 
+					// get assignedEntity Family name	
+					if((typeof msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;family&apos;] !== &apos;undefined&apos;)||(msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;family&apos;].length&gt;0)) {	
+						if(debug&gt;0) { logger.error(&apos;msg[assignedEntity][assignedPerson][name][family]: &apos;+msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;family&apos;].toString().replace(/xmlns=\&quot;(.*?)\&quot;/g, &apos;&apos;)); }
+						objAssignedEntity.familyName= msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;family&apos;].toString().replace(/xmlns=\&quot;(.*?)\&quot;/g, &apos;&apos;);
+					} // end if
+					// get assignedEntity Suffix
+					if(debug&gt;0) { logger.error(&apos;getAssignedEntity msg[assignedEntity][assignedPerson][name][suffix]: &apos;+msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;suffix&apos;]+
+						&apos; typeof: &apos;+typeof msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;suffix&apos;]+
+						&apos; length: &apos;+msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;suffix&apos;].toString().length);
+					} // end if logger.error
+					if((typeof msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;suffix&apos;] !== &apos;undefined&apos;)||(msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;suffix&apos;].toString().length&gt;0)) {	
+						if(debug&gt;0) { logger.error(&apos;msg[assignedEntity][assignedPerson][name][suffix]: &apos;+msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;suffix&apos;].toString()); }
+						objAssignedEntity.suffix= msg[&apos;assignedEntity&apos;][&apos;assignedPerson&apos;][&apos;name&apos;][&apos;suffix&apos;].toString();
+					} // end if 
+				} // end if 
+			} // end if 
+			
+			// set assignedEntity representedOrganization
+			if(typeof msg[&apos;assignedEntity&apos;][&apos;representedOrganization&apos;] !== &apos;undefined&apos;) {
+				// check for assignedEntity representedOrganization name child element
+				if(typeof msg[&apos;assignedEntity&apos;][&apos;representedOrganization&apos;][&apos;name&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[assignedEntity][representedOrganization][name]: &apos;+msg[&apos;assignedEntity&apos;][&apos;representedOrganization&apos;][&apos;name&apos;].toString()); }
+					objAssignedEntity.representedOrganizationName= msg[&apos;assignedEntity&apos;][&apos;representedOrganization&apos;][&apos;name&apos;].toString();	// Walgreens Drug Store 12562
+				} // end if
+				
+				if(typeof msg[&apos;assignedEntity&apos;][&apos;representedOrganization&apos;][&apos;id&apos;] !== &apos;undefined&apos;) {
+					if(typeof msg[&apos;assignedEntity&apos;][&apos;representedOrganization&apos;][&apos;id&apos;][&apos;root&apos;] !== &apos;undefined&apos;) {
+						if(debug&gt;0) { logger.error(&apos;msg[assignedEntity][representedOrganization][id][root]: &apos;+msg[&apos;assignedEntity&apos;][&apos;representedOrganization&apos;][&apos;id&apos;][&apos;root&apos;].toString()); }
+						objAssignedEntity.representedOrganizationIdRoot= msg[&apos;assignedEntity&apos;][&apos;representedOrganization&apos;][&apos;id&apos;][&apos;root&apos;].toString();	// 12562
+					} // end if 
+				} // end if
+			} // end if
+		} // end if
+	} // end if 
+	return objAssignedEntity;
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>e2cc3ab2-6619-43f6-b77e-bb2f56a8670f</id>
+      <name>getAuthorPerson</name>
+      <revision>45</revision>
+      <lastModified>
+        <time>1519632777197</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getAuthorPerson(object)
+
+  	- Desc: This function receives Javascript Object and returns AuthorPerson string
+  	- Modified:
+	2018-02-18 10:12 CT JER - Modified to accommodate the changes to the objAssignedEntity
+  	2018-02-16 10:40 CT JER - Removed the objAuthor instances reference and left the references specific to JS Rhino XPath
+  	2018-02-15 16:01 CT JER - Modified included additional typeof and for each object
+
+   	@param {object} objAuthor - this contains the Javascript Object (object)
+	@return {string} strAuthorPerson - contains authorPerson string containing the required HL7.Composite.XCN datatype and related properties.
+	
+	[2018-02-18 10:11:47,629]  ERROR (transformer:?): objAuthor= ({assigningAuthorityName:&quot;INLP_FIN&quot;, extension:&quot;3100004118&quot;, root:&quot;2.16.840.1.113883.3.2139.200&quot;, startTime:&quot;20180208041500&quot;, stopTime:&quot;20180208075000&quot;, dispositionCode:&quot;&quot;, dispositionCodeSystemOid:&quot;&quot;, dispositionCodeSystemName:&quot;&quot;, dispositionDisplayName:&quot;Home or Self Care&quot;, encounterParticipant_code:&quot;ATND&quot;, assignedEntity_root:&quot;2.16.840.1.113883.3.2139.300&quot;, assignedEntity_extension:&quot;8284&quot;, assignedEntity_assigningAuthorityName:&quot;LPS_ORG_DOC&quot;, assignedEntity_code:&quot;&quot;, assignedEntity_codeSystem:&quot;&quot;, assignedEntity_codeSystemName:&quot;&quot;, assignedEntity_codeDisplayName:&quot;&quot;, assignedEntity_givenName:&quot;Robert&quot;, assignedEntity_familyName:&quot;Riggs&quot;})
+	
+*/
+
+function getAuthorPerson(objAuthor) {
+
+	var debug= 0;
+	var cntObject= 0;
+	var strAuthorPerson= &apos;&apos;;
+	if(debug&gt;0) { 
+		logger.error(&quot;getAuthorPerson objAuthor= &quot;+objAuthor.toSource()); 
+		// logger.error(&quot;objAuthor JSON= &quot;+JSON.stringify(objAuthor, null, 4));
+	}
+
+	if(typeof objAuthor !== &apos;undefined&apos;) {	
+	
+		// replaced the assignedId with assignedEntity_extension
+		if(typeof objAuthor.assignedEntity_extension !== &apos;undefined&apos;) {
+			if(objAuthor.assignedEntity_extension.toString().length&gt;0) {
+				if(debug&gt;0) { logger.error(&apos;objAuthor.assignedEntity_extension: &apos;+objAuthor.assignedEntity_extension.toString()); }
+				strAuthorPerson += objAuthor.assignedEntity_extension.toString();
+			} // end if 
+		} // end if 
+
+	
+		// replaced the assignedPersonLastName with assignedEntity_familyName
+		if(typeof objAuthor.assignedEntity_familyName !== &apos;undefined&apos;) {
+			if(debug&gt;0) { logger.error(&apos;objAuthor.assignedEntity_familyName: &apos;+objAuthor.assignedEntity_familyName.toString()); }
+			if(objAuthor.assignedEntity_familyName.toString().length&gt;0) {
+				strAuthorPerson += &quot;^&quot;+objAuthor.assignedEntity_familyName.toString();
+			} else {
+				strAuthorPerson += &quot;^&quot;;
+			} // end if 
+		} // end if 
+		// replaced the assignedPersonFirstName with assignedEntity_givenName
+		if(typeof objAuthor.assignedEntity_givenName !== &apos;undefined&apos;) {
+			// replace(/xmlns=\&quot;(.*?)\&quot;/g, &apos;&apos;) to remove namespaces
+			// objAuthor.assignedEntity_givenName.toString().replace(/xmlns=\&quot;(.*?)\&quot;/g, &apos;&apos;)); }
+			if(debug&gt;0) { 
+				logger.error(&apos;objAuthor.assignedEntity_givenName: &apos;+objAuthor.assignedEntity_givenName.toString());
+			} // end if 
+			if(objAuthor.assignedEntity_givenName.toString().length&gt;0) {
+				// strAuthorPerson += &quot;^&quot;+objAuthor.assignedEntity_givenName.toString().replace(/xmlns=\&quot;(.*?)\&quot;/g, &apos;&apos;);
+				strAuthorPerson += &quot;^&quot;+objAuthor.assignedEntity_givenName;
+			} else {
+				strAuthorPerson += &quot;^&quot;;
+			} // end if 
+		} // end if
+
+		 
+		// replace the assignedPersonSuffix with assignedEntity_suffix
+		if(typeof objAuthor.assignedEntity_suffix !== &apos;undefined&apos;) {
+			if(debug&gt;0) { logger.error(&apos;objAuthor.assignedEntity_suffix: &apos;+objAuthor.assignedEntity_suffix.toString()); }
+			if(objAuthor.assignedEntity_suffix.toString().length&gt;0) {
+				strAuthorPerson += &quot;^^&quot;+objAuthor.assignedEntity_suffix.toString();
+			} else {
+				strAuthorPerson += &quot;^^&quot;;
+			} // end if 
+		} // end if 
+		// replace the assignedRoot with assignedEntity_root
+		if(typeof objAuthor.assignedEntity_root !== &apos;undefined&apos;) {
+			if(debug&gt;0) { logger.error(&apos;objAuthor.assignedEntity_root: &apos;+objAuthor.assignedEntity_root.toString()); }
+			if (objAuthor.assignedEntity_root.toString().length&gt;0) {
+				strAuthorPerson += &quot;^^^^^&amp;amp;&quot;+objAuthor.assignedEntity_root.toString()+&quot;&amp;amp;ISO&quot;;
+			} else {
+				strAuthorPerson += &quot;^^^^^&quot;;
+			} // end if
+		} // end if
+	} // end if 
+
+	if(debug&gt;0) { logger.error(&quot;getAuthorPerson.strAuthorPerson: &quot;+strAuthorPerson); }
+	return strAuthorPerson;
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>e7b0d95b-2bde-43e7-ab61-ea1572002360</id>
+      <name>getAuthors</name>
+      <revision>28</revision>
+      <lastModified>
+        <time>1519632777308</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getAuthors(msg)
+
+	- Desc: This function receives CCD msg and returns an array of Author objects 
+	- Modified
+	2018-02-18 13:38 CT JER - Modified to accommodate the changes to call the objAssignedAuthor function
+	2018-02-10 11:32 CT JER - Verified per the HL7 Rim model 1..* assignedAuthors elements (1..* more authors) list objects persist to arrAuthors.
+	2018-02-08 03:58 CT JER - Modified for additional handling verify typeof !== &apos;undefined&apos; and two conditionals to set authorInstitution property
+	
+	@param {String} msg - Raw msg
+	@return {Array} return array of Author objects
+*/
+function getAuthors(msg) {
+	
+	var debug= 0;
+	// uncertain if more than one assignedAuthor per ClinicalDocument
+	if(debug&gt;0) { logger.error(&apos;getAuthor of msg[author]: &apos;+msg[&apos;author&apos;]); }
+	
+	var objAuthor= new Object;			
+	var objAssignedAuthor= getAssignedAuthor(msg[&apos;author&apos;]);
+
+	if(typeof objAssignedAuthor !== &apos;undefined&apos;) {
+	
+		// get assigningAuthorityName
+		if((typeof objAssignedAuthor.assigningAuthorityName !== &apos;undefined&apos;)&amp;&amp;(objAssignedAuthor.assigningAuthorityName.toString().length&gt;0)) {
+			if(debug&gt;0) { logger.error(&apos;msg[author][assignedAuthor][id][@assigningAuthorityName]: &apos;+objAssignedAuthor.assigningAuthorityName.toString()); }
+			objAuthor.IdAssigningAuthorityName= objAssignedAuthor.assigningAuthorityName.toString();
+		} // end if
+		// get root
+		if((typeof objAssignedAuthor.root !== &apos;undefined&apos;)&amp;&amp;(objAssignedAuthor.root.toString().length&gt;0)) {
+			if(debug&gt;0) { logger.error(&apos;msg[author][assignedAuthor][id][@root]: &apos;+objAssignedAuthor.root.toString()); }
+			objAuthor.Idroot= objAssignedAuthor.root.toString();
+		} // end if
+		// get extension
+		if((typeof objAssignedAuthor.extension !== &apos;undefined&apos;)&amp;&amp;(objAssignedAuthor.extension.toString().length&gt;0)) {
+			if(debug&gt;0) { logger.error(&apos;msg[author][assignedAuthor][id][@extension]: &apos;+objAssignedAuthor.extension.toString()); }
+			objAuthor.Idextension= objAssignedAuthor.extension.toString();
+		} // end if			
+	
+		// get assignedAuthorizingDevice manufacturer -&gt; set manufacturer
+		if((typeof objAssignedAuthor.assignedAuthorizingDevice_manufacturer !== &apos;undefined&apos;)&amp;&amp;(objAssignedAuthor.assignedAuthorizingDevice_manufacturer.toString().length&gt;0)) {
+			if(debug&gt;0) { logger.error(&apos;msg[author][assignedAuthor][assignedAuthoringDevice][manufacturerModelName]: &apos;+objAssignedAuthor.assignedAuthorizingDevice_manufacturer.toString()); }
+			objAuthor.authorizingDevice= objAssignedAuthor.assignedAuthorizingDevice_manufacturer.toString();
+		} // end if			
+	
+		// get assignedAuthorizingDevice softwareName -&gt; set softwareName
+		if((typeof objAssignedAuthor.assignedAuthorizingDevice_softwareName !== &apos;undefined&apos;)&amp;&amp;(objAssignedAuthor.assignedAuthorizingDevice_softwareName.toString().length&gt;0)) {
+			if(debug&gt;0) { logger.error(&apos;msg[author][assignedAuthor][assignedAuthoringDevice][softwareName]: &apos;+objAssignedAuthor.assignedAuthorizingDevice_softwareName.toString()); }
+			objAuthor.softwareName= objAssignedAuthor.assignedAuthorizingDevice_softwareName.toString();
+		} // end if	
+				
+		// get objAssignedAuthor representedOrganization_assigningAuthorityName -&gt; set assigningAuthorityName
+		if((typeof objAssignedAuthor.representedOrganization_assigningAuthorityName !== &apos;undefined&apos;)&amp;&amp;(objAssignedAuthor.representedOrganization_assigningAuthorityName.toString().length&gt;0)) {
+			if(debug&gt;0) { logger.error(&apos;msg[author][assignedAuthor][representedOrganization][id][assigingAuthorityName]: &apos;+objAssignedAuthor.representedOrganization_assigningAuthorityName.toString()); }
+			objAuthor.representedOrganization_assigingAuthorityName= objAssignedAuthor.representedOrganization_assigningAuthorityName.toString();
+		} // end if				
+	
+		// get objAssignedAuthor representedOrganization_extension -&gt; set extension
+		if((typeof objAssignedAuthor.representedOrganization_extension !== &apos;undefined&apos;)&amp;&amp;(objAssignedAuthor.representedOrganization_extension.toString().length&gt;0)) {
+			if(debug&gt;0) { logger.error(&apos;msg[author][assignedAuthor][representedOrganization][id][extension]: &apos;+objAssignedAuthor.representedOrganization_extension.toString()); }
+			objAuthor.representedOrganization_extension= objAssignedAuthor.representedOrganization_extension.toString();
+		} // end if	
+	
+		// get objAssignedAuthor representedOrganization_root -&gt; set root
+		if((typeof objAssignedAuthor.representedOrganization_root !== &apos;undefined&apos;)&amp;&amp;(objAssignedAuthor.representedOrganization_root.toString().length&gt;0)) {
+			if(debug&gt;0) { logger.error(&apos;msg[author][assignedAuthor][representedOrganization][id][root]: &apos;+objAssignedAuthor.representedOrganization_root.toString()); }
+			objAuthor.representedOrganization_root= objAssignedAuthor.representedOrganization_root.toString();
+		} // end if
+				
+		// get objAssignedAuthor.representedOrganizationName -&gt; set representedOrganizationName
+		if((typeof objAssignedAuthor.representedOrganizationName !== &apos;undefined&apos;)&amp;&amp;(objAssignedAuthor.representedOrganizationName.toString().length&gt;0)) {
+			if(debug&gt;0) { logger.error(&apos;msg[author][assignedAuthor][representedOrganization][name]: &apos;+objAssignedAuthor.representedOrganizationName.toString()); }
+			objAuthor.authorInstitution= objAssignedAuthor.representedOrganizationName.toString();
+		} // end if
+	} // end if 
+	
+	return objAuthor;
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>6fa24651-0c70-4d88-95b6-a50ba345cdfc</id>
+      <name>getClinicalDocumentInfo</name>
+      <revision>10</revision>
+      <lastModified>
+        <time>1518424049850</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getClinicalDocumentInfo(msg)
+
+  	- Desc: This function receives CCD msg and returns clinicalDocumentInfo object
+  	- Modified:
+ 	2018-02-10 11:20 CT JER - Modified to include capturing the SetId and versionNumber attributes
+
+   	@param {String} msg - this contains the raw message (string)
+	@return {object} objClinDocInfo - this contains a clinical document info element specific values composed into a single objClinDocInfo object.
+*/
+function getClinicalDocumentInfo(msg) {
+
+		var objClinDocInfo= new Object();
+		objClinDocInfo.extension=				msg[&apos;id&apos;][&apos;@extension&apos;].toString();
+		objClinDocInfo.root=					msg[&apos;id&apos;][&apos;@root&apos;].toString();	
+		objClinDocInfo.assigningAuthorityName=		msg[&apos;id&apos;][&apos;@assigningAuthorityName&apos;].toString();
+		objClinDocInfo.code=					msg[&apos;code&apos;][&apos;@code&apos;].toString();
+		objClinDocInfo.codeSystemOid=				msg[&apos;code&apos;][&apos;@codeSystem&apos;].toString();
+		objClinDocInfo.codeSystemName=			msg[&apos;code&apos;][&apos;@codeSystemName&apos;].toString();
+		objClinDocInfo.displayName=				msg[&apos;code&apos;][&apos;@displayName&apos;].toString();
+		objClinDocInfo.title=					msg[&apos;title&apos;].toString();
+		objClinDocInfo.creationTime=				msg[&apos;effectiveTime&apos;][&apos;@value&apos;].toString().substring(0,14);
+		objClinDocInfo.confCode=					msg[&apos;confidentialityCode&apos;][&apos;@code&apos;].toString();
+		objClinDocInfo.confCodeSystemOid=			msg[&apos;confidentialityCode&apos;][&apos;@codeSystem&apos;].toString();
+		objClinDocInfo.languageCode=				msg[&apos;languageCode&apos;][&apos;@code&apos;].toString();
+		objClinDocInfo.setIdExtension=			msg[&apos;setId&apos;][&apos;@extension&apos;].toString();
+		objClinDocInfo.setIdRoot=				msg[&apos;setId&apos;][&apos;@root&apos;].toString();	
+		objClinDocInfo.setIdAssigningAuthorityName=	msg[&apos;setId&apos;][&apos;@assigningAuthorityName&apos;].toString();
+		objClinDocInfo.documentVersion=			msg[&apos;versionNumber&apos;][&apos;@value&apos;].toString();
+		return objClinDocInfo;
+
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>70cd4591-c02c-43e3-8da1-b6c7f3debd3b</id>
+      <name>getCustodian</name>
+      <revision>10</revision>
+      <lastModified>
+        <time>1524413710013</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getCustodian(msg)
+
+	- Desc: This function receives CCD msg and returns an array of custodian objects 
+	- Modified
+	2018-02-11 17:49 CT JER - Newly created to store the custodian objects
+
+	@param {String} msg - Raw msg
+	@return {Array} return array of custodian objects
+*/
+function getCustodian(msg) {
+	
+	var debug= 0;
+	var objCounter= 1;
+	var arrCustodian= new Array();
+
+	// uncertain if more than one assignedCustodians per ClinicalDocument
+	for each(custodian in msg[&apos;custodian&apos;][0]) {
+		var objCustodian= new Object;
+		objCustodian.id= objCounter;
+		if(custodian.children().length()&gt;0) {
+			if(debug&gt;0) { logger.error(&apos;custodian children()= &apos;+custodian.children()); }
+			for each(child in custodian.children()) {
+				// each assignedCustodian
+				if(child.localName()== &apos;assignedCustodian&apos;) {
+					// &lt;id assigningAuthorityName=&quot;HMS HOSPITAL NUMBER&quot; extension=&quot;134&quot; root=&quot;2.16.840.1.113883.3.1579.834848495152.134.500&quot;/&gt;
+					if(typeof child.representedCustodianOrganization.id !== &apos;undefined&apos;) {
+						objCustodian.representedOrganization_AssignAuthorityName=	child.representedCustodianOrganization.id.@assigningAuthorityName.toString();
+						objCustodian.representedOrganization_Extension=  			child.representedCustodianOrganization.id.@extension.toString();
+						objCustodian.representedOrganization_Root=  				child.representedCustodianOrganization.id.@root.toString();
+					} // end if
+					// e.g &lt;name&gt;HILL REGIONAL HOSPITAL&lt;/name&gt;
+					if(typeof child.representedOrganziation.name !== &apos;undefined&apos;) {
+						objCustodian.representedOrganization=					child.representedCustodianOrganization.name.toString();
+					}
+					// &lt;telecom use=&quot;WP&quot; value=&quot;tel:(254)580-8500&quot;/&gt;
+					if(typeof child.representedOrganziation.telecom !== &apos;undefined&apos;) {
+						objCustodian.representedOrganization_telecom=			child.representedCustodianOrganization.telecom.@value.toString();
+					}
+					// &lt;addr use=&quot;WP&quot;&gt;&lt;streetAddressLine&gt;101 CIRCLE DRIVE&lt;/streetAddressLine&gt;&lt;city&gt;HILLSBORO&lt;/city&gt;&lt;state&gt;TX&lt;/state&gt;&lt;postalCode&gt;766450000&lt;/postalCode&gt;&lt;/addr&gt;
+					if(typeof child.representedOrganziation.addr !== &apos;undefined&apos;) {
+						objCustodian.representedOrganization_streetAddress=				child.representedCustodianOrganization.addr.streetAddressLine.toString();
+						objCustodian.representedOrganization_city=						child.representedCustodianOrganization.addr.city.toString();
+						objCustodian.representedOrganization_state=						child.representedCustodianOrganization.addr.state.toString();
+						objCustodian.representedOrganization_postalCode=					child.representedCustodianOrganization.addr.postalCode.toString();
+					} // end if
+				}
+			} // end for each
+		} // end if 
+		objCounter++;
+	} // end for each
+	arrCustodian.push(objCustodian);
+
+	return arrCustodian;
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>b0e1a23f-7003-4f27-a819-985f89f80e87</id>
+      <name>getEncounter</name>
+      <revision>11</revision>
+      <lastModified>
+        <time>1519009928864</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getEncounter(msg)
+
+  	- Desc: This function receives CCD msg and returns Encounter object
+  	- Modified
+  	2018-02-18 20:23 CT JER - Modified to include the addition of healthcareFacility Location Name - use for HealthcareFacilityTypeCode displayName
+  	2018-02-16 17:33 CT JER - Added association to the getAssignedEntity to retrieve the assignedEntity related elements and attributes
+  	2018-02-16 15:55 CT JER - Added handling for DischargeDisposition elements and attributes
+  	2018-02-11 17:34 CT JER - Modified startTime and stopTime by applying the substring(0,14) function to remove the datetime offset
+  	2018-02-10 11:27 CT JER - Corrected the setting of the objEncounter extension, root, startTime and stopTime
+  	
+
+   	@param {String} msg - this contains the raw message (string)
+	@return {object} objEncounter - contains objEncounter object and related properties.
+*/
+
+function getEncounter(msg) {
+
+var debug= 0;
+
+	if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;] !== &apos;undefined&apos;) {
+		if(msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;].children().length()&gt;0) {
+			var objEncounter= new Object;
+			
+			// &lt;id assigningAuthorityName=&quot;HMS PATIENT ACCOUNT NUMBER&quot; extension=&quot;3480487&quot; root=&quot;2.16.840.1.113883.3.1579.834848495152.134.300&quot;/&gt;
+			if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;id&apos;] !== &apos;undefined&apos;) {
+				if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;id&apos;][&apos;@assigningAuthorityName&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][id][@assigningAuthorityName]: &apos;+msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;id&apos;][&apos;@assigningAuthorityName&apos;].toString()); }
+					objEncounter.assigningAuthorityName= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;id&apos;][&apos;@assigningAuthorityName&apos;].toString();
+				} // end if
+				if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;id&apos;][&apos;@extension&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][id][@extension]: &apos;+msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;id&apos;][&apos;@extension&apos;].toString()); }
+					objEncounter.extension= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;id&apos;][&apos;@extension&apos;].toString();
+				} // end if
+				if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;id&apos;][&apos;@root&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][id][@root]: &apos;+msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;id&apos;][&apos;@root&apos;].toString()); }
+					objEncounter.root= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;id&apos;][&apos;@root&apos;].toString();
+				} // end if
+			} // end if
+			
+			// &lt;effectiveTime&gt;&lt;low value=&quot;20180203075200-0600&quot;/&gt;&lt;high value=&quot;20180203075200-0600&quot;/&gt;&lt;/effectiveTime&gt;
+			if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;effectiveTime&apos;] !== &apos;undefined&apos;) {
+				if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;effectiveTime&apos;][&apos;low&apos;][&apos;@value&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][effectiveTime][low][@value]: &apos;+msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;effectiveTime&apos;][&apos;low&apos;][&apos;@value&apos;].toString()); }
+					objEncounter.startTime= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;effectiveTime&apos;][&apos;low&apos;][&apos;@value&apos;].toString().substring(0,14);
+				} // end if
+				if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;effectiveTime&apos;][&apos;high&apos;][&apos;@value&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][effectiveTime][high][@value]: &apos;+msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;effectiveTime&apos;][&apos;high&apos;][&apos;@value&apos;].toString()); }
+					objEncounter.stopTime= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;effectiveTime&apos;][&apos;high&apos;][&apos;@value&apos;].toString().substring(0,14);
+				} // end if
+			} // end if
+			
+			//  &lt;dischargeDispositionCode code=&quot;1&quot; codeSystem=&quot;2.16.840.1.113883.12.112&quot; codeSystemName=&quot;HL7 Discharge Disposition&quot; displayName=&quot;DISCHARGED HOME/SELF CARE&quot;/&gt;
+			if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;] !== &apos;undefined&apos;) {
+				if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;@code&apos;] !== &apos;undefined&apos;) {
+					// get DischargeDisposition Code
+					if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;@code&apos;] !== &apos;undefined&apos;) {&#xd;						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][dischargeDispositionCode][@code]: &apos;+msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;@code&apos;].toString()); }
+						objEncounter.dispositionCode= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;@code&apos;].toString();
+					} // end if
+					// get DischargeDisposition CodeSystemOid
+					if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;@codeSystem&apos;] !== &apos;undefined&apos;) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][dischargeDispositionCode][@codeSystem]: &apos;+msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;@codeSystem&apos;].toString()); }
+						objEncounter.dispositionCodeSystemOid= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;@codeSystem&apos;].toString();
+					} // end if
+					// get DischargeDisposition CodeSystemName
+					if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;@codeSystemName&apos;] !== &apos;undefined&apos;) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][dischargeDispositionCode][@codeSystemName]: &apos;+msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;@codeSystemName&apos;].toString()); }						
+						objEncounter.dispositionCodeSystemName= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;@codeSystemName&apos;].toString();
+					} // end if
+					// get DischargeDisposition DisplayName
+					if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;@displayName&apos;] !== &apos;undefined&apos;) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][dischargeDispositionCode][@displayName]: &apos;+msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;@displayName&apos;].toString()); }
+						objEncounter.dispositionDisplayName= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;@displayName&apos;].toString();
+					} // end if
+				} // end if 
+				// get DischargeDisposition originalText
+				if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;originalText&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][dischargeDispositionCode][originalText]: &apos;+msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;originalText&apos;].toString()); }
+					objEncounter.dispositionDisplayName= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;dischargeDispositionCode&apos;][&apos;originalText&apos;].toString();
+				} // end if 
+			} // end if 	
+				
+			// get encounterParticipant assignedEntity
+			if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;encounterParticipant&apos;] !== &apos;undefined&apos;) {
+					
+				if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;encounterParticipant&apos;][&apos;@typeCode&apos;] !== &apos;undefined&apos;) {
+					if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][encounterParticipant][@typeCode]: &apos;+msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;encounterParticipant&apos;][&apos;@typeCode&apos;].toString()); }
+					objEncounter.encounterParticipant_code= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;encounterParticipant&apos;][&apos;@typeCode&apos;].toString();
+				} // end if
+				
+				// call getAssignedEntity
+				var objAssignedEntity= getAssignedEntity(msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;encounterParticipant&apos;]);
+				if(objAssignedEntity !== &apos;undefined&apos;) {
+				
+					// get assignedEntity Root
+					if(objAssignedEntity.root != null) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][encounterParticipant][assignedEntity][id][@root]: &apos;+objAssignedEntity.root.toString()); }
+						objEncounter.assignedEntity_root= objAssignedEntity.root.toString();
+					} // end if
+					// get assignedEntity Extension
+					if(objAssignedEntity.extension != null) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][encounterParticipant][assignedEntity][id][@extension]: &apos;+objAssignedEntity.extension.toString()); }
+						objEncounter.assignedEntity_extension= objAssignedEntity.extension.toString();
+					} // end if
+					// get assignedEntity AssigningAuthorityName
+					if(objAssignedEntity.assigningAuthorityName != null) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][encounterParticipant][assignedEntity][id][@assigningAuthorityName]: &apos;+objAssignedEntity.assigningAuthorityName.toString()); }
+						objEncounter.assignedEntity_assigningAuthorityName= objAssignedEntity.assigningAuthorityName.toString();
+					} // end if
+					
+					// get assignedEntity code
+					if(objAssignedEntity.code != null) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][encounterParticipant][assignedEntity][code][@code]: &apos;+objAssignedEntity.code.toString()); }
+						objEncounter.assignedEntity_code= objAssignedEntity.code.toString();
+					} // end if
+					// get assignedEntity codeSystem
+					if(objAssignedEntity.codeSystem != null) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][encounterParticipant][assignedEntity][code][@codeSystem]: &apos;+objAssignedEntity.codeSystem.toString()); }
+						objEncounter.assignedEntity_codeSystem= objAssignedEntity.codeSystem.toString();
+					} // end if
+					// get assignedEntity codeSystemName
+					if(objAssignedEntity.codeSystemName != null) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][encounterParticipant][assignedEntity][code][@codeSystemName]: &apos;+objAssignedEntity.codeSystemName.toString()); }
+						objEncounter.assignedEntity_codeSystemName= objAssignedEntity.codeSystemName.toString();
+					} // end if
+					// get assignedEntity displayName
+					if(objAssignedEntity.codeDisplayName != null) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][encounterParticipant][assignedEntity][code][@displayName]: &apos;+objAssignedEntity.codeDisplayName.toString()); }
+						objEncounter.assignedEntity_codeDisplayName= objAssignedEntity.codeDisplayName.toString();
+					} // end if
+
+					// get assignedEntity Author GivenName
+					if(objAssignedEntity.givenName != null) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][encounterParticipant][assignedEntity][assignedPerson][name][@given]: &apos;+objAssignedEntity.givenName.toString()); }
+						objEncounter.assignedEntity_givenName= objAssignedEntity.givenName.toString();
+					} // end if
+					// get assignedEntity Author FamilyName
+					if(objAssignedEntity.familyName != null) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][encounterParticipant][assignedEntity][assignedPerson][name][@family]: &apos;+objAssignedEntity.familyName.toString()); }
+						objEncounter.assignedEntity_familyName= objAssignedEntity.familyName.toString();
+					} // end if					
+				} // end if 
+			} // end if 
+			
+			// get HealthcareFacilityTypeCode
+			if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthCareFacility&apos;] !== &apos;undefined&apos;) {
+	
+				// set healthcareFacility classCode
+				if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;@classCode&apos;] !== &apos;undefined&apos;) {
+					if((typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;@classCode&apos;] != null)&amp;&amp;(msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;@classCode&apos;].toString().length&gt;0)) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][location][healthcareFacility][@classCode].toString(): &apos;+msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;@classCode&apos;].toString()); }
+						objEncounter.healthcareFacility_classCode= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;@classCode&apos;].toString();
+					} // end if 
+				} // end if
+
+				// set healthcareFacility Location 
+				if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;location&apos;] !== &apos;undefined&apos;) {
+	
+					// set healthcareFacility Location classCode
+					if((typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;location&apos;][&apos;@classCode&apos;] != null)&amp;&amp;(msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;location&apos;][&apos;@classCode&apos;].toString().length&gt;0)) {
+						if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][location][healthcareFacility][location][@classCode].toString(): &apos;+msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;location&apos;][&apos;@classCode&apos;].toString()); }
+						objEncounter.healthcareFacilityLocation_classCode= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;location&apos;][&apos;@classCode&apos;].toString();
+					} // end if 
+
+					// set healthcareFacility Location Name - use for HealthcareFacilityTypeCode displayName
+					if(typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;location&apos;][&apos;name&apos;] !== &apos;undefined&apos;) {
+						if((typeof msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;location&apos;][&apos;name&apos;] != null)&amp;&amp;(msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;location&apos;][&apos;name&apos;].toString().length&gt;0)) {
+							if(debug&gt;0) { logger.error(&apos;msg[componentOf][encompassingEncounter][location][healthcareFacility][location][name].toString(): &apos;+msg.componentOf.encompassingEncounter.location.healthcareFacility.location.name.toString()); }
+							objEncounter.healthcareFacilityLocation_name= msg[&apos;componentOf&apos;][&apos;encompassingEncounter&apos;][&apos;location&apos;][&apos;healthcareFacility&apos;][&apos;location&apos;][&apos;name&apos;].toString();
+							channelMap.put(healthcareFacilityDisplayName,objEncounter.healthcareFacilityLocation_name);
+						} // end if 
+					} // end if
+				} // end if 
+			} // end if 
+		} // end if 
+	} // end if
+		
+	return objEncounter;
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>ddf9102b-8eaa-451e-875c-d359ef078c35</id>
+      <name>getPatientRole</name>
+      <revision>21</revision>
+      <lastModified>
+        <time>1519467489697</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getPatientRole(msg)
+
+  	- Desc: This function receives CCD msg and returns from patientRole Object
+
+   	@param {String} msg - this contains the raw message (string)
+	@return {object} objPatientRole - this contains the patientRole elements composed into a single objPatientRole object.
+*/
+function getPatientRole(msg) {
+
+	// define variables
+	if (typeof(msg[&apos;recordTarget&apos;][&apos;patientRole&apos;].toString()) !== undefined) {
+
+		var objPatientRole= new Object();
+		objPatientRole.patientId=		msg[&apos;recordTarget&apos;][&apos;patientRole&apos;][&apos;id&apos;][0][&apos;@extension&apos;].toString();
+		objPatientRole.root=			msg[&apos;recordTarget&apos;][&apos;patientRole&apos;][&apos;id&apos;][0][&apos;@root&apos;].toString();
+		objPatientRole.streetAddress=		msg[&apos;recordTarget&apos;][&apos;patientRole&apos;][&apos;addr&apos;][&apos;streetAddressLine&apos;].toString();
+		objPatientRole.city=			msg[&apos;recordTarget&apos;][&apos;patientRole&apos;][&apos;addr&apos;][&apos;city&apos;].toString();
+		objPatientRole.state=			msg[&apos;recordTarget&apos;][&apos;patientRole&apos;][&apos;addr&apos;][&apos;state&apos;].toString();
+		objPatientRole.postalCode=		msg[&apos;recordTarget&apos;][&apos;patientRole&apos;][&apos;addr&apos;][&apos;postalCode&apos;].toString();
+		objPatientRole.country=			msg[&apos;recordTarget&apos;][&apos;patientRole&apos;][&apos;addr&apos;][&apos;country&apos;].toString();
+		objPatientRole.lastName=			msg[&apos;recordTarget&apos;][&apos;patientRole&apos;][&apos;patient&apos;][&apos;name&apos;][&apos;family&apos;][0].toString();
+		objPatientRole.firstName=		msg[&apos;recordTarget&apos;][&apos;patientRole&apos;][&apos;patient&apos;][&apos;name&apos;][&apos;given&apos;][0].toString();
+		objPatientRole.gender=			msg[&apos;recordTarget&apos;][&apos;patientRole&apos;][&apos;patient&apos;][&apos;administrativeGenderCode&apos;][&apos;@code&apos;].toString();
+		objPatientRole.dateOfBirth=		msg[&apos;recordTarget&apos;][&apos;patientRole&apos;][&apos;patient&apos;][&apos;birthTime&apos;][&apos;@value&apos;].toString();
+		// objPID.dateOfBirth=			convertDate(msg[&apos;PID&apos;][&apos;PID.7&apos;][&apos;PID.7.1&apos;].text().toString(),&quot;MM-dd-yyyy&quot;);
+		objPatientRole.phoneNumber=		msg[&apos;recordTarget&apos;][&apos;patientRole&apos;][&apos;telecom&apos;][&apos;@value&apos;].toString();
+
+		return objPatientRole;
+	}
+}
+							</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>ceb659b6-95fb-4a37-8bb1-7198343b0976</id>
+      <name>getPerformer</name>
+      <revision>59</revision>
+      <lastModified>
+        <time>1526533877892</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getPerformer(msg)
+
+  	- Desc: This function receives CCD msg and returns Performer objects
+  	- Modified
+	2018-02-16 18:21 CT JER - Modified call the getAssignedEntity function to reference the serviceEvent\assignedEntity child elements and attributes instead of using XPath assignments - reusability of the getAssignedEntities
+	2018-02-16 10:40 CT JER - Corrected typo error still referencing performerChild object no longer in reference/deprecated usage of performer[&apos;functionCode&apos;][&apos;@displayName&apos;] XPath reference
+	2018-02-15 08:37 CT JER - Modified changed from usage of children(), child and attribute XML ECMAScript E4X calls to specific XMLPath calls
+  	2018-02-14 17:19 CT JER - Modified to provide additional handling typeof != &apos;undefined&apos; on the functionCode element and child elements and their attributes
+	2018-02-07 11:44 CT JER - Modified for additional handling verify typeof !== &apos;undefined&apos;
+
+   	@param {String} msg - this contains the raw message (string)
+	@return {array} arrPerformer - contains arrPerformer array contains objPerformer objects and related properties.
+*/
+
+function getPerformer(msg) {
+
+	var debug= 0;
+	var arrPerformer= new Array();
+
+	if(msg[&apos;documentationOf&apos;][&apos;serviceEvent&apos;][&apos;performer&apos;] !== &apos;undefined&apos;) {
+		var strPerfCount= 0;
+		for each (performer in msg[&apos;documentationOf&apos;][&apos;serviceEvent&apos;][&apos;performer&apos;][0]) {
+			if(debug&gt;0) { logger.error(&apos;performer[&apos;+strPerfCount+&apos;]: &apos;+performer); }
+			//if(typeof performer !== &apos;undefined&apos;) {
+				var objPerformer= new Object;
+				if(performer.children().length()&gt;0) {
+					
+					if(debug&gt;0) { logger.error(&apos;Performer.children().length: &apos;+performer.children().length()+&apos; children names: &apos;+performer.children()); }
+					// str = str.replace(/xmlns=\&quot;(.*?)\&quot;/g, &apos;&apos;);
+					
+					if(performer[&apos;functionCode&apos;][&apos;@code&apos;] != null) {
+						// check for functionCode element and it&apos;s attributes
+						if(typeof performer[&apos;functionCode&apos;][&apos;@code&apos;] !== &apos;undefined&apos;) {
+							// check for functionCode code attribute
+							if(performer[&apos;functionCode&apos;][&apos;@code&apos;].toString().length&gt;0) {
+								// get Provider Role
+								if(debug&gt;0) { logger.error(&apos;performer[function][@code].toString(): &apos;+performer[&apos;function&apos;][&apos;@code&apos;].toString()); }
+								objPerformer.functionCode= performer[&apos;function&apos;][&apos;@code&apos;].toString();				// PP
+							} // end if 
+						} // end if 
+						// check for functionCode displayName attribute
+						if(typeof performer[&apos;functionCode&apos;][&apos;@displayName&apos;] !=null) {
+							// check for functionCode displayName attribute
+							if(performer[&apos;functionCode&apos;][&apos;@displayName&apos;].toString().length&gt;0) {
+								// get Provider Role
+								if(debug&gt;0) { logger.error(&apos;performer[function][@displayName].toString(): &apos;+performer[&apos;function&apos;][&apos;@displayName&apos;].toString()); }
+								objPerformer.functionDisplayNmae= performer[&apos;functionCode&apos;][&apos;@displayName&apos;].toString();						// PP
+							} // end if 
+						} // end if 
+						if(typeof performer[&apos;functionCode&apos;][&apos;@codeSystem&apos;] !=null) {
+							// check for functionCode codeSystem attribute
+							if(performer[&apos;functionCode&apos;][&apos;@codeSystem&apos;].toString().length&gt;0) {
+								if(debug&gt;0) { logger.error(&apos;performer[function][@codeSystem].toString(): &apos;+performer[&apos;function&apos;][&apos;@codeSystem&apos;].toString()); }
+								objPerformer.functionCodeSystem= performer[&apos;function&apos;][&apos;@codeSystem&apos;].toString(); 		// 2.16.840.1.113883.12.443
+							} // end if 
+						} // end if
+					} // end if
+
+					var objAssignedEntity= getAssignedEntity(performer);
+					if(objAssignedEntity !== &apos;undefined&apos;) {
+						
+						// check for assignedEntity id assigningAuthorityName 
+						if(typeof objAssignedEntity.assigningAuthorityName !== &apos;undefined&apos;) {
+							if(objAssignedEntity.assigningAuthorityName.toString().length&gt;0) {
+								if(debug&gt;0) { logger.error(&apos;performer[assignedEntity][id][@assigningAuthorityName].toString(): &apos;+objAssignedEntity.assigningAuthorityName.toString()); }
+								objPerformer.assignedEntity_assigningAuthorityName= objAssignedEntity.assigningAuthorityName.toString(); 		// 2.16.840.1.113883.12.443
+							} // end if							
+						} // end if 
+						
+						// check for assignedEntity id root 
+						if(typeof objAssignedEntity.root !== &apos;undefined&apos;) {
+							if(objAssignedEntity.root.toString().length&gt;0) {
+								if(debug&gt;0) { logger.error(&apos;performer[assignedEntity][id][@root].toString(): &apos;+objAssignedEntity.root.toString()); }
+								objPerformer.assignedEntity_root= objAssignedEntity.root.toString(); 		// 2.16.840.1.113883.12.443
+							} // end if							
+						} // end if 
+
+						// check for assignedEntity id extension 
+						if(typeof objAssignedEntity.extension !== &apos;undefined&apos;) {
+							if(objAssignedEntity.extension.toString().length&gt;0) {
+								if(debug&gt;0) { logger.error(&apos;performer[assignedEntity][id][@extension].toString(): &apos;+objAssignedEntity.extension.toString()); }
+								objPerformer.assignedEntity_extension= objAssignedEntity.extension.toString(); 		// 2.16.840.1.113883.12.443
+							} // end if							
+						} // end if 
+
+						
+						// &lt;code code=&quot;208D00000X&quot; codeSystem=&quot;2.16.840.1.113883.6.101&quot; codeSystemName=&quot;NUCC Health Care Provider Taxonomy&quot; displayName=&quot;General Practice&quot;/&gt;
+						// check for assignedEntity code element
+						if(typeof objAssignedEntity.code !== &apos;undefined&apos;) {
+							if(objAssignedEntity.code.toString().length&gt;0) {
+								if(debug&gt;0) { logger.error(&apos;performer[assignedEntity][code][@code].toString(): &apos;+objAssignedEntity.code.toString()); }
+								objPerformer.assignedEntity_code= objAssignedEntity.code.toString(); 				// 208D00000X
+							} // end if							
+						} // end if 
+
+						// check for assignedEntity codeSystem element
+						if(typeof objAssignedEntity.codeSystem !== &apos;undefined&apos;) {
+							if(objAssignedEntity.codeSystem.toString().length&gt;0) {
+								if(debug&gt;0) { logger.error(&apos;performer[assignedEntity][code][@codeSystem].toString(): &apos;+objAssignedEntity.codeSystem.toString()); }
+								objPerformer.assignedEntity_codeSystem= objAssignedEntity.codeSystem.toString(); 			// 2.16.840.1.113883.6.101
+							} // end if							
+						} // end if 
+						
+						// check for assignedEntity codeSystemName element
+						if(typeof objAssignedEntity.codeSystemName !== &apos;undefined&apos;) {
+							if(objAssignedEntity.codeSystemName.toString().length&gt;0) {
+								if(debug&gt;0) { logger.error(&apos;performer[assignedEntity][code][@codeSystemName].toString(): &apos;+objAssignedEntity.codeSystemName.toString()); }
+								objPerformer.assignedEntity_codeSystemName= objAssignedEntity.codeSystemName.toString(); 		// NUCC Health Care Provider Taxonomy
+							} // end if							
+						} // end if 
+
+						// check for assignedEntity displayName element
+						if(typeof objAssignedEntity.displayName !== &apos;undefined&apos;) {
+							if(objAssignedEntity.displayName.toString().length&gt;0) {
+								if(debug&gt;0) { logger.error(&apos;performer[assignedEntity][code][@displayName].toString(): &apos;+objAssignedEntity.displayName.toString()); }
+								objPerformer.assignedEntity_displayName= objAssignedEntity.codeSystemName.toString(); 		// NUCC Health Care Provider Taxonomy
+							} // end if							
+						} // end if 						
+
+						
+						// check for assignedEntity assignedPerson Given name
+						if(typeof objAssignedEntity.givenName !== &apos;undefined&apos;) {
+							if(objAssignedEntity.givenName.toString().length&gt;0) {
+								if(debug&gt;0) { logger.error(&apos;performer[assignedEntity][assignedPerson][name][given].toString(): &apos;+objAssignedEntity.givenName.toString()); }
+								objPerformer.assignedEntity_givenName= objAssignedEntity.givenName.toString(); 		// NUCC Health Care Provider Taxonomy
+							} // end if							
+						} // end if
+						
+						// check for assignedEntity assignedPerson Family name
+						if(typeof objAssignedEntity.familyName !== &apos;undefined&apos;) {
+							if(objAssignedEntity.familyName.toString().length&gt;0) {
+								if(debug&gt;0) { logger.error(&apos;performer[assignedEntity][assignedPerson][name][family].toString(): &apos;+objAssignedEntity.familyName.toString()); }
+								objPerformer.assignedEntity_familyName= objAssignedEntity.familyName.toString(); 		// NUCC Health Care Provider Taxonomy
+							} // end if							
+						} // end if
+
+						if(debug&gt;0) { logger.error(&apos;getPerformer objAssignedEntity.suffix: &apos;+objAssignedEntity.suffix+
+							&apos; typeof: &apos;+typeof objAssignedEntity.suffix); }
+						// check for assignedEntity assignedPerson Suffix
+						if(typeof objAssignedEntity.suffix !== &apos;undefined&apos;) {
+							if(objAssignedEntity.suffix.toString().length&gt;0) {
+								if(debug&gt;0) { logger.error(&apos;performer[assignedEntity][assignedPerson][name][suffix].toString(): &apos;+objAssignedEntity.suffix.toString()); }
+								objPerformer.assignedEntity_suffix= objAssignedEntity.suffix.toString(); 		// NUCC Health Care Provider Taxonomy
+							} // end if							
+						} // end if
+						
+						
+						// check for assignedEntity representedOrganization name
+						if(typeof objAssignedEntity.representedOrganizationName !== &apos;undefined&apos;) {
+							if(objAssignedEntity.representedOrganizationName.toString().length&gt;0) {
+								if(debug&gt;0) { logger.error(&apos;performer[assignedEntity][representedOrganization][name].toString(): &apos;+objAssignedEntity.representedOrganizationName.toString()); }
+								objPerformer.assignedEntity_representedOrganization= objAssignedEntity.representedOrganizationName.toString(); 		// Walgreens Drug Store 12562
+							} // end if							
+						} // end if
+						
+					} // end if 
+
+				} // end if
+			//} // end if 
+			arrPerformer.push(objPerformer);
+			strPerfCount++;
+		} // end for each
+	} // end if
+	channelMap.put(&apos;objPerformer&apos;,arrPerformer);
+	return arrPerformer;
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>a3b08547-8ed2-4097-a7e7-ea43e052f13b</id>
+      <name>getServiceEvent</name>
+      <revision>7</revision>
+      <lastModified>
+        <time>1526533878624</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getServiceEvent(msg)
+
+  	- Desc: This function receives CCD msg and returns Service Event objects
+  	- Modified: 
+  	2018-02-14 JER - Modified to capture the serviceEvent ClassCode and DisplayName attribute values
+  	2018-02-12 JER - multiple documentationOf (1..M) with (1..1) serviceEvents
+
+   	@param {String} msg - this contains the raw message (string)
+	@return {array} arrServiceEvents - this array contains list of objServiceEvent objects composed into the arrServiceEvents
+*/
+function getServiceEvent(msg) {
+
+	// define variables
+	var arrServiceEvent= new Array();
+	var tSrvcCount= 1;
+
+	if(msg[&apos;documentationOf&apos;] !== &apos;undefined&apos;) {
+		for each(documentationOf in msg[&apos;documentationOf&apos;]) {
+			if(documentationOf.serviceEvent !== &apos;undefined&apos;) {
+				for each(serviceEvent in documentationOf.serviceEvent) {
+					var objServiceEvent= new Object();
+					objServiceEvent.id= 	tSrvcCount;
+					if(typeof serviceEvent.@classCode !== &apos;undefined&apos;) {
+						if(serviceEvent.@classCode.length()&gt;0) {
+							objServiceEvent.classCode=	serviceEvent.@classCode.toString();
+						} // end if 
+					} // end if 
+					if(serviceEvent.children().length()&gt;0) {
+						if(typeof serviceEvent.id.@extension !== &apos;undefined&apos;) {
+							objServiceEvent.extension=	serviceEvent.id.@extension.toString();
+						} else {
+							objServiceEvent.extension=    &apos;&apos;;
+						} // end if
+						if(typeof serviceEvent.id.@root !== &apos;undefined&apos;) {
+							objServiceEvent.root=		serviceEvent.id.@root.toString();
+						} else {
+							objServiceEvent.root=		&apos;&apos;;
+						} // end if
+						if(typeof serviceEvent.code.@displayName !== &apos;undefined&apos;) {
+							objServiceEvent.displayName=	serviceEvent.code.@displayName.toString();
+						} else {
+							objServiceEvent.displayName=    &apos;&apos;;
+						} // end if
+						if(typeof serviceEvent.effectiveTime.low.@value !== &apos;undefined&apos;) {
+							objServiceEvent.startTime=	serviceEvent.effectiveTime.low.@value.toString().substring(0,14);
+						} else {
+							objServiceEvent.startTime=	&apos;&apos;;
+						} // end if
+						if(typeof serviceEvent.effectiveTime.high.@value !== &apos;undefined&apos;) {
+							objServiceEvent.stopTime=	serviceEvent.effectiveTime.high.@value.toString().substring(0,14);
+						} else {
+							objServiceEvent.stopTime=	&apos;&apos;;
+						} // end if
+					} // end if 
+					arrServiceEvent.push(objServiceEvent);
+				} // end for each	
+			} // end if 
+		} // end for each
+	} // end if 
+	return arrServiceEvent;
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>39531322-8698-4cdf-9824-d225f1bc60ea</id>
+      <name>getXdsAuthorPerson</name>
+      <revision>7</revision>
+      <lastModified>
+        <time>1519634065158</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getXdsAuthorPerson
+
+	- Desc: This function receives Author Object and returns a CCD authorPerson XML
+	- Modified:
+	2018-02-25 12:35 PM CST - Perform additional checks on the supplied object typeof and null checks
+
+	@param {object} objAuthor - the objAuthor object passed input argument
+	@return {XML} return stringXML containing the newly devised XML containing the authorPerson
+
+*/
+function getXdsAuthorPerson(objAuthor) {
+
+	// 0^Allscripts^System^^^^^^&amp;amp;1.3.6.1.4.1.22812.4.10065404.0.3.3
+	var authorPerson= &apos;&apos;;
+	var debug= 0;
+
+	if(debug&gt;0) { logger.error(&apos;getXdsAuthorPerson Input objAuthor: &apos;+objAuthor); }
+
+	// Author Id Extension
+	if((typeof objAuthor.extension !== &apos;undefined&apos;)&amp;&amp;(objAuthor.extension != null)) {
+		if(objAuthor.extension.toString().length&gt;0) {
+			if(debug&gt;0) { logger.error(&apos;objAuthor.extension: &apos;+objAuthor.extension.toString()); }
+			authorPerson += objAuthor.extension.toString()+&apos;^&apos;;
+		} else {
+			authorPerson += &apos;^&apos;;
+		} // end if
+	} else {
+		authorPerson += &apos;^&apos;;
+	} // end if 
+
+	// Author LastName
+	if((typeof objAuthor.idExtension !== &apos;undefined&apos;)&amp;&amp;(objAuthor.idExtension != null)) {
+		if(objAuthor.idExtension.toString().length&gt;0) {
+			authorPerson += objAuthor.idExtension.toString()+&apos;^&apos;;
+		} else {
+			authorPerson += &apos;^&apos;;
+		} // end if
+	} else {
+		authorPerson += &apos;^&apos;;
+	} // end if 
+
+	// Author FirstName
+	if((typeof objAuthor.idExtension !== &apos;undefined&apos;)&amp;&amp;(objAuthor.idExtension != null)) {
+		if(objAuthor.idExtension.toString().length&gt;0) {
+			authorPerson += objAuthor.idExtension.toString()+&apos;^&apos;;
+		} else {
+			authorPerson += &apos;^&apos;;
+		} // end if
+	} else {
+		authorPerson += &apos;^&apos;;
+	} // end if 
+
+
+	// Author Id Root - objAssignedAuthor.root
+	if((typeof objAuthor.root !== &apos;undefined&apos;)&amp;&amp;(objAuthor.root != null)) {
+		if(objAuthor.root.toString().length&gt;0) {
+			if(debug&gt;0) { logger.error(&apos;objAuthor.root: &apos;+objAuthor.root.toString()); }
+			authorPerson += &apos;^^^^^&apos;+objAuthor.root.toString();
+		} else {
+			authorPerson += &apos;^^^^^&apos;;
+		} // end if
+	} else {
+		authorPerson += &apos;^^^^^&apos;; 
+	} // end if
+
+	if(debug) { logger.error(&apos;getXdsAuthorPerson authorPerson: &apos;+authorPerson); }
+	channelMap.put(&apos;authorPerson&apos;,authorPerson);	
+
+	return authorPerson;
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>bac30250-f269-474b-a628-e41b4a27ca54</id>
+      <name>getXdsSourcePatientId</name>
+      <revision>17</revision>
+      <lastModified>
+        <time>1526533879166</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getXdsSourcePatientId(object)
+
+  	 - Desc: This function receives patientRole JavaScript Object and returns a sourcePatientId String
+
+	@param {object} objPatientRole - the objPatientRole object passed input argument
+	@return {string} return string containing the newly devised string containing the sourcePatientId
+*/
+// @return {XML} return stringXML containing the newly devised XML containing the sourcePatientInfo
+function getXdsSourcePatientId(objPatientRole) {
+
+	var debug= 0;
+	/*
+	var objSourcePatientId= new Object;
+	//if (msg.namespace() != undefined) { default xml namespace = msg.namespace(); } else { default xml namespace = &apos;&apos;; }
+	var rim = new Namespace(&apos;urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0&apos;);
+
+	var stringXML= new XML(&apos;&lt;ValueList/&gt;&apos;);
+	*/
+	if(typeof objPatientRole.patientId !== &apos;undefined&apos;) {
+		var pid_3=  objPatientRole.patientId+&quot;^^^&amp;amp;&quot;+objPatientRole.root+&quot;&amp;amp;ISO&quot;;
+		if(debug&gt;1) { logger.error(&quot;objPatientRole.patientid: &quot;+objPatientRole.patientId.toString()); }
+	} else { var pid_3= &apos;&apos;; }
+			
+	// var stringXML= stringXML.appendChild(&apos;&lt;Value&gt;&apos;+pid_3+&apos;&lt;/Value&gt;&apos;);
+	var strSourcePatientId= pid_3;
+
+	return strSourcePatientId;
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>cc1f343b-bfa4-4994-9402-bb78c1ad6388</id>
+      <name>getXdsSourcePatientInfo</name>
+      <revision>16</revision>
+      <lastModified>
+        <time>1526533937195</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** getXdsSourcePatientInfo(object)
+
+  	- Desc: This function receives patientRole JavaScript Object and returns a XML SourcePatientInfo JavaScript object
+
+	@param {object} objPatientRole - the objPatientRole object passed input argument
+	@return {object} return object containing the newly devised string for XML containing the sourcePatientInfo
+*/
+// @return {XML} return stringXML containing the newly devised XML containing the sourcePatientInfo
+function getXdsSourcePatientInfo(objPatientRole) {
+
+	var objSourcePatientInfo= new Object;
+	var rim = new Namespace(&apos;urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0&apos;);
+	var stringXML= new XML(&apos;&lt;ValueList/&gt;&apos;);
+	
+	var pid_3=  &quot;PID-3|&quot;+objPatientRole.patientId+&quot;^^^&amp;amp;&quot;+objPatientRole.root+&quot;&amp;amp;ISO&quot;
+	var stringXML= stringXML.appendChild(&apos;&lt;Value&gt;&apos;+pid_3+&apos;&lt;/Value&gt;&apos;);
+	objSourcePatientInfo.pid3= pid_3;
+	
+	var pid_5=  &quot;PID-5|&quot;+objPatientRole.lastName+&quot;^&quot;+objPatientRole.firstName+&quot;^^^^&quot;
+	var stringXML= stringXML.appendChild(&apos;&lt;Value&gt;&apos;+pid_5+&apos;&lt;/Value&gt;&apos;);
+	objSourcePatientInfo.pid5= pid_5;
+	
+	var pid_7=  &quot;PID-7|&quot;+objPatientRole.dateOfBirth
+	var stringXML= stringXML.appendChild(&apos;&lt;Value&gt;&apos;+pid_7+&apos;&lt;/Value&gt;&apos;);
+	objSourcePatientInfo.pid7= pid_7;
+	
+	var pid_8=  &quot;PID-8|&quot;+objPatientRole.gender
+	var stringXML= stringXML.appendChild(&apos;&lt;Value&gt;&apos;+pid_8+&apos;&lt;/Value&gt;&apos;);
+	objSourcePatientInfo.pid8= pid_8;
+	
+	var pid_11= &quot;PID-11|&quot;+objPatientRole.streetAddress+&quot;^^&quot;+objPatientRole.city+&quot;^&quot;+objPatientRole.state+&quot;^&quot;+objPatientRole.postalCode+&quot;^&quot;+objPatientRole.country
+	var stringXML= stringXML.appendChild(&apos;&lt;Value&gt;&apos;+pid_11+&apos;&lt;/Value&gt;&apos;);
+	objSourcePatientInfo.pid11= pid_11;
+	
+	var pid_13= &quot;PID-13|&quot;+objPatientRole.phoneNumber
+	var stringXML= stringXML.appendChild(&apos;&lt;Value&gt;&apos;+pid_13+&apos;&lt;/Value&gt;&apos;);
+	objSourcePatientInfo.pid13= pid_13;
+	
+	return objSourcePatientInfo;
+}</code>
+      </properties>
+    </codeTemplate>
+    <codeTemplate version="3.5.1">
+      <id>d78fd3dc-2f75-4b0e-ab30-1e7eea48e0c1</id>
+      <name>setXdsAuthor</name>
+      <revision>3</revision>
+      <lastModified>
+        <time>1526534006203</time>
+        <timezone>America/Chicago</timezone>
+      </lastModified>
+      <contextSet>
+        <delegate>
+          <contextType>SOURCE_FILTER_TRANSFORMER</contextType>
+          <contextType>SOURCE_RECEIVER</contextType>
+          <contextType>DESTINATION_DISPATCHER</contextType>
+          <contextType>DESTINATION_RESPONSE_TRANSFORMER</contextType>
+          <contextType>DESTINATION_FILTER_TRANSFORMER</contextType>
+        </delegate>
+      </contextSet>
+      <properties class="com.mirth.connect.model.codetemplates.BasicCodeTemplateProperties">
+        <type>FUNCTION</type>
+        <code>/** setXdsMetadataAuthor(object)
+
+  	- Desc: This setXdsAuthor function receives Javascript Array of Objects and author XML string
+  	- Modified:
+  	2018-02-26 19:20 CST - Under development
+	2018-02-25 12:40PM CST - Replacement of the Call getPerformer, getAuthor and usage of objEncounter transformation function.
+
+   	@param {object} arrPerformer - this contains the Javascript Object (object) - could pass in 
+	@return {XML} authorXML - contains authorXML XML Object string to build out the Template : XDSDocumentEntry.author (urn:uuid:93606bcf-9494-43ec-9b4e-a7748d1a838d) XML scheme.
+
+	Reference: https://gazelle.ihe.net/XDStarClient/rimihe-templates/rimihe-Author_XDSDocumentEntry.html
+		
+*/
+
+function setXdsMetadataAuthor(arrAuthors) {
+
+	var debug= 1;
+	var i= 0;
+	
+	if(debug&gt;0) { logger.error(&apos;setXdsAuthor arrAuthors: &apos;+JSON.stringify(arrAuthors)); } 
+	
+	if(typeof arrAuthor !== &apos;undefined&apos;) {
+		if(arrAuthor.length&gt;1) {
+			for each(objAuthor in arrAuthors) {
+				if(debug&gt;0) { logger.error(&apos;objAuthor[&apos;+i+&apos;]: &apos;+JSON.stringify(objAuthor)+
+					&apos; typeof: &apos;+typeof objAuthor+
+					&apos; length: &apos;+objAuthor.length());
+				} // end if 
+		
+				var authorXML = new XML(&apos;&lt;rim:Classification id=&quot;${uuid}&quot; classificationScheme=&quot;urn:uuid:93606bcf-9494-43ec-9b4e-a7748d1a838d&quot; classifiedObject=&quot;${extrinsicObjectUUID}&quot;&gt;&lt;/rim:Classification&gt;&apos;);
+
+				// need to confirm the objAuthor contains the representedOrganization
+				// create Author Person - using either objAuthor.assignedEntity_familyName OR objEncounter.assignedEntity_familyName call the getAuthorPerson function
+				if((typeof objAuthor.assignedEntity_familyName !== &apos;undefined&apos;)&amp;&amp;(objAuthor.assignedEntity_familyName.toString() != null)) { 
+					var xmlAuthor= new XML(&apos;&lt;rim:Slot name=&quot;authorPerson&quot;&gt;&lt;rim:ValueList&gt;&lt;rim:Value&gt;&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;&lt;/rim:Slot&gt;&apos;);
+					xmlAuthor[&apos;rim:Slot&apos;][&apos;rim:ValueList&apos;][&apos;rim:Value&apos;]= getAuthorPerson(objAuthor);
+				} else {
+					var xmlAuthor= new XML(&apos;&lt;rim:Slot name=&quot;authorPerson&quot;&gt;&lt;rim:ValueList&gt;&lt;rim:Value&gt;&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;&lt;/rim:Slot&gt;&apos;);
+				} // end if 
+		
+				// create Author Institution - objAuthor.authorInstitution
+				if((typeof objAuthor.authorInstitution !== &apos;undefined&apos;)&amp;&amp;(objAuthor.authorInstitution.toString() != null)) {
+					var xmlAuthor= new XML(&apos;&lt;rim:Slot name=&quot;authorInstitution&quot;&gt;&lt;rim:ValueList&gt;&lt;rim:Value&gt;&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;&lt;/rim:Slot&gt;&apos;);
+					xmlAuthor[&apos;rim:Slot&apos;][&apos;rim:ValueList&apos;][&apos;rim:Value&apos;]= objAuthor.authorInstitution.toString();
+				} else {
+					var xmlAuthor= new XML(&apos;&lt;rim:Slot name=&quot;authorInstitution&quot;&gt;&lt;rim:ValueList&gt;&lt;rim:Value&gt;&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;&lt;/rim:Slot&gt;&apos;);
+				} // end if
+		
+				// create Author Role 
+				// objPerformers.functionDisplayName
+				if((typeof objAuthor.functionDisplayName !== &apos;undefined&apos;)&amp;&amp;(objAuthor.functionDisplayName.toString() != null)) {
+					if(objAuthor.functionDisplayName.toString().length&gt;0) {
+						var xmlAuthor= new XML(&apos;&lt;rim:Slot name=&quot;authorRole&quot;&gt;&lt;rim:ValueList&gt;&lt;rim:Value&gt;&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;&lt;/rim:Slot&gt;&apos;);
+						xmlAuthor[&apos;rim:Slot&apos;][&apos;rim:ValueList&apos;][&apos;rim:Value&apos;]= objAuthor.functionDisplayName.toString();
+					} // end if 
+					// objEncounter.encounterParticipant_code
+				} else if((typeof objAuthor.encounterParticipant_code !== &apos;undefined&apos;)&amp;&amp;(objAuthor.encounterParticipant_code.toString() != null)) {
+					if(objAuthor.encounterParticipant_code.toString().length&gt;0) {
+						var xmlAuthor= new XML(&apos;&lt;rim:Slot name=&quot;authorRole&quot;&gt;&lt;rim:ValueList&gt;&lt;rim:Value&gt;&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;&lt;/rim:Slot&gt;&apos;);
+						xmlAuthor[&apos;rim:Slot&apos;][&apos;rim:ValueList&apos;][&apos;rim:Value&apos;]= objAuthor.functionDisplayName.toString();
+					} // end if 
+				// objEncounter.assignedEntity_codeDisplayName
+				} else if((typeof objAuthor.assignedEntity_codeDisplayName !== &apos;undefined&apos;)&amp;&amp;(objAuthor.assignedEntity_codeDisplayName.toString() != null)) {
+					if(objAuthor.assignedEntity_codeDisplayName.toString().length&gt;0) {
+						var xmlAuthor= new XML(&apos;&lt;rim:Slot name=&quot;authorRole&quot;&gt;&lt;rim:ValueList&gt;&lt;rim:Value&gt;&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;&lt;/rim:Slot&gt;&apos;);
+						xmlAuthor[&apos;rim:Slot&apos;][&apos;rim:ValueList&apos;][&apos;rim:Value&apos;]= objAuthor.assignedEntity_codeDisplayName.toString();
+					} // end if 
+				} else {
+					var xmlAuthor= new XML(&apos;&lt;rim:Slot name=&quot;authorRole&quot;&gt;&lt;rim:ValueList&gt;&lt;rim:Value&gt;Medical Doctor&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;&lt;/rim:Slot&gt;&apos;);
+				} // end if 
+		
+				// create Author Specialty
+				// objPerformers.assignedDisplayName
+				if((typeof objAuthor.assignedDisplayName !== &apos;undefined&apos;)&amp;&amp;(objAuthor.assignedDisplayName.toString() != null)) {
+					if(objAuthor.assignedDisplayName.toString().length&gt;0) {
+						var xmlAuthor= new XML(&apos;&lt;rim:Slot name=&quot;authorSpecialty&quot;&gt;&lt;rim:ValueList&gt;&lt;rim:Value&gt;&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;&lt;/rim:Slot&gt;&apos;);
+						xmlAuthor[&apos;rim:Slot&apos;][&apos;rim:ValueList&apos;][&apos;rim:Value&apos;]= objAuthor.assignedDisplayName.toString();
+					} // end if 
+				// objEncounter.assignedEntity_codeDisplayName
+				} else if((typeof objAuthor.assignedEntity_codeDisplayName !== &apos;undefined&apos;)&amp;&amp;(objAuthor.assignedEntity_codeDisplayName.toString() != null)) {
+					if(objAuthor.assignedEntity_codeDisplayName.toString().length&gt;0) {
+						var xmlAuthor= new XML(&apos;&lt;rim:Slot name=&quot;authorSpecialty&quot;&gt;&lt;rim:ValueList&gt;&lt;rim:Value&gt;&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;&lt;/rim:Slot&gt;&apos;);
+						xmlAuthor[&apos;rim:Slot&apos;][&apos;rim:ValueList&apos;][&apos;rim:Value&apos;]= objAuthor.assignedEntity_codeDisplayName.toString();
+					} // end if 
+				} else {
+					var xmlAuthor= new XML(&apos;&lt;rim:Slot name=&quot;authorSpecialty&quot;&gt;&lt;rim:ValueList&gt;&lt;rim:Value&gt;General Medicine&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;&lt;/rim:Slot&gt;&apos;);
+				} // end if 
+			} // end for each
+		} // end if 
+	} else {		
+		var classificationXML=     [&apos;rim:Classification&apos;][&apos;@id&apos;]=&quot;1234&quot;; 
+		classificationXML+=        [&apos;rim:Classification&apos;][&apos;@ClassificationScheme&apos;]= &quot;urn:uuid:93606bcf-9494-43ec-9b4e-a7748d1a838d&quot;;
+		classificationXML+=        [&apos;rim:Classification&apos;][&apos;@classifiedObject&apos;]= &quot;&quot;;
+		var authorXML = new XML(classificationXML);
+			
+		var authorPersonXML=    	new XML(&apos;&lt;rim:Slot name=&quot;authorPerson&quot;&gt;&lt;/rim:Slot&gt;&apos;);
+		authorPersonXML+= 		new XML(&apos;&lt;rim:ValueList&gt;&lt;/rim:ValueList&gt;&apos;);
+		authorPersonXML+=	 	new XML(&apos;&lt;rim:Value&gt;&lt;/rim:Value&gt;&apos;);
+		authorXML+= authorPersonXML; 
+
+		var authorInstitutionXML=    new XML(&apos;&lt;rim:Slot name=&quot;authorInstitution&quot;&gt;&lt;/rim:Slot&gt;&apos;);
+		authorInstitutionXML+= 		new XML(&apos;&lt;rim:ValueList&gt;&lt;/rim:ValueList&gt;&apos;);
+		authorInstitutionXML+=		new XML(&apos;&lt;rim:Value&gt;&lt;/rim:Value&gt;&apos;);
+		authorXML+= authorInstitutionXML;
+
+		var authorRoleXML=  new XML(&apos;&lt;rim:Slot name=&quot;authorRole&quot;&gt;&lt;/rim:Slot&gt;&apos;);
+		authorRoleXML+= 	new XML(&apos;&lt;rim:ValueList&gt;&lt;/rim:ValueList&gt;&apos;);
+		authorRoleXML+=	new XML(&apos;&lt;rim:Value&gt;&lt;/rim:Value&gt;&apos;);
+		authorXML+= autorRoleXML;
+		
+		var authorSpecialtyXML =		new XML(&apos;&lt;rim:Slot name=&quot;authorSpecialty&quot;&gt;&lt;/rim:Slot&gt;&apos;);
+		authorSpecialtyXML+= new XML(&apos;&lt;rim:ValueList&gt;&lt;/rim:ValueList&gt;&apos;);
+		authorSpecialtyXML+= new XML(&apos;&lt;rim:Value&gt;&lt;/rim:Value&gt;&apos;);
+		authorXML+= authorSpecialtyXML;
+				
+	} // end if 	
+		
+	return authorXML;
+} // end function</code>
+      </properties>
+    </codeTemplate>
+  </codeTemplates>
+</codeTemplateLibrary>
